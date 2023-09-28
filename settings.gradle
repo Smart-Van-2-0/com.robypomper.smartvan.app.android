@@ -13,5 +13,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Smart Van"
+rootProject.name = "SmartVan4Android"
 include ':app'
+project(":app").name = "SmartVanAndroid"
