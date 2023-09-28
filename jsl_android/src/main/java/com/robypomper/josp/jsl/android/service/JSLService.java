@@ -3,6 +3,7 @@ package com.robypomper.josp.jsl.android.service;
 import com.robypomper.josp.jsl.FactoryJSL;
 import com.robypomper.josp.jsl.JSL;
 import com.robypomper.josp.jsl.JSLSettings_002;
+import com.robypomper.josp.jsl.android.impls.DiscoverAndroid;
 import com.robypomper.josp.states.JSLState;
 import com.robypomper.josp.states.StateException;
 
@@ -13,6 +14,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
+/**
+ * ...
+ * <p>
+ * Moreover, the JSLService, on his create method, sets the {@link DiscoverAndroid}
+ * context. So, the JSL instance can use it as discover implementation.
+ */
 public class JSLService extends JSLServiceBase {
 
     ExecutorService executor_init = Executors.newFixedThreadPool(1);
@@ -25,12 +32,15 @@ public class JSLService extends JSLServiceBase {
     /**
      * Initialize the JSL background thread.
      * <p>
+     * This method, sets also the {@link DiscoverAndroid} context.
+     * <p>
      * This method is executed for both startingService() and bindService()
      * Android's methods.
      */
     @Override
     public void onCreate() {
         super.onCreate();
+        DiscoverAndroid.setContext(this);
         jslInitThread();
     }
 
