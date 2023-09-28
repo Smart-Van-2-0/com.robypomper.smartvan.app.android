@@ -25,9 +25,14 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    packagingOptions {
+        exclude("META-INF/DEPENDENCIES")
+    }
 }
 
 dependencies {
+    implementation 'com.robypomper.josp:jospJSL:2.2.4-DEV'
+
     implementation 'org.slf4j:slf4j-api:2.0.9'
     implementation 'uk.uuid.slf4j:slf4j-android:2.0.9-0'
 
