@@ -1,0 +1,12 @@
+{
+  jsl.comm.cloud.enabled: 'false',
+  jcp.url.apis: 'localhost:9001',
+  jcp.url.auth: 'localhost:8998',
+  jcp.client.id: 'test-android-srv',
+  jcp.client.secret: 'xxx',
+  jcp.client.callback: 'https://localhost:8080',
+  jsl.srv.id: 'smart-van-android',
+  jsl.srv.name: 'Smart Van 4 Android',
+  jsl.comm.local.ks.path: 'local_ks.jks',
+  jsl.comm.local.ks.pass: 'smartvan123'
+}
