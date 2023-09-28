@@ -1,0 +1,6 @@
+<resources>
+    <dimen name="title_margin">48dp</dimen>
+    <dimen name="title_size">48sp</dimen>
+    <dimen name="sub_title_margin">24dp</dimen>
+    <dimen name="sub_title_size">24sp</dimen>
+</resources>
