@@ -2,6 +2,7 @@ package com.robypomper.josp.jsl.android.service;
 
 import com.robypomper.josp.jsl.FactoryJSL;
 import com.robypomper.josp.jsl.JSL;
+import com.robypomper.josp.jsl.JSLListeners;
 import com.robypomper.josp.jsl.JSLSettings_002;
 import com.robypomper.josp.jsl.android.impls.DiscoverAndroid;
 import com.robypomper.josp.states.JSLState;
@@ -25,6 +26,7 @@ public class JSLService extends JSLServiceBase {
     ExecutorService executor_init = Executors.newFixedThreadPool(1);
     private JSL jslInstance = null;
     private final List<JSLInstanceListener> jslInstanceListeners = new ArrayList<>();
+    private final JSLListeners jslListeners = new JSLListeners();
 
 
     // Android
@@ -103,6 +105,8 @@ public class JSLService extends JSLServiceBase {
             throw new RuntimeException(e);
         }
 
+        jslListeners.setJSL(jslInstance);
+
         emitOnJSLInstanceCreated();
     }
 
@@ -131,6 +135,8 @@ public class JSLService extends JSLServiceBase {
     private void jslShutdown() {
         if (jslInstance == null)
             return;
+
+        jslListeners.setJSL(null);
 
         if (jslInstance.getState() != JSLState.RUN)
             return;
@@ -192,6 +198,17 @@ public class JSLService extends JSLServiceBase {
 
         void onJSLInstanceShutdown(JSLService service);
 
+    }
+
+
+    // JSL Listeners
+
+    /**
+     * @return the {@link JSLListeners} instance linked to the JSL Instance
+     * from current JSLService.
+     */
+    protected JSLListeners getJSLListeners() {
+        return jslListeners;
     }
 
 }

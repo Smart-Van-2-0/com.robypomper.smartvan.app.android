@@ -8,6 +8,7 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.robypomper.josp.jsl.JSL;
+import com.robypomper.josp.jsl.JSLListeners;
 import com.robypomper.josp.jsl.android.service.JSLService;
 import com.robypomper.josp.states.JSLState;
 
@@ -47,6 +48,7 @@ public abstract class JSLClient<T extends JSLService> {
     private T jslService;
     private JSLClientState extendedState = JSLClientState.NOT_BOUND;
     private final Vector<JSLClientStateListener> onJSLStateChange = new Vector<>();
+    private final JSLListeners jslListeners = new JSLListeners();
 
 
     // Constructor
@@ -246,8 +248,19 @@ public abstract class JSLClient<T extends JSLService> {
 
     /** Emits event `onStateChange` as {@link JSLClient}'s state events. */
     private void emitOnJSLStateChange(JSLClientState new_state, JSLClientState old_state) {
+        jslListeners.setJSL(getJSL());
         for (JSLClientStateListener l : onJSLStateChange)
             l.stateChanged(new_state, old_state);
     }
 
+
+    // JSL Listeners
+
+    /**
+     * @return the {@link JSLListeners} instance linked to the JSL Instance
+     * from current JSLClient.
+     */
+    public JSLListeners getJSLListeners() {
+        return jslListeners;
+    }
 }
