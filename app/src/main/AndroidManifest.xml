@@ -29,9 +29,9 @@
         </receiver>
 
         <activity
-            android:name=".activities.SVMainActivity"
+            android:name=".activities.SVStartupActivity"
             android:exported="true"
-            android:label="@string/title_activity_svmain"
+            android:label="@string/title_activity_svstartup"
             android:theme="@style/Theme.SmartVan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,6 +39,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".activities.SVMainActivity"
+            android:exported="false"
+            android:label="@string/title_activity_svmain"
+            android:theme="@style/Theme.SmartVan" />
 
     </application>
 
