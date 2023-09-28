@@ -1,0 +1,35 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.SmartVan" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/smartvan_500</item>
+        <item name="colorPrimaryVariant">@color/smartvan_700</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/smartvan_second_500</item>
+        <item name="colorSecondaryVariant">@color/smartvan_second_700</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="21">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+    </style>
+
+
+    <style name="Theme.SmartVan.textGenericTitle" parent="TextAppearance.AppCompat">
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="Theme.SmartVan.textTitle" parent="Theme.SmartVan.textGenericTitle">
+        <item name="android:textSize">@dimen/title_size</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?colorPrimary</item>
+        <item name="android:layout_margin">@dimen/title_margin</item>
+    </style>
+
+    <style name="Theme.SmartVan.textSubTitle" parent="Theme.SmartVan.textGenericTitle">
+        <item name="android:textSize">@dimen/sub_title_size</item>
+        <item name="android:textColor">?attr/colorSecondary</item>
+        <item name="android:layout_margin">@dimen/sub_title_margin</item>
+    </style>
+
+</resources>

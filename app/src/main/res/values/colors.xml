@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="smartvan_200">#4BCDCD</color>
+    <color name="smartvan_500">#0BB1B2</color>
+    <color name="smartvan_700">#028B8C</color>
+
+    <color name="smartvan_second_200">#CDE9FB</color>
+    <color name="smartvan_second_500">#5EAADA</color>
+    <color name="smartvan_second_700">#0A68A5</color>
+
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>
