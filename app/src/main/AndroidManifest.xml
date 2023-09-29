@@ -31,6 +31,7 @@
         <activity
             android:name=".activities.SVStartupActivity"
             android:exported="true"
+            android:noHistory="true"
             android:label="@string/title_activity_svstartup"
             android:theme="@style/Theme.SmartVan">
             <intent-filter>
@@ -39,6 +40,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".activities.SVSelectObjectActivity"
+            android:exported="false"
+            android:noHistory="true"
+            android:label="@string/title_activity_svmain"
+            android:theme="@style/Theme.SmartVan" />
 
         <activity
             android:name=".activities.SVMainActivity"
