@@ -29,9 +29,8 @@ public class SVSelectObjectActivity extends JSLSelectObjectActivity {
         if (objs.size() == 0) return;
 
         Bundle b = new Bundle();
-        // TODO update bundle creation for SVMainActivity
-        //JSLRemoteObject remObj = objs.get(0);
-        //b.putString(SVMainActivity.PARAM_OBJ_ID, remObj.getId());
+        JSLRemoteObject remObj = objs.get(0);
+        b.putString(SVMainActivity.PARAM_OBJ_ID, remObj.getId());
 
         showNextActivity(b);
     }
