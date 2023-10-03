@@ -14,7 +14,8 @@ project, so you can use it to edit those sources.
 This mobile app allows connect to Smart Van object as defined from the [Smart Van Project](https://smartvan.johnosproject.org/)
 website.
 
-Actually, the first version contains only a simple welcome screen.
+It's based on the 'JSLAndroid' library (actually it's a module from current
+repository), that allows access easily to the JOSP Eco System.
 
 
 ## Build and run
