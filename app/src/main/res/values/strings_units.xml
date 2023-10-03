@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="unit_voltage">Volts</string>
+    <string name="unit_voltage_short">V</string>
+    <string name="unit_watts">Watts</string>
+    <string name="unit_watts_short">W</string>
+</resources>

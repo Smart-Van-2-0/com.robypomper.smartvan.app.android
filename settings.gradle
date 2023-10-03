@@ -8,6 +8,7 @@ pluginManagement {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
+        mavenLocal()
         google()
         mavenCentral()
     }
@@ -16,3 +17,5 @@ dependencyResolutionManagement {
 rootProject.name = "SmartVan4Android"
 include ':app'
 project(":app").name = "SmartVanAndroid"
+include ':jsl_android'
+project(":jsl_android").name = "JSL4Android"

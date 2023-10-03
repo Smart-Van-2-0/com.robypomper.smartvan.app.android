@@ -12,24 +12,60 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="21">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
     </style>
 
 
-    <style name="Theme.SmartVan.textGenericTitle" parent="TextAppearance.AppCompat">
+
+    <style name="Theme.SmartVan.text" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="Theme.SmartVan.text.GenericTitle">
         <item name="android:gravity">center_horizontal</item>
     </style>
 
-    <style name="Theme.SmartVan.textTitle" parent="Theme.SmartVan.textGenericTitle">
+    <style name="Theme.SmartVan.text.Title" parent="Theme.SmartVan.text.GenericTitle">
         <item name="android:textSize">@dimen/title_size</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">?colorPrimary</item>
         <item name="android:layout_margin">@dimen/title_margin</item>
     </style>
 
-    <style name="Theme.SmartVan.textSubTitle" parent="Theme.SmartVan.textGenericTitle">
+    <style name="Theme.SmartVan.text.SubTitle" parent="Theme.SmartVan.text.GenericTitle">
         <item name="android:textSize">@dimen/sub_title_size</item>
         <item name="android:textColor">?attr/colorSecondary</item>
         <item name="android:layout_margin">@dimen/sub_title_margin</item>
+    </style>
+
+    <style name="Theme.SmartVan.text.Label">
+        <item name="android:textSize">@dimen/label_size</item>
+        <item name="android:layout_marginLeft">@dimen/label_margin</item>
+        <item name="android:layout_marginRight">@dimen/label_margin</item>
+    </style>
+
+    <style name="Theme.SmartVan.text.Value">
+        <item name="android:textSize">@dimen/value_size</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginLeft">@dimen/value_margin</item>
+        <item name="android:layout_marginRight">@dimen/value_margin</item>
+    </style>
+
+    <style name="Theme.SmartVan.text.Unit">
+        <item name="android:textSize">@dimen/unit_size</item>
+        <item name="android:layout_marginLeft">@dimen/unit_margin</item>
+        <item name="android:layout_marginRight">@dimen/unit_margin</item>
+    </style>
+
+
+    <style name="Theme.SmartVan.section" parent="android:Widget">
+
+    </style>
+
+    <style name="Theme.SmartVan.section.Card" parent="android:Widget">
+        <item name="android:background">@drawable/section_card_background</item>
     </style>
 
 </resources>
