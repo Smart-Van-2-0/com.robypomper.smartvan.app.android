@@ -10,11 +10,11 @@
     <string name="activity_svmain_txt_connection_text">{CONN_STATE_STRING}</string>
     <string name="activity_svmain_txt_power_label">Battery Voltage</string>
     <string name="activity_svmain_txt_power_value_placeholder">{VAL}</string>
-    <string name="activity_svmain_txt_power_unit">@string/unit_voltage_short</string>
+    <string name="activity_svmain_txt_power_unit">@string/unit_percent_short</string>
     <string name="activity_svmain_txt_panels_label">Panels Current\nCharge</string>
     <string name="activity_svmain_txt_panels_value_placeholder">{VAL}</string>
-    <string name="activity_svmain_txt_panels_unit">@string/unit_watts_short</string>
+    <string name="activity_svmain_txt_panels_unit">@string/unit_percent_short</string>
     <string name="activity_svmain_txt_services_label">Services Current\nConsumption</string>
     <string name="activity_svmain_txt_services_value_placeholder">{VAL}</string>
-    <string name="activity_svmain_txt_services_unit">@string/unit_watts_short</string>
+    <string name="activity_svmain_txt_services_unit">@string/unit_percent_short</string>
 </resources>

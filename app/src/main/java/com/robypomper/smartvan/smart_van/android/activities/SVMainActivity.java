@@ -2,6 +2,7 @@ package com.robypomper.smartvan.smart_van.android.activities;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
@@ -18,15 +19,16 @@ import com.robypomper.smartvan.smart_van.android.R;
 import com.robypomper.smartvan.smart_van.android.app.SVApplication;
 import com.robypomper.smartvan.smart_van.android.app.SVJSLClient;
 import com.robypomper.smartvan.smart_van.android.commons.SVDefinitions;
+import com.robypomper.smartvan.smart_van.android.commons.SVSpecs;
 import com.robypomper.smartvan.smart_van.android.databinding.ActivitySvmainBinding;
 
 
 public class SVMainActivity extends AppCompatActivity {
 
     public final static String PARAM_OBJ_ID = SVDefinitions.PARAM_ACTIVITY_SVMAIN_OBJID;
-    public final static String COMP_POWER_PATH = SVDefinitions.COMP_MAIN_POWER;
-    public final static String COMP_PANELS_PATH = SVDefinitions.Components.POWER_PANELS_POWER;
-    private static final String COMP_SERVICES_PATH = SVDefinitions.Components.POWER_LOAD_CURRENT;
+    public final static SVSpecs.Spec COMP_POWER_PATH = SVDefinitions.COMP_MAIN_POWER;
+    public final static SVSpecs.Spec COMP_PANELS_PATH = SVSpecs.SVBox.Energy.Generation.Percentage;
+    public final static SVSpecs.Spec COMP_SERVICES_PATH = SVSpecs.SVBox.Energy.Consumption.Percentage;
 
     private ActivitySvmainBinding binding;
     private SVJSLClient jslClient;
@@ -95,13 +97,13 @@ public class SVMainActivity extends AppCompatActivity {
     private void registerRemoteObject(JSLRemoteObject obj) {
         remObj = obj;
 
-        JSLRangeState component = searchComponent(remObj, COMP_POWER_PATH);
+        JSLRangeState component = searchComponent(remObj, COMP_POWER_PATH.getPath());
         if (component != null)
             registerPowerComp(component);
-        component = searchComponent(remObj, COMP_PANELS_PATH);
+        component = searchComponent(remObj, COMP_PANELS_PATH.getPath());
         if (component != null)
             registerPanelsComp(component);
-        component = searchComponent(remObj, COMP_SERVICES_PATH);
+        component = searchComponent(remObj, COMP_SERVICES_PATH.getPath());
         if (component != null)
             registerServicesComp(component);
 
@@ -230,17 +232,17 @@ public class SVMainActivity extends AppCompatActivity {
         @Override
         public void onStructureChanged(JSLRemoteObject obj, JSLRoot newRoot) {
             if (powerComp == null) {
-                JSLRangeState component = searchComponent(obj, COMP_POWER_PATH);
+                JSLRangeState component = searchComponent(obj, COMP_POWER_PATH.getPath());
                 if (component != null)
                     registerPowerComp(component);
             }
             if (panelsComp == null) {
-                JSLRangeState component = searchComponent(obj, COMP_PANELS_PATH);
+                JSLRangeState component = searchComponent(obj, COMP_PANELS_PATH.getPath());
                 if (component != null)
                     registerPanelsComp(component);
             }
             if (servicesComp == null) {
-                JSLRangeState component = searchComponent(obj, COMP_SERVICES_PATH);
+                JSLRangeState component = searchComponent(obj, COMP_SERVICES_PATH.getPath());
                 if (component != null)
                     registerServicesComp(component);
             }
@@ -344,8 +346,20 @@ public class SVMainActivity extends AppCompatActivity {
             public void run() {
                 String text = "N/A";
                 if (comp!=null)
-                    text = String.format("%.2f", comp.getState() / 1000); // mV to V
+                    // text = String.format("%.2f", comp.getState() / 1000); // mV to V
+                    text = String.format("%.2f", comp.getState()); // % to %
                 binding.txtPowerValue.setText(text);
+
+                //*
+                double state = ((JSLRangeState)remObj.getStruct().getComponent(SVSpecs.SVBox.Energy.Storage.Voltage.getPath())).getState();
+                Log.v("SVMain", "###########      Battery voltage    : " + state);
+                state = ((JSLRangeState)remObj.getStruct().getComponent(SVSpecs.SVBox.Energy.Storage.Min_Voltage.getPath())).getState();
+                Log.v("SVMain", "###########      Battery voltage min: " + state);
+                state = ((JSLRangeState)remObj.getStruct().getComponent(SVSpecs.SVBox.Energy.Storage.Max_Voltage.getPath())).getState();
+                Log.v("SVMain", "###########      Battery voltage max: " + state);
+                state = ((JSLRangeState)remObj.getStruct().getComponent(SVSpecs.SVBox.Energy.Storage.Percentage.getPath())).getState();
+                Log.v("SVMain", "###########      Battery voltage %  : " + state);
+                // */
             }
         });
     }
@@ -357,8 +371,22 @@ public class SVMainActivity extends AppCompatActivity {
             public void run() {
                 String text = "N/A";
                 if (comp!=null)
-                    text = String.format("%.2f", comp.getState() / 1000); // mV to V
+                    // text = String.format("%.2f", comp.getState() / 1000); // mV to V
+                    text = String.format("%.2f", comp.getState()); // % to %
                 binding.txtPanelsValue.setText(text);
+
+                //*
+                double state = ((JSLRangeState)remObj.getStruct().getComponent(SVSpecs.SVBox.Energy.Generation.Current.getPath())).getState();
+                Log.v("SVMain", "###########      Panels current mA    : " + state);
+                state = ((JSLRangeState)remObj.getStruct().getComponent(SVSpecs.SVBox.Energy.Generation.Voltage.getPath())).getState();
+                Log.v("SVMain", "###########      Panels Voltage mV    : " + state);
+                state = ((JSLRangeState)remObj.getStruct().getComponent(SVSpecs.SVBox.Energy.Generation.Power.getPath())).getState();
+                Log.v("SVMain", "###########      Panels Power mW      : " + state);
+                state = ((JSLRangeState)remObj.getStruct().getComponent(SVSpecs.SVBox.Energy.Generation.Percentage.getPath())).getState();
+                Log.v("SVMain", "###########      Panels Power Perc %  : " + state);
+                state = ((JSLRangeState)remObj.getStruct().getComponent(SVSpecs.SVBox.Energy.Generation.Max_Power.getPath())).getState();
+                Log.v("SVMain", "###########      Panels Power Max mW  : " + state);
+                // */
             }
         });
     }
@@ -370,8 +398,22 @@ public class SVMainActivity extends AppCompatActivity {
             public void run() {
                 String text = "N/A";
                 if (comp!=null)
-                    text = String.format("%.2f", comp.getState() / 1000); // mV to V
+                    // text = String.format("%.2f", comp.getState() / 1000); // mV to V
+                    text = String.format("%.2f", comp.getState()); // % to %
                 binding.txtServicesValue.setText(text);
+
+                //*
+                double state = ((JSLRangeState)remObj.getStruct().getComponent(SVSpecs.SVBox.Energy.Consumption.Current.getPath())).getState();
+                Log.v("SVMain", "###########      AllServs current mA    : " + state);
+                state = ((JSLRangeState)remObj.getStruct().getComponent(SVSpecs.SVBox.Energy.Consumption.Voltage.getPath())).getState();
+                Log.v("SVMain", "###########      AllServs Voltage mV    : " + state);
+                state = ((JSLRangeState)remObj.getStruct().getComponent(SVSpecs.SVBox.Energy.Consumption.Power.getPath())).getState();
+                Log.v("SVMain", "###########      AllServs Power mW      : " + state);
+                state = ((JSLRangeState)remObj.getStruct().getComponent(SVSpecs.SVBox.Energy.Consumption.Percentage.getPath())).getState();
+                Log.v("SVMain", "###########      AllServs Power Perc %  : " + state);
+                state = ((JSLRangeState)remObj.getStruct().getComponent(SVSpecs.SVBox.Energy.Consumption.Max_Power.getPath())).getState();
+                Log.v("SVMain", "###########      AllServs Power Max mW  : " + state);
+                // */
             }
         });
     }
