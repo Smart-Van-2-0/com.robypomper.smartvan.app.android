@@ -3,13 +3,20 @@ package com.robypomper.josp.jsl.android.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.robypomper.discovery.Discover;
 import com.robypomper.josp.jsl.android.R;
+import com.robypomper.josp.jsl.android.adapters.RemoteObjectAdapter;
 import com.robypomper.josp.jsl.android.app.JSLApplication;
 import com.robypomper.josp.jsl.android.app.JSLClient;
 import com.robypomper.josp.jsl.android.service.JSLService;
@@ -89,12 +96,13 @@ public abstract class JSLSelectObjectActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setupUI();
-
-        // Check JSL state, registerRemoteObject
         //noinspection unchecked
         JSLApplication<JSLService> app = ((JSLApplication<JSLService>) this.getApplication());
         jslClient = app.getJSLClient();
+
+        setupUI();
+
+        // Check JSL state, registerRemoteObject
         if (jslClient.getJSLState() == JSLState.RUN) {
             // Search for remote objects by obj's model
             JSLObjsMngr objsMngr = jslClient.getJSL().getObjsMngr();
@@ -126,6 +134,54 @@ public abstract class JSLSelectObjectActivity extends AppCompatActivity {
     protected void setupUI() {
         binding = ActivityJslWaitObjectBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        binding.listFoundObjects.setHasFixedSize(false);
+        binding.listFoundObjects.setAdapter(new RemoteObjectAdapter(this, jslClient) {
+
+            /**
+             * Create new views (invoked by the layout manager).
+             * <p>
+             * Create a new view, which defines the UI of the list item
+             *
+             * @param viewGroup The ViewGroup into which the new View will be added after it is bound to
+             *                  an adapter position.
+             * @param viewType  The view type of the new View.
+             * @return the created view.
+             */
+            @NonNull
+            public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+                View view = LayoutInflater.from(viewGroup.getContext())
+                        .inflate(R.layout.lay_remote_object_simple, viewGroup, false);
+                return new RemoteObjectAdapter.ViewHolder(view) {
+                    @Override
+                    public void bind(JSLRemoteObject obj) {
+                        // fill layout fields
+                        TextView txtObjName = view.findViewById(R.id.txtObjName);
+                        TextView txtObjId = view.findViewById(R.id.txtObjId);
+                        txtObjName.setText(obj.getName());
+                        txtObjId.setText(obj.getId());
+
+                        // register new listener for current item
+                        // (automatically delete the old one)
+                        view.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                proposeFoundedSmartVan(obj);
+                            }
+                            protected void finalize() {
+                                Log.e("J_APP", "Finalize OnClick listener for " + obj);
+                                // TODO check that current listener is destroyed each time
+                                //  a JSLRemoteObject has been bound
+                            }
+                        });
+                    }
+
+                };
+            }
+
+        });
+        binding.listFoundObjects.setLayoutManager(new LinearLayoutManager(this));
+
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -159,7 +215,7 @@ public abstract class JSLSelectObjectActivity extends AppCompatActivity {
 
         @Override
         public void onObjAdded(JSLRemoteObject obj) {
-            proposeFoundedSmartVan(obj);
+            // proposeFoundedSmartVan(obj);
         }
 
         @Override

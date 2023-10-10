@@ -1,0 +1,23 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/lay_remote_object_simple"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="12dp"
+    android:gravity="center_vertical"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/txtObjName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/adapter_remote_object_name"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/txtObjId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/adapter_remote_object_id" />
+
+</LinearLayout>
