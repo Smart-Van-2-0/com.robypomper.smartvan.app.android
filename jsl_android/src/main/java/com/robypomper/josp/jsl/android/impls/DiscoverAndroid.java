@@ -47,7 +47,7 @@ public class DiscoverAndroid extends DiscoverAbs {
 
         @Override
         public void onServiceLost(NsdServiceInfo service) {
-            Log.e("J_Android_Discovery", "service lost: " + service);
+            Log.d("J_Android_Discovery", "service lost: " + service);
             deregisterService(new DiscoveryService(service.getServiceName(), service.getServiceType(), null, null, null, null, null));
         }
 
@@ -78,7 +78,7 @@ public class DiscoverAndroid extends DiscoverAbs {
 
         @Override
         public void onServiceResolved(NsdServiceInfo serviceInfo) {
-            Log.e("J_Android_Discovery", "Resolve Succeeded. " + serviceInfo);
+            Log.d("J_Android_Discovery", "Resolve Succeeded. " + serviceInfo);
 
             serviceInfo.getHost();
             String attributesAsString = ""; // not available before the Android API level 21
