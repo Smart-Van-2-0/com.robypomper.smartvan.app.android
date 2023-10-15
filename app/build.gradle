@@ -4,12 +4,13 @@ plugins {
 
 android {
     namespace 'com.robypomper.smartvan.smart_van.android'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.robypomper.smartvan.smart_van.android"
-        minSdk 16
-        targetSdk 33
+        minSdk 18
+        targetSdk 34
+        multiDexEnabled true
         versionCode 2
         versionName "1.0.0-DEV"
 
@@ -32,15 +33,7 @@ android {
 
 dependencies {
     implementation project(path: ':JSL4Android')
-    implementation 'com.robypomper.josp:jospJSL:2.2.4-DEV'
 
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.9.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    //noinspection GradleDependency         because 2.7.3 creates a conflict with compileSdk 33
-    implementation 'androidx.navigation:navigation-fragment:2.5.3'
-    //noinspection GradleDependency         because 2.7.3 creates a conflict with compileSdk 33
-    implementation 'androidx.navigation:navigation-ui:2.5.3'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'

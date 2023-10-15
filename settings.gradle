@@ -16,6 +16,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "SmartVan4Android"
 include ':app'
-project(":app").name = "SmartVanAndroid"
+project(":app").name = "SVMobileApp"
 include ':jsl_android'
 project(":jsl_android").name = "JSL4Android"
