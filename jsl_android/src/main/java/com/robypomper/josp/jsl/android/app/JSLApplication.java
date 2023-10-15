@@ -1,8 +1,9 @@
 package com.robypomper.josp.jsl.android.app;
 
-import android.app.Application;
 import android.content.Context;
 import android.util.Log;
+
+import androidx.multidex.MultiDexApplication;
 
 import com.robypomper.josp.jsl.android.R;
 import com.robypomper.josp.jsl.android.service.JSLService;
@@ -32,7 +33,7 @@ import java.lang.reflect.InvocationTargetException;
  *
  * @param <T>
  */
-public abstract class JSLApplication<T extends JSLService> extends Application {
+public abstract class JSLApplication<T extends JSLService> extends MultiDexApplication {
 
     private JSLClient<T> jslClient;
 
