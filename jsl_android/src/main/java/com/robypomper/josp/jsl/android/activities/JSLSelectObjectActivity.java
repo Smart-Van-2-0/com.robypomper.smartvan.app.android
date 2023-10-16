@@ -41,6 +41,7 @@ public abstract class JSLSelectObjectActivity extends AppCompatActivity {
     private final Class<? extends Activity> nextActivityClass;
     private ActivityJslWaitObjectBinding binding;
     private JSLClient<JSLService> jslClient;
+    protected boolean auto_propose = false;
 
 
     // Constructor
@@ -107,7 +108,7 @@ public abstract class JSLSelectObjectActivity extends AppCompatActivity {
             // Search for remote objects by obj's model
             JSLObjsMngr objsMngr = jslClient.getJSL().getObjsMngr();
             List<JSLRemoteObject> objs = objsMngr.getByModel(modelName);
-            if (objs.size() > 0)
+            if (auto_propose && objs.size() > 0)
                 // propose found objects
                 proposeFoundedSmartVan(objs);
         }
