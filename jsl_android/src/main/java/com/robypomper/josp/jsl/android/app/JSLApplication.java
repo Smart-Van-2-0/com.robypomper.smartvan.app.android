@@ -15,6 +15,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 /**
@@ -36,6 +38,7 @@ import java.lang.reflect.InvocationTargetException;
 public abstract class JSLApplication<T extends JSLService> extends MultiDexApplication {
 
     private JSLClient<T> jslClient;
+    ExecutorService executors_network = Executors.newFixedThreadPool(5);
 
 
     // Android
@@ -50,7 +53,7 @@ public abstract class JSLApplication<T extends JSLService> extends MultiDexAppli
         Log.i("J_Android", "JSLApplication creating...");
 
         //if (!new File(getFilesDir(), "jsl.yml").exists())
-            copyResourceToLocalStorage(R.raw.jsl, new File(getFilesDir(), "jsl.yml"));
+        copyResourceToLocalStorage(R.raw.jsl, new File(getFilesDir(), "jsl.yml"));
         copyResourceToLocalStorage(R.raw.local_ks, new File(getFilesDir(), "local_ks.jks"));
 
         initJSLClient();
@@ -123,6 +126,10 @@ public abstract class JSLApplication<T extends JSLService> extends MultiDexAppli
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void runOnNetworkThread(Runnable action) {
+        executors_network.execute(action);
     }
 
 }
