@@ -13,7 +13,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.SmartVan"
+        android:theme="@style/Theme.SmartVan.NoActionBar"
         tools:targetApi="31">
 
         <service
@@ -32,8 +32,7 @@
             android:name=".activities.SVStartupActivity"
             android:exported="true"
             android:noHistory="true"
-            android:label="@string/title_activity_svstartup"
-            android:theme="@style/Theme.SmartVan">
+            android:label="@string/activity_svstartup__title" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -45,14 +44,12 @@
             android:name=".activities.SVSelectObjectActivity"
             android:exported="false"
             android:noHistory="true"
-            android:label="@string/title_activity_svmain"
-            android:theme="@style/Theme.SmartVan" />
+            android:label="@string/activity_svmain__title" />
 
         <activity
             android:name=".activities.SVMainActivity"
             android:exported="false"
-            android:label="@string/title_activity_svmain"
-            android:theme="@style/Theme.SmartVan" />
+            android:label="@string/activity_svmain__title" />
 
     </application>
 

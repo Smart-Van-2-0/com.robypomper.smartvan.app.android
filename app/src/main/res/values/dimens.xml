@@ -1,18 +1,5 @@
 <resources>
-    <dimen name="title_margin">24dp</dimen>
-    <dimen name="title_size">24sp</dimen>
-
-    <dimen name="sub_title_margin">16dp</dimen>
-    <dimen name="sub_title_size">16sp</dimen>
-
-    <dimen name="label_margin">0dp</dimen>
-    <dimen name="label_size">14sp</dimen>
-
-    <dimen name="value_margin">4dp</dimen>
-    <dimen name="value_size">18sp</dimen>
-
-    <dimen name="unit_margin">0dp</dimen>
-    <dimen name="unit_size">14sp</dimen>
-
-    <dimen name="section_margin">16dp</dimen>
+    <dimen name="margin_small">8dp</dimen>
+    <dimen name="margin_medium">16dp</dimen>
+    <dimen name="margin_large">32dp</dimen>
 </resources>

@@ -1,0 +1,28 @@
+<resources>
+    <string name="activity_svmain__title">SV Mobile App</string>
+    <string name="activity_svmain_txt_title_pre">Welcome to</string>
+    <string name="activity_svmain_txt_title_name">MyVan</string>
+    <string name="activity_svmain_txt_title_post">Smart Van</string>
+    <string name="activity_svmain_txt_content">Here you can monitor\n and control your Smart Van.</string>
+    <string name="activity_svmain_txt_connection_text">{CONN_STATE_STRING}</string>
+    <string name="activity_svmain_txt_power_label">Battery Voltage</string>
+    <string name="activity_svmain_txt_power_value_placeholder">{VAL}</string>
+    <string name="activity_svmain_txt_power_unit">@string/unit_percent_short</string>
+    <string name="activity_svmain_txt_panels_label">Panels Charge</string>
+    <string name="activity_svmain_txt_panels_value_placeholder">{VAL}</string>
+    <string name="activity_svmain_txt_panels_unit">@string/unit_watts_short</string>
+    <string name="activity_svmain_txt_services_label">Srvs Consumption</string>
+    <string name="activity_svmain_txt_services_value_placeholder">{VAL}</string>
+    <string name="activity_svmain_txt_services_unit">@string/unit_watts_short</string>
+    <string name="activity_svmain_txt_specs_label">SV Specs</string>
+    <string name="activity_svmain_txt_specs_description">Checkout which SV Specs is supported frm current Smart Van Box.</string>
+    <string name="activity_svmain_btn_more_details">More details</string>
+    <string name="activity_svmain_txt_website">
+        This application is part of the Smart Van Project and can be connected to a Smart Van Box.\n
+        \n
+        The entire project, like the current application, is under heavy development and updates are released frequently.\n
+        So, if you want to stay up to date, please visit the project website at:\n
+        \n
+        https://smartvan.johnosproject.org
+    </string>
+</resources>

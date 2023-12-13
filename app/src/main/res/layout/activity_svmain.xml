@@ -8,12 +8,11 @@
     android:fitsSystemWindows="true"
     tools:context=".activities.SVMainActivity">
 
-
     <LinearLayout
         android:id="@+id/layTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/title_margin"
+        android:layout_margin="16dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,253 +20,372 @@
 
         <TextView
             android:id="@+id/txtTitlePre"
-            style="@style/Theme.SmartVan.text.Title"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="0dp"
-            android:layout_marginBottom="0dp"
-            android:text="@string/activity_svmain_txt_title_pre" />
+            android:layout_gravity="center_horizontal"
+            android:text="@string/activity_svmain_txt_title_pre"
+            android:textAppearance="?attr/textAppearanceHeadline5" />
 
         <TextView
             android:id="@+id/txtTitleName"
-            style="@style/Theme.SmartVan.text.Title"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="0dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginBottom="0dp"
-            android:text="@string/activity_svmain_txt_title_name" />
+            android:layout_gravity="center_horizontal"
+            android:text="@string/activity_svmain_txt_title_name"
+            android:textAppearance="?attr/textAppearanceHeadline5" />
 
         <TextView
             android:id="@+id/txtTitlePost"
-            style="@style/Theme.SmartVan.text.Title"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="0dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginBottom="0dp"
-            android:text="@string/activity_svmain_txt_title_post" />
+            android:layout_gravity="center_horizontal"
+            android:text="@string/activity_svmain_txt_title_post"
+            android:textAppearance="?attr/textAppearanceHeadline5" />
     </LinearLayout>
 
     <TextView
         android:id="@+id/txtContent"
-        style="@style/Theme.SmartVan.text.SubTitle"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:text="@string/activity_svmain_txt_content"
-        app:layout_constraintTop_toBottomOf="@id/layTitle"
+        android:textAlignment="center"
+        android:textAppearance="?attr/textAppearanceCaption"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/layTitle" />
 
     <Space
         android:id="@+id/space1"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/sub_title_margin"
-        app:layout_constraintTop_toBottomOf="@+id/txtContent"
+        android:layout_height="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/txtContent" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.cardview.widget.CardView
         android:id="@+id/layPower"
-        style="@style/Theme.SmartVan.section.Card"
-        android:layout_width="match_parent"
+        style="@style/Widget.MaterialComponents.CardView"
+        android:layout_width="0dp"
+        app:layout_constraintHorizontal_weight="1"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/section_margin"
-        app:layout_constraintTop_toBottomOf="@+id/space1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" >
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toStartOf="@+id/layPanels"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/space1">
 
-        <ImageView
-            android:id="@+id/imgPower"
-            android:layout_width="150dp"
-            android:layout_height="100dp"
-            android:importantForAccessibility="no"
-            android:scaleX="0.8"
-            android:scaleY="0.8"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/battery_transparent" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/txtPowerLabel"
-            style="@style/Theme.SmartVan.text.Label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="25dp"
-            android:text="@string/activity_svmain_txt_power_label"
-            app:layout_constraintStart_toEndOf="@id/imgPower"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/txtPowerLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/activity_svmain_txt_power_label"
+                android:textAppearance="?attr/textAppearanceOverline"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/txtPowerValue"
-            style="@style/Theme.SmartVan.text.Value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
-            android:text="@string/activity_svmain_txt_power_value_placeholder"
-            app:layout_constraintStart_toStartOf="@id/txtPowerLabel"
-            app:layout_constraintEnd_toStartOf="@+id/txtPowerUnit"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/txtPowerValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                android:text="@string/activity_svmain_txt_power_value_placeholder"
+                android:textAppearance="?attr/textAppearanceHeadline6"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/txtPowerLabel" />
 
-        <TextView
-            android:id="@+id/txtPowerUnit"
-            style="@style/Theme.SmartVan.text.Unit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
-            android:text="@string/activity_svmain_txt_power_unit"
-            app:layout_constraintEnd_toEndOf="@id/txtPowerLabel"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/txtPowerUnit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/activity_svmain_txt_power_unit"
+                android:textAppearance="?attr/textAppearanceHeadline6"
+                app:layout_constraintBottom_toBottomOf="@id/txtPowerValue"
+                app:layout_constraintStart_toEndOf="@id/txtPowerValue" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <Button
+                android:id="@+id/button"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/activity_svmain_btn_more_details"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/imgPower" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+            <ImageView
+                android:id="@+id/imgPower"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="16dp"
+                android:importantForAccessibility="no"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/txtPowerLabel"
+                app:srcCompat="@drawable/battery_transparent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
         android:id="@+id/layPanels"
-        style="@style/Theme.SmartVan.section.Card"
-        android:layout_width="match_parent"
+        style="@style/Widget.MaterialComponents.CardView"
+        android:layout_width="0dp"
+        app:layout_constraintHorizontal_weight="1"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/section_margin"
-        app:layout_constraintTop_toBottomOf="@+id/layPower"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" >
+        app:layout_constraintStart_toEndOf="@id/layPower"
+        app:layout_constraintTop_toBottomOf="@+id/space1">
 
-        <ImageView
-            android:id="@+id/imgPanels"
-            android:layout_width="150dp"
-            android:layout_height="100dp"
-            android:importantForAccessibility="no"
-            android:scaleX="0.8"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/solarpanles_transparent" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/txtPanelsLabel"
-            style="@style/Theme.SmartVan.text.Label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="25dp"
-            android:text="@string/activity_svmain_txt_panels_label"
-            app:layout_constraintStart_toEndOf="@id/imgPanels"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/txtPanelsLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/activity_svmain_txt_panels_label"
+                android:textAppearance="?attr/textAppearanceOverline"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/txtPanelsValue"
-            style="@style/Theme.SmartVan.text.Value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
-            android:text="@string/activity_svmain_txt_panels_value_placeholder"
-            app:layout_constraintStart_toStartOf="@id/txtPanelsLabel"
-            app:layout_constraintEnd_toStartOf="@+id/txtPanelsUnit"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/txtPanelsValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                android:text="@string/activity_svmain_txt_power_value_placeholder"
+                android:textAppearance="?attr/textAppearanceHeadline6"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/txtPanelsLabel" />
 
-        <TextView
-            android:id="@+id/txtPanelsUnit"
-            style="@style/Theme.SmartVan.text.Unit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
-            android:text="@string/activity_svmain_txt_panels_unit"
-            app:layout_constraintEnd_toEndOf="@id/txtPanelsLabel"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/txtPanelsUnit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/activity_svmain_txt_panels_unit"
+                android:textAppearance="?attr/textAppearanceHeadline6"
+                app:layout_constraintBottom_toBottomOf="@id/txtPanelsValue"
+                app:layout_constraintStart_toEndOf="@id/txtPanelsValue" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <Button
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/activity_svmain_btn_more_details"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imgPanels" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+            <ImageView
+                android:id="@+id/imgPanels"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="16dp"
+                android:importantForAccessibility="no"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/txtPanelsLabel"
+                app:srcCompat="@drawable/solarpanles_transparent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
         android:id="@+id/layServices"
-        style="@style/Theme.SmartVan.section.Card"
-        android:layout_width="match_parent"
+        style="@style/Widget.MaterialComponents.CardView"
+        android:layout_width="0dp"
+        app:layout_constraintHorizontal_weight="1"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/section_margin"
-        app:layout_constraintTop_toBottomOf="@+id/layPanels"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toStartOf="@+id/laySpecs"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layPower">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/txtServicesLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/activity_svmain_txt_services_label"
+                android:textAppearance="?attr/textAppearanceOverline"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/txtServicesValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                android:text="@string/activity_svmain_txt_services_value_placeholder"
+                android:textAppearance="?attr/textAppearanceHeadline6"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/txtServicesLabel" />
+
+            <TextView
+                android:id="@+id/txtServicesUnit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/activity_svmain_txt_services_unit"
+                android:textAppearance="?attr/textAppearanceHeadline6"
+                app:layout_constraintBottom_toBottomOf="@id/txtServicesValue"
+                app:layout_constraintStart_toEndOf="@id/txtServicesValue" />
+
+            <Button
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/activity_svmain_btn_more_details"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imgServices" />
+
+            <ImageView
+                android:id="@+id/imgServices"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="16dp"
+                android:importantForAccessibility="no"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/txtServicesLabel"
+                app:srcCompat="@drawable/services_transparent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/laySpecs"
+        style="@style/Widget.MaterialComponents.CardView"
+        android:layout_width="0dp"
+        app:layout_constraintHorizontal_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" >
+        app:layout_constraintStart_toEndOf="@+id/layServices"
+        app:layout_constraintTop_toBottomOf="@+id/layPanels">
 
-        <ImageView
-            android:id="@+id/imgServices"
-            android:layout_width="150dp"
-            android:layout_height="100dp"
-            android:importantForAccessibility="no"
-            android:scaleY="0.9"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/services_transparent" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/txtServicesLabel"
-            style="@style/Theme.SmartVan.text.Label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="25dp"
-            android:text="@string/activity_svmain_txt_services_label"
-            app:layout_constraintStart_toEndOf="@id/imgServices"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/txtSpecsLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/activity_svmain_txt_specs_label"
+                android:textAppearance="?attr/textAppearanceOverline"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/txtServicesValue"
-            style="@style/Theme.SmartVan.text.Value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
-            android:text="@string/activity_svmain_txt_services_value_placeholder"
-            app:layout_constraintStart_toStartOf="@id/txtServicesLabel"
-            app:layout_constraintEnd_toStartOf="@+id/txtServicesUnit"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/txtSpecsValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="@string/activity_svmain_txt_specs_description"
+                android:textAppearance="?attr/textAppearanceCaption"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/txtSpecsLabel" />
 
-        <TextView
-            android:id="@+id/txtServicesUnit"
-            style="@style/Theme.SmartVan.text.Unit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
-            android:text="@string/activity_svmain_txt_services_unit"
-            app:layout_constraintEnd_toEndOf="@id/txtServicesLabel"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            <Button
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginTop="60dp"
+                android:text="@string/activity_svmain_btn_more_details"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/txtSpecsLabel" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layConn"
-        style="@style/Theme.SmartVan.section.Card"
+    </androidx.cardview.widget.CardView>
+
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        app:layout_constraintTop_toBottomOf="@id/layServices"
+        android:layout_margin="16dp"
+        android:background="?android:attr/listDivider" />
+
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/section_margin"
+        android:layout_marginLeft="48dp"
+        android:layout_marginRight="48dp"
+        android:textAlignment="center"
+        android:text="@string/activity_svmain_txt_website"
+        app:layout_constraintBottom_toTopOf="@+id/layConn"
+        app:layout_constraintTop_toBottomOf="@+id/divider2" />
+    <androidx.cardview.widget.CardView
+        android:id="@+id/layConn"
+        style="@style/Widget.MaterialComponents.CardView"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <ImageView
-            android:id="@+id/txtConnectionState"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginLeft="16dp"
-            app:srcCompat="@drawable/ic_not_available"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:importantForAccessibility="no" />
 
-        <TextView
-            android:id="@+id/txtConnectionText"
-            style="@style/Theme.SmartVan.text.Label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:text="@string/activity_svmain_txt_connection_text"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <ImageView
+                android:id="@+id/txtConnectionState"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginLeft="32dp"
+                android:importantForAccessibility="no"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_not_available" />
+
+            <TextView
+                android:id="@+id/txtConnectionText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="32dp"
+                android:text="@string/activity_svmain_txt_connection_text"
+                android:textAppearance="?attr/textAppearanceOverline"
+                android:textAlignment="viewEnd"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
