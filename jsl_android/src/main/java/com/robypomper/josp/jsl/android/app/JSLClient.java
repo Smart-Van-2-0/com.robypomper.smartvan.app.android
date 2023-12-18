@@ -126,9 +126,8 @@ public abstract class JSLClient<T extends JSLService> {
         if (!isBound()) return;
         Log.i(LOG_TAG, "JSLApplication disconnecting to the JSL Service");
         context.unbindService(connection);
-        JSLClientState oldState = getState();
-        extendedState = JSLClientState.UNBOUNDING;
-        emitOnJSLStateChange(extendedState, oldState);
+        Intent intent_service = new Intent(this.context, getJSLServiceClass());
+        context.stopService(intent_service);
     }
 
     /**
@@ -218,6 +217,12 @@ public abstract class JSLClient<T extends JSLService> {
         JSLClientState oldState = getState();
         extendedState = JSLClientState.valueOf(getJSL().getState().name());
         emitOnJSLStateChange(extendedState, oldState);
+
+        if (oldState == JSLClientState.SHOUTING && extendedState == JSLClientState.STOP) {
+            oldState = JSLClientState.STOP;
+            extendedState = JSLClientState.UNBOUNDING;
+            emitOnJSLStateChange(extendedState, oldState);
+        }
     }
 
 
@@ -241,9 +246,8 @@ public abstract class JSLClient<T extends JSLService> {
      * instance is not yet ready, then it return the {@link JSLState#STOP} value.
      */
     public JSLState getJSLState() {
-        if (getJSL() != null)
-            return getJSL().getState();
-        return JSLState.STOP;
+        if (getJSL() != null) return getJSL().getState();
+        throw new IllegalStateException("JSL instance not yet ready");
     }
 
 
