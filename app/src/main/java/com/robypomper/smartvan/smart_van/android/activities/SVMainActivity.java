@@ -46,6 +46,10 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
         setContentView(binding.getRoot());
 
         super.onCreate(savedInstanceState);
+
+        // register ui listeners and callbacks
+        binding.laySpecs.setOnClickListener((onClickSpecsListener));
+        //binding.txtTitleName.setOnClickListener(onClickTitleNameListener);
     }
 
 
@@ -332,5 +336,20 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
             }
         });
     }
+
+
+    // UI listeners
+
+    private final View.OnClickListener onClickSpecsListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            JSLRemoteObject obj = getRemoteObject();
+            if (obj == null) return;
+
+            Intent intent = new Intent(SVMainActivity.this, SVObjectSpecsActivity.class);
+            intent.putExtra(SVObjectSpecsActivity.PARAM_OBJ_ID, obj.getId());
+            startActivity(intent);
+        }
+    };
 
 }
