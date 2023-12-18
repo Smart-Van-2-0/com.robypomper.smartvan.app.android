@@ -32,7 +32,7 @@ public class SVSelectObjectActivity extends JSLSelectObjectActivity {
         JSLRemoteObject remObj = objs.get(0);
         b.putString(SVMainActivity.PARAM_OBJ_ID, remObj.getId());
 
-        showNextActivity(b);
+        goToNextActivity(b);
     }
 
 }
