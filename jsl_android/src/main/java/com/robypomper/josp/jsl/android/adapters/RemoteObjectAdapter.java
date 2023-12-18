@@ -14,8 +14,8 @@ import com.robypomper.josp.jsl.objs.JSLRemoteObject;
 import com.robypomper.josp.jsl.objs.remote.ObjInfo;
 import com.robypomper.josp.states.JSLState;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -34,7 +34,7 @@ import java.util.ArrayList;
 public abstract class RemoteObjectAdapter extends RecyclerView.Adapter<RemoteObjectAdapter.ViewHolder> {
 
     private final Activity parent;
-    private final JSLClient<JSLService> jslClient;
+    private final JSLClient<? extends JSLService> jslClient;
     private final List<JSLRemoteObject> _cached_objs = new ArrayList<>();
 
     /**
@@ -47,7 +47,6 @@ public abstract class RemoteObjectAdapter extends RecyclerView.Adapter<RemoteObj
         }
 
         /**
-         *
          * Replace the contents of the current view.
          * <p>
          * Get Remote Object info from the given parameter and replace the
@@ -59,6 +58,7 @@ public abstract class RemoteObjectAdapter extends RecyclerView.Adapter<RemoteObj
 
     }
 
+
     // Constructor
 
     /**
@@ -66,7 +66,7 @@ public abstract class RemoteObjectAdapter extends RecyclerView.Adapter<RemoteObj
      *
      * @param jslClient JSLClient<JSLService> the client to JSL Service.
      */
-    public RemoteObjectAdapter(Activity parent, JSLClient<JSLService> jslClient) {
+    public RemoteObjectAdapter(Activity parent, JSLClient<? extends JSLService> jslClient) {
         this.parent = parent;
         this.jslClient = jslClient;
 
@@ -99,7 +99,9 @@ public abstract class RemoteObjectAdapter extends RecyclerView.Adapter<RemoteObj
         viewHolder.bind(remObj);
     }
 
-    /** @return the size of your dataset (invoked by the layout manager). */
+    /**
+     * @return the size of your dataset (invoked by the layout manager).
+     */
     @Override
     public int getItemCount() {
         return _cached_objs.size();
@@ -164,8 +166,7 @@ public abstract class RemoteObjectAdapter extends RecyclerView.Adapter<RemoteObj
     private final JSL.JSLStateListener jslStateListener = new JSL.JSLStateListener() {
         @Override
         public void onJSLStateChanged(JSLState newState, JSLState oldState) {
-            if (newState == JSLState.RUN)
-                resetCachedObject();
+            if (newState == JSLState.RUN) resetCachedObject();
         }
     };
 

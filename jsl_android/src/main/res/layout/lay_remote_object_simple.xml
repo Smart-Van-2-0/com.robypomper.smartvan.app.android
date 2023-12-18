@@ -1,23 +1,33 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/lay_remote_object_simple"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="12dp"
-    android:gravity="center_vertical"
-    android:orientation="vertical">
+    android:padding="16dp"
+    android:minHeight="72dp"
+    android:background="?attr/selectableItemBackground">
 
     <TextView
         android:id="@+id/txtObjName"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/adapter_remote_object_name"
-        android:textSize="18sp" />
+        android:textSize="16sp"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
+        android:maxLines="1"
+        android:text="@string/adapter_remote_object_name" />
+        <!-- android:text="@string/view_sv_specs_name_placeholder" -->
 
     <TextView
         android:id="@+id/txtObjId"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_below="@id/txtObjName"
+        android:paddingRight="16dp"
+        android:textAppearance="?attr/textAppearanceCaption"
+        android:textSize="12sp"
+        android:maxLines="2"
         android:text="@string/adapter_remote_object_id" />
 
-</LinearLayout>
+</RelativeLayout>

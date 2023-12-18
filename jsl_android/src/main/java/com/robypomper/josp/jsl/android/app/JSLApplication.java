@@ -1,6 +1,7 @@
 package com.robypomper.josp.jsl.android.app;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 
 import androidx.multidex.MultiDexApplication;
@@ -15,6 +16,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -37,6 +39,8 @@ import java.util.concurrent.Executors;
  */
 public abstract class JSLApplication<T extends JSLService> extends MultiDexApplication {
 
+    private final String LOG_TAG = "JSLA.JSLApp";
+
     private JSLClient<T> jslClient;
     ExecutorService executors_network = Executors.newFixedThreadPool(5);
 
@@ -50,7 +54,7 @@ public abstract class JSLApplication<T extends JSLService> extends MultiDexAppli
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.i("J_Android", "JSLApplication creating...");
+        Log.i(LOG_TAG, "JSLApplication creating...");
 
         //if (!new File(getFilesDir(), "jsl.yml").exists())
         copyResourceToLocalStorage(R.raw.jsl, new File(getFilesDir(), "jsl.yml"));
@@ -65,16 +69,17 @@ public abstract class JSLApplication<T extends JSLService> extends MultiDexAppli
     @Override
     public void onTerminate() {
         super.onTerminate();
-        Log.i("J_Android", "JSLApplication terminating...");
+        Log.i(LOG_TAG, "JSLApplication terminating...");
 
-        if (jslClient != null)
-            jslClient.unboundService();
+        if (jslClient != null) jslClient.unboundService();
     }
 
 
     // JSL Service Client
 
-    /** @return current application's JSLClient instance. */
+    /**
+     * @return current application's JSLClient instance.
+     */
     public JSLClient<T> getJSLClient() {
         return jslClient;
     }
@@ -90,17 +95,20 @@ public abstract class JSLApplication<T extends JSLService> extends MultiDexAppli
                 Constructor<? extends JSLClient<T>> constructor = getJSLClientClass().getConstructor(Context.class);
                 Object obj = constructor.newInstance(this);
                 jslClient = getJSLClientClass().cast(obj);
-                if (jslClient != null)
-                    jslClient.boundService();
+                if (jslClient != null) jslClient.boundService();
             }
         } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
+            Log.e(LOG_TAG, String.format("JSLApplication error while initializing JSLClient, class '%s' provides wrong constructor", getJSLClientClass().getName()), e);
+            throw new RuntimeException(String.format("JSLApplication error while initializing JSLClient, class '%s' provides wrong constructor", getJSLClientClass().getName()), e);
         } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
+            Log.e(LOG_TAG, String.format("JSLApplication error while initializing JSLClient, class '%s' constructor throws an exception", getJSLClientClass().getName()), e);
+            throw new RuntimeException(String.format("JSLApplication error while initializing JSLClient, class '%s' constructor throws an exception", getJSLClientClass().getName()), e);
         } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+            Log.e(LOG_TAG, String.format("JSLApplication error while initializing JSLClient, class '%s' constructor is not accessible", getJSLClientClass().getName()), e);
+            throw new RuntimeException(String.format("JSLApplication error while initializing JSLClient, class '%s' constructor is not accessible", getJSLClientClass().getName()), e);
         } catch (InstantiationException e) {
-            throw new RuntimeException(e);
+            Log.e(LOG_TAG, String.format("JSLApplication error while initializing JSLClient, class '%s' is abstract or interface", getJSLClientClass().getName()), e);
+            throw new RuntimeException(String.format("JSLApplication error while initializing JSLClient, class '%s' is abstract or interface", getJSLClientClass().getName()), e);
         }
     }
 
@@ -112,11 +120,20 @@ public abstract class JSLApplication<T extends JSLService> extends MultiDexAppli
 
     // Utils
 
-    /** Copies the specified resource file into application's local storage. */
+    /**
+     * Copies the specified resource file into application's local storage.
+     */
     private void copyResourceToLocalStorage(int resID, File destFile) {
+        Log.d(LOG_TAG, String.format("JSLApplication copying resource '%d' to local storage '%s'", resID, destFile));
+
         try {
             InputStream fromRes = getResources().openRawResource(resID);
-            OutputStream toFile = new FileOutputStream(destFile);
+            OutputStream toFile;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                toFile = Files.newOutputStream(destFile.toPath());
+            else
+                //noinspection IOStreamConstructor
+                toFile = new FileOutputStream(destFile);
             byte[] buf = new byte[8192];
             int length;
             while ((length = fromRes.read(buf)) != -1) {
@@ -124,11 +141,13 @@ public abstract class JSLApplication<T extends JSLService> extends MultiDexAppli
             }
             toFile.close();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Log.e(LOG_TAG, String.format("JSLApplication error while copying resource '%d' to local storage '%s'", resID, destFile), e);
+            throw new RuntimeException(String.format("JSLApplication error while copying resource '%d' to local storage '%s'", resID, destFile), e);
         }
     }
 
     public void runOnNetworkThread(Runnable action) {
+        Log.d(LOG_TAG, "JSLApplication running on network thread");
         executors_network.execute(action);
     }
 

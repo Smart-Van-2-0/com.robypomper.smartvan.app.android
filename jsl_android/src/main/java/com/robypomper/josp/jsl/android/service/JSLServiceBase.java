@@ -20,6 +20,7 @@ import android.util.Log;
  */
 public class JSLServiceBase extends Service {
 
+    private static final String LOG_TAG = "JSLA.JSLService";
     private final boolean DISABLE_LOGGING = true;
 
 
@@ -32,35 +33,39 @@ public class JSLServiceBase extends Service {
 
     @Override
     public void onCreate() {
-        if (!DISABLE_LOGGING) Log.d("J_Android", "The service is being created");
+        if (!DISABLE_LOGGING) Log.d(LOG_TAG, "The service is being created");
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (!DISABLE_LOGGING) Log.d("J_Android", "The service is starting, due to a call to startService()");
+        if (!DISABLE_LOGGING)
+            Log.d(LOG_TAG, "The service is starting, due to a call to startService()");
         return startMode;
     }
 
     @Override
     public IBinder onBind(Intent intent) {
-        if (!DISABLE_LOGGING) Log.d("J_Android", "A client is binding to the service with bindService()");
+        if (!DISABLE_LOGGING)
+            Log.d(LOG_TAG, "A client is binding to the service with bindService()");
         return binder;
     }
 
     @Override
     public boolean onUnbind(Intent intent) {
-        if (!DISABLE_LOGGING) Log.d("J_Android", "All clients have unbound with unbindService()");
+        if (!DISABLE_LOGGING) Log.d(LOG_TAG, "All clients have unbound with unbindService()");
         return allowRebind;
     }
 
     @Override
     public void onRebind(Intent intent) {
-        if (!DISABLE_LOGGING) Log.d("J_Android", "A client is binding to the service with bindService(), after onUnbind() has already been called");
+        if (!DISABLE_LOGGING)
+            Log.d(LOG_TAG, "A client is binding to the service with bindService(), after onUnbind() has already been called");
     }
 
     @Override
     public void onDestroy() {
-        if (!DISABLE_LOGGING) Log.d("J_Android", "The service is no longer used and is being destroyed");
+        if (!DISABLE_LOGGING)
+            Log.d(LOG_TAG, "The service is no longer used and is being destroyed");
     }
 
 

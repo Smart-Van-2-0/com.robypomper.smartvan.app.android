@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:background="@drawable/gradient_to_surface"
     tools:context=".activities.JSLSelectObjectActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -26,6 +27,7 @@
 
         <TextView
             android:id="@+id/txtFilterValue"
+            android:visibility="invisible"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="150dp"
@@ -62,7 +64,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-
                 app:layout_constraintTop_toBottomOf="@id/txtOperation" />
 
         </androidx.cardview.widget.CardView>
@@ -71,12 +72,12 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
-        android:layout_width="48dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:contentDescription="@string/activity_jsl_wait_object_txt_button"
-        app:srcCompat="@android:drawable/ic_dialog_dialer" />
+        app:srcCompat="@android:drawable/ic_popup_sync" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

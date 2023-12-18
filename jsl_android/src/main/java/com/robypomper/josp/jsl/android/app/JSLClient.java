@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -31,9 +32,9 @@ import java.util.Vector;
  * availability ith the following methods:
  * <p>
  * * {@link #getState()}: return the extended JSL Client state that include
- *   also the JSL instance state
+ * also the JSL instance state
  * * {@link #getJSLState()}: return the JSL instance state, using the
- *   {@link JSLState#STOP} value if the JSL instance is not available.
+ * {@link JSLState#STOP} value if the JSL instance is not available.
  * <p>
  * This is an abstract class, that means, in order to use it you must implement
  * a subclass. That subclass must provide the JSLService's subclass that must be
@@ -44,6 +45,7 @@ import java.util.Vector;
  */
 public abstract class JSLClient<T extends JSLService> {
 
+    private final String LOG_TAG = "JSLA.JSLClient";
     private final Context context;
     private T jslService;
     private JSLClientState extendedState = JSLClientState.NOT_BOUND;
@@ -67,16 +69,19 @@ public abstract class JSLClient<T extends JSLService> {
      */
     @Override
     protected void finalize() {
-        if (isBound())
-            unboundService();
+        if (isBound()) unboundService();
     }
 
-    /** @return `true` if the JSLService instance is set, otherwise it return `false`. */
+    /**
+     * @return `true` if the JSLService instance is set, otherwise it return `false`.
+     */
     public boolean isBound() {
         return jslService != null;
     }
 
-    /** @return `true` if the JSL instance is set, otherwise it return `false`. */
+    /**
+     * @return `true` if the JSL instance is set, otherwise it return `false`.
+     */
     public boolean isReady() {
         return getJSL() != null;
     }
@@ -84,12 +89,16 @@ public abstract class JSLClient<T extends JSLService> {
 
     // JSL Service
 
-    /** @return bound JSLService if any, otherwise it returns null. */
+    /**
+     * @return bound JSLService if any, otherwise it returns null.
+     */
     public T getService() {
         return jslService;
     }
 
-    /** @return the class instance of the JSLService's subclass to connect to. */
+    /**
+     * @return the class instance of the JSLService's subclass to connect to.
+     */
     protected abstract Class<?> getJSLServiceClass();
 
     /**
@@ -98,8 +107,10 @@ public abstract class JSLClient<T extends JSLService> {
      */
     public void boundService() {
         if (isBound()) return;
-        Log.i("J_Android", "JSLApplication connecting to the service...");
+        Log.i(LOG_TAG, "JSLApplication connecting to the JSL Service");
         Intent intent_service = new Intent(this.context, getJSLServiceClass());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            context.startForegroundService(intent_service);
         context.startService(intent_service);
         context.bindService(intent_service, connection, Context.BIND_AUTO_CREATE);
         JSLClientState oldState = getState();
@@ -113,24 +124,26 @@ public abstract class JSLClient<T extends JSLService> {
      */
     public void unboundService() {
         if (!isBound()) return;
-        Log.i("J_Android", "JSLApplication disconnecting to the service...");
+        Log.i(LOG_TAG, "JSLApplication disconnecting to the JSL Service");
         context.unbindService(connection);
         JSLClientState oldState = getState();
         extendedState = JSLClientState.UNBOUNDING;
         emitOnJSLStateChange(extendedState, oldState);
     }
 
-    /** Defines callbacks for service binding, passed to bindService(). */
+    /**
+     * Defines callbacks for service binding, passed to bindService().
+     */
     private final ServiceConnection connection = new ServiceConnection() {
 
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
             T.LocalBinder binder = (T.LocalBinder) service;
             //noinspection unchecked
-            jslService = (T)binder.getService();
+            jslService = (T) binder.getService();
             jslService.addJSLInstanceListener(jslInstanceListener);
 
-            Log.i("J_Android", "JSLApplication service connected!");
+            Log.i(LOG_TAG, "JSLApplication connected to JSL Service");
 
             if (getJSL() == null) {
                 JSLClientState oldState = getState();
@@ -149,7 +162,7 @@ public abstract class JSLClient<T extends JSLService> {
             jslService.removeJSLInstanceListener(jslInstanceListener);
             jslService = null;
 
-            Log.i("J_Android", "JSLApplication service disconnected!");
+            Log.i(LOG_TAG, "JSLApplication disconnected from JSL service");
 
             JSLClientState oldState = getState();
             extendedState = JSLClientState.NOT_BOUND;
@@ -172,13 +185,17 @@ public abstract class JSLClient<T extends JSLService> {
         }
 
         @Override
-        public void onJSLInstanceReady(JSL jsl, JSLService service) {}
+        public void onJSLInstanceReady(JSL jsl, JSLService service) {
+        }
 
         @Override
-        public void onJSLInstanceShutdown(JSLService service) {}
+        public void onJSLInstanceShutdown(JSLService service) {
+        }
     };
 
-    /** Listen for JSLState events and update current `extendedState`. */
+    /**
+     * Listen for JSLState events and update current `extendedState`.
+     */
     private final JSL.JSLStateListener jslStateListener = new JSL.JSLStateListener() {
         @Override
         public void onJSLStateChanged(JSLState newState, JSLState oldState) {
@@ -194,7 +211,9 @@ public abstract class JSLClient<T extends JSLService> {
         return extendedState;
     }
 
-    /** Updates the `extendedState` using the state from current JSL instance. */
+    /**
+     * Updates the `extendedState` using the state from current JSL instance.
+     */
     private void updateExtendedStateFromJSL() {
         JSLClientState oldState = getState();
         extendedState = JSLClientState.valueOf(getJSL().getState().name());
@@ -209,11 +228,11 @@ public abstract class JSLClient<T extends JSLService> {
      * components like the jslService. If something is not yet initialized or
      * ready, then this method return `null`.
      * <p>
+     *
      * @return the JSL instance, or `null` if not yet ready.
      */
     public JSL getJSL() {
-        if (jslService == null)
-            return null;
+        if (jslService == null) return null;
         return jslService.getJSL();
     }
 
@@ -230,23 +249,30 @@ public abstract class JSLClient<T extends JSLService> {
 
     // Listeners
 
-    /** Listener interface for {@link JSLClient}'s state events. */
+    /**
+     * Listener interface for {@link JSLClient}'s state events.
+     */
     public interface JSLClientStateListener {
         void stateChanged(JSLClientState newState, JSLClientState oldState);
     }
 
-    /** Register listener {@link JSLClient}'s state events. */
+    /**
+     * Register listener {@link JSLClient}'s state events.
+     */
     public void registerOnJSLStateChange(JSLClientStateListener listener) {
-        if (!onJSLStateChange.contains(listener))
-            onJSLStateChange.add(listener);
+        if (!onJSLStateChange.contains(listener)) onJSLStateChange.add(listener);
     }
 
-    /** Deregister listener {@link JSLClient}'s state events. */
+    /**
+     * Deregister listener {@link JSLClient}'s state events.
+     */
     public void deregisterOnJSLStateChange(JSLClientStateListener listener) {
         onJSLStateChange.remove(listener);
     }
 
-    /** Emits event `onStateChange` as {@link JSLClient}'s state events. */
+    /**
+     * Emits event `onStateChange` as {@link JSLClient}'s state events.
+     */
     private void emitOnJSLStateChange(JSLClientState new_state, JSLClientState old_state) {
         jslListeners.setJSL(getJSL());
         for (JSLClientStateListener l : onJSLStateChange)
@@ -263,4 +289,5 @@ public abstract class JSLClient<T extends JSLService> {
     public JSLListeners getJSLListeners() {
         return jslListeners;
     }
+
 }
