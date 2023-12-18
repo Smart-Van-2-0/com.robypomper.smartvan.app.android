@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -18,11 +17,9 @@ import com.robypomper.discovery.Discover;
 import com.robypomper.josp.jsl.android.R;
 import com.robypomper.josp.jsl.android.adapters.RemoteObjectAdapter;
 import com.robypomper.josp.jsl.android.app.JSLApplication;
-import com.robypomper.josp.jsl.android.app.JSLClient;
+import com.robypomper.josp.jsl.android.databinding.ActivityJslWaitObjectBinding;
 import com.robypomper.josp.jsl.android.service.JSLService;
 import com.robypomper.josp.jsl.comm.JSLLocalClientsMngr;
-import com.robypomper.josp.jsl.android.databinding.ActivityJslWaitObjectBinding;
-import com.robypomper.josp.jsl.objs.JSLObjsMngr;
 import com.robypomper.josp.jsl.objs.JSLRemoteObject;
 import com.robypomper.josp.states.JSLState;
 import com.robypomper.josp.states.StateException;
@@ -35,13 +32,41 @@ import java.util.List;
  * <p>
  * TODO add filter by object id and others params
  */
-public abstract class JSLSelectObjectActivity extends AppCompatActivity {
+public abstract class JSLSelectObjectActivity extends BaseObjectsActivity {
+
+    private final String LOG_TAG = "JSLA.Actvt.SelectObject";
 
     private final String modelName;
     private final Class<? extends Activity> nextActivityClass;
     private ActivityJslWaitObjectBinding binding;
-    private JSLClient<JSLService> jslClient;
     protected boolean auto_propose = false;
+
+
+    private class ViewHolderImpl extends RemoteObjectAdapter.ViewHolder {
+
+        private final View view;
+
+        public ViewHolderImpl(View view) {
+            super(view);
+            this.view = view;
+        }
+
+        @Override
+        public void bind(JSLRemoteObject obj) {
+            // fill layout fields
+            TextView txtObjName = view.findViewById(R.id.txtObjName);
+            txtObjName.setText(obj.getName());
+            TextView txtObjId = view.findViewById(R.id.txtObjId);
+            txtObjId.setText(obj.getId());
+
+            view.setTag(obj);
+
+            // register new listener for current item
+            // (automatically delete the old one)
+            view.setOnClickListener(onItemClickListener);
+        }
+
+    }
 
 
     // Constructor
@@ -50,39 +75,13 @@ public abstract class JSLSelectObjectActivity extends AppCompatActivity {
      * Create an activity that wait for `modelName` objects and when the users
      * choose one, it starts the {@link #nextActivityClass} activity.
      *
-     * @param modelName the object's model to use as a filter.
+     * @param modelName         the object's model to use as a filter.
      * @param nextActivityClass the class of the activity to show after the user selected an object.
      */
     public JSLSelectObjectActivity(String modelName, Class<? extends Activity> nextActivityClass) {
+        super(Collections.singletonList(modelName), null, null);
         this.modelName = modelName;
         this.nextActivityClass = nextActivityClass;
-    }
-
-    /** @return the model name used to filter the remote objects. */
-    public String getModelName() {
-        return modelName;
-    }
-
-    /** @return the activity's class to show when an object has been selected. */
-    public Class<? extends Activity> getNextActivityClass() {
-        return nextActivityClass;
-    }
-
-    /** Utils class to show the next activity. This method is for subclasses. */
-    protected void showNextActivity() {
-        showNextActivity(null);
-    }
-
-    /**
-     * Utils class to show the next activity. This method is for subclasses.
-     *
-     * @param bundle the intent's bundle to send to the next activity, it can be null.
-     */
-    protected void showNextActivity(Bundle bundle) {
-        Intent intent_activity = new Intent(JSLSelectObjectActivity.this, getNextActivityClass());
-        if (bundle != null)
-            intent_activity.putExtras(bundle);
-        startActivity(intent_activity);
     }
 
 
@@ -95,25 +94,11 @@ public abstract class JSLSelectObjectActivity extends AppCompatActivity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(LOG_TAG, String.format("JSLSelectObjectActivity is being created to filter `%s` object models", modelName));
+
         super.onCreate(savedInstanceState);
 
-        //noinspection unchecked
-        JSLApplication<JSLService> app = ((JSLApplication<JSLService>) this.getApplication());
-        jslClient = app.getJSLClient();
-
         setupUI();
-
-        // Check JSL state, registerRemoteObject
-        if (jslClient.getJSLState() == JSLState.RUN) {
-            // Search for remote objects by obj's model
-            JSLObjsMngr objsMngr = jslClient.getJSL().getObjsMngr();
-            List<JSLRemoteObject> objs = objsMngr.getByModel(modelName);
-            if (auto_propose && objs.size() > 0)
-                // propose found objects
-                proposeFoundedSmartVan(objs);
-        }
-        // register JSL ObjsMngrListenersByModel
-        jslClient.getJSLListeners().addObjsMngrListenersByModel(modelName, remObjByModelListener);
     }
 
     /**
@@ -122,7 +107,46 @@ public abstract class JSLSelectObjectActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        jslClient.getJSLListeners().removeObjsMngrListenersByModel(modelName, remObjByModelListener);
+        Log.d(LOG_TAG, "JSLSelectObjectActivity is being destroyed");
+    }
+
+
+    // Getters
+
+    /**
+     * @return the model name used to filter the remote objects.
+     */
+    public String getModelName() {
+        return modelName;
+    }
+
+
+    // Next activity to show
+
+    /**
+     * @return the activity's class to show when an object has been selected.
+     */
+    public Class<? extends Activity> getNextActivityClass() {
+        return nextActivityClass;
+    }
+
+    /**
+     * Start the next activity.
+     */
+    protected void goToNextActivity() {
+        goToNextActivity(null);
+    }
+
+    /**
+     * Start the next activity with the given bundle.
+     *
+     * @param bundle the bundle to pass to the next activity.
+     */
+    protected void goToNextActivity(Bundle bundle) {
+        Log.i(LOG_TAG, String.format("JSLSelectObjectActivity start next activity '%s'", getNextActivityClass().getName()));
+        Intent intent_activity = new Intent(this, getNextActivityClass());
+        if (bundle != null) intent_activity.putExtras(bundle);
+        startActivity(intent_activity);
     }
 
 
@@ -137,7 +161,7 @@ public abstract class JSLSelectObjectActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         binding.listFoundObjects.setHasFixedSize(false);
-        binding.listFoundObjects.setAdapter(new RemoteObjectAdapter(this, jslClient) {
+        binding.listFoundObjects.setAdapter(new RemoteObjectAdapter(this, getJSLClient()) {
 
             /**
              * Create new views (invoked by the layout manager).
@@ -151,82 +175,63 @@ public abstract class JSLSelectObjectActivity extends AppCompatActivity {
              */
             @NonNull
             public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
-                View view = LayoutInflater.from(viewGroup.getContext())
-                        .inflate(R.layout.lay_remote_object_simple, viewGroup, false);
-                return new RemoteObjectAdapter.ViewHolder(view) {
-                    @Override
-                    public void bind(JSLRemoteObject obj) {
-                        // fill layout fields
-                        TextView txtObjName = view.findViewById(R.id.txtObjName);
-                        TextView txtObjId = view.findViewById(R.id.txtObjId);
-                        txtObjName.setText(obj.getName());
-                        txtObjId.setText(obj.getId());
-
-                        // register new listener for current item
-                        // (automatically delete the old one)
-                        view.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                proposeFoundedSmartVan(obj);
-                            }
-                            protected void finalize() {
-                                Log.e("J_APP", "Finalize OnClick listener for " + obj);
-                                // TODO check that current listener is destroyed each time
-                                //  a JSLRemoteObject has been bound
-                            }
-                        });
-                    }
-
-                };
+                View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.lay_remote_object_simple, viewGroup, false);
+                return new ViewHolderImpl(view);
             }
 
         });
         binding.listFoundObjects.setLayoutManager(new LinearLayoutManager(this));
 
-        binding.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onLocalConnRestartClick(view);
-            }
-        });
+        binding.fab.setOnClickListener(onFabClickListener);
     }
 
 
-    // Remote obj and comp
+    // Remote obj selection
 
-    /** Simplified version of the {@link #proposeFoundedSmartVan(List)} method. */
+    private final View.OnClickListener onItemClickListener = new View.OnClickListener() {
+
+        @Override
+        public void onClick(View view) {
+            if (view.getTag() == null || !(view.getTag() instanceof JSLRemoteObject)) {
+                Log.e(LOG_TAG, "View tag must be a JSLRemoteObject");
+                throw new RuntimeException("View tag must be a JSLRemoteObject");
+            }
+            JSLRemoteObject obj = (JSLRemoteObject) view.getTag();
+            Log.i(LOG_TAG, String.format("User selected object '%s'", obj.getName()));
+            proposeFoundedSmartVan(obj);
+        }
+
+    };
+
+    // TODO rename proposeFoundedSmartVan
+
+    /**
+     * Simplified version of the {@link #proposeFoundedSmartVan(List)} method.
+     */
     private void proposeFoundedSmartVan(JSLRemoteObject obj) {
         proposeFoundedSmartVan(Collections.singletonList(obj));
     }
 
+    // TODO rename proposeFoundedSmartVan
+
     /**
-     * Propone given objects to the user. Then, if user chose one, starts the next activity.
+     * Propose given objects to the user. Then, if user chose one, starts the next activity.
      *
      * @param objs the list of objects to propose.
      */
     protected abstract void proposeFoundedSmartVan(List<JSLRemoteObject> objs);
 
 
-    // Remote listeners
+    // JSL local communication restart
 
-    /**
-     * Listen for added objects with specified `model`, then propose found objects to the user.
-     */
-    private final JSLObjsMngr.ObjsMngrListener remObjByModelListener = new JSLObjsMngr.ObjsMngrListener() {
+    private final View.OnClickListener onFabClickListener = new View.OnClickListener() {
 
         @Override
-        public void onObjAdded(JSLRemoteObject obj) {
-            // proposeFoundedSmartVan(obj);
-        }
-
-        @Override
-        public void onObjRemoved(JSLRemoteObject obj) {
+        public void onClick(View view) {
+            restartLocalDiscovery();
         }
 
     };
-
-
-    // Local communication restart
 
     /**
      * React on JSL Local communication events to handle the Restart procedure.
@@ -236,58 +241,66 @@ public abstract class JSLSelectObjectActivity extends AppCompatActivity {
 
         @Override
         public void onStarted() {
-            JSLLocalClientsMngr localMngr = jslClient.getJSL().getCommunication().getLocalConnections();
+            JSLLocalClientsMngr localMngr = getJSLClient().getJSL().getCommunication().getLocalConnections();
             localMngr.removeListener(restartListener);
-            notifyRestartPhase("JSL Local communication restarted, successfully.");
+            Log.d(LOG_TAG, "JSL Local communication restarted, successfully");
+            notifyRestartPhase("JSL Local communication restarted, successfully");
         }
 
         @Override
         public void onStopped() {
-            notifyRestartPhase("JSL Local communication stopped, restarting.");
-            JSLLocalClientsMngr localMngr = jslClient.getJSL().getCommunication().getLocalConnections();
+            Log.d(LOG_TAG, "JSL Local communication stopped, restarting");
+            notifyRestartPhase("JSL Local communication stopped, restarting");
+            JSLLocalClientsMngr localMngr = getJSLClient().getJSL().getCommunication().getLocalConnections();
             try {
                 localMngr.start();
             } catch (StateException | Discover.DiscoveryException e) {
-                throw new RuntimeException(e);
+                Log.e(LOG_TAG, "Error while restarting JSL Local communication", e);
+                notifyRestartPhase("Error while restarting JSL Local communication");
+                throw new RuntimeException("Error while restarting JSL Local communication", e);
             }
         }
 
     };
 
     /**
-     * Re-action on JSL Local communication Restart button click.
-     */
-    private void onLocalConnRestartClick(View ignoredView) {
-        if (jslClient.getJSLState() != JSLState.RUN) {
-            notifyRestartPhase("JSL not running, please wait.");
-            return;
-        }
-        restartLocalDiscovery();
-    }
-
-    /**
-     * Show the phase's message to the user.
-     * @param text the message that describe the phase.
-     */
-    private void notifyRestartPhase(String text) {
-        Snackbar.make(binding.fab, text, Snackbar.LENGTH_LONG)
-                .setAnchorView(R.id.fab)
-                .setAction("Action", null)
-                .show();
-    }
-
-    /**
      * It starts the JSL Local communication Restart procedure using the
      * {@link #restartListener} as support listener.
      */
     private void restartLocalDiscovery() {
-        JSLLocalClientsMngr localMngr = jslClient.getJSL().getCommunication().getLocalConnections();
-        localMngr.addListener(restartListener);
-        try {
-            localMngr.stop();
-        } catch (StateException | Discover.DiscoveryException e) {
-            throw new RuntimeException(e);
+        if (getJSLClient().getJSLState() != JSLState.RUN) {
+            Log.w(LOG_TAG, "Can't restart JSL Local Communication stopped because JSL not running, please retry later");
+            notifyRestartPhase("Can't restart JSL Local Communication stopped because JSL not running, please retry later");
+            return;
         }
+
+        JSLLocalClientsMngr localMngr = getJSLClient().getJSL().getCommunication().getLocalConnections();
+        localMngr.addListener(restartListener);
+        JSLApplication<? extends JSLService> app = getJSLApplication();
+        app.runOnNetworkThread(new Runnable() {
+            @Override
+            public void run() {
+                Log.w(LOG_TAG, "JSL Local Communication stopping");
+                notifyRestartPhase("JSL Local Communication stopping");
+
+                try {
+                    localMngr.stop();
+                } catch (StateException | Discover.DiscoveryException e) {
+                    Log.e(LOG_TAG, "Error while stopping JSL Local communication", e);
+                    notifyRestartPhase("Error while stopping JSL Local communication");
+                    throw new RuntimeException("Error while stopping JSL Local communication", e);
+                }
+            }
+        });
+    }
+
+    /**
+     * Show the phase's message to the user.
+     *
+     * @param text the message that describe the phase.
+     */
+    private void notifyRestartPhase(String text) {
+        Snackbar.make(binding.fab, text, Snackbar.LENGTH_LONG).setAnchorView(R.id.fab).setAction("Action", null).show();
     }
 
 }
