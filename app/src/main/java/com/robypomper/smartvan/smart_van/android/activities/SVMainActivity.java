@@ -1,137 +1,110 @@
 package com.robypomper.smartvan.smart_van.android.activities;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 
-import com.robypomper.josp.jsl.comm.JSLLocalClient;
-import com.robypomper.josp.jsl.objs.JSLObjsMngr;
+import com.robypomper.josp.jsl.android.activities.BaseRemoteObjectActivity;
 import com.robypomper.josp.jsl.objs.JSLRemoteObject;
 import com.robypomper.josp.jsl.objs.remote.ObjComm;
-import com.robypomper.josp.jsl.objs.remote.ObjStruct;
-import com.robypomper.josp.jsl.objs.structure.JSLRoot;
 import com.robypomper.josp.jsl.objs.structure.pillars.JSLRangeState;
-import com.robypomper.josp.states.JSLState;
 import com.robypomper.smartvan.smart_van.android.R;
-import com.robypomper.smartvan.smart_van.android.app.SVApplication;
-import com.robypomper.smartvan.smart_van.android.app.SVJSLClient;
 import com.robypomper.smartvan.smart_van.android.commons.SVDefinitions;
+import com.robypomper.smartvan.smart_van.android.commons.SVSpec;
 import com.robypomper.smartvan.smart_van.android.commons.SVSpecs;
 import com.robypomper.smartvan.smart_van.android.databinding.ActivitySvmainBinding;
 
 
-public class SVMainActivity extends AppCompatActivity {
+/**
+ * Main activity for the Smart Van application.
+ * <p>
+ * This activity shows the main components of the Smart Van object.
+ */
+public class SVMainActivity extends BaseRemoteObjectActivity {
 
     public final static String PARAM_OBJ_ID = SVDefinitions.PARAM_ACTIVITY_SVMAIN_OBJID;
-    public final static SVSpecs.Spec COMP_POWER_PATH = SVDefinitions.COMP_MAIN_POWER;
-    public final static SVSpecs.Spec COMP_PANELS_PATH = SVSpecs.SVBox.Energy.Generation.Percentage;
-    public final static SVSpecs.Spec COMP_SERVICES_PATH = SVSpecs.SVBox.Energy.Consumption.Percentage;
+    public final static SVSpec COMP_POWER_PATH = SVDefinitions.COMP_MAIN_POWER;
+    public final static SVSpec COMP_PANELS_PATH = SVSpecs.SVBox.Energy.Generation.Power;
+    public final static SVSpec COMP_SERVICES_PATH = SVSpecs.SVBox.Energy.Consumption.Power;
 
     private ActivitySvmainBinding binding;
-    private SVJSLClient jslClient;
-    private String objId = null;
-    private JSLRemoteObject remObj;
     private JSLRangeState powerComp;
     private JSLRangeState panelsComp;
     private JSLRangeState servicesComp;
 
+
+    // Android
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
         // inflate ui
         binding = ActivitySvmainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // get object id
-        objId = null;
-        if (getIntent().getExtras() != null)
-            objId = getIntent().getExtras().getString(PARAM_OBJ_ID);
-        if (objId == null && savedInstanceState!=null)
-            objId = savedInstanceState.getString(PARAM_OBJ_ID);
-        // TODO implement obj id storage into shared preferences
-        //if (objId == null)
-        // look into shared preferences
-        if (objId == null)
-            throw new RuntimeException(String.format("Can't init SVMainActivity without specify '%s' param", PARAM_OBJ_ID));
-        binding.txtTitleName.setText(objId);
+        super.onCreate(savedInstanceState);
+    }
 
-        // Check JSL state, registerRemoteObject
-        SVApplication app = ((SVApplication) this.getApplication());
-        jslClient = app.getJSLClient();
-        if (jslClient.getJSLState() == JSLState.RUN) {
-            // Search for remote object by obj's id
-            JSLObjsMngr objsMngr = jslClient.getJSL().getObjsMngr();
-            JSLRemoteObject obj = objsMngr.getById(objId);
-            if (obj != null)
-                // register remote object
-                registerRemoteObject(obj);
-        }
-        // register JSL ObjsMngrListenersByID
-        jslClient.getJSLListeners().addObjsMngrListenersByID(objId, remObjByIdListener);
+
+    // BaseRemoteObjectActivity re-implementations
+
+    @Override
+    protected void onRemoteObjectReady() {
+        registerRemoteObjectToUI();
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    protected void onRemoteObjectDeregistered() {
+        deregisterRemoteObjectToUI();
+    }
 
-        if (powerComp != null)
-            deregisterPowerComp();
-        if (panelsComp != null)
-            deregisterPanelsComp();
-        if (servicesComp != null)
-            deregisterServicesComp();
+    @Override
+    protected void onRemoteObjectConnectedLocal() {
+        updateConnectionWidgets();
+    }
 
-        if (remObj != null)
-            deregisterRemoteObject();
+    @Override
+    protected void onRemoteObjectDisconnectedLocal() {
+        updateConnectionWidgets();
+    }
 
-        jslClient.getJSLListeners().addObjsMngrListenersByID(objId, remObjByIdListener);
+    @Override
+    protected void onRemoteObjectConnectedCloud() {
+        updateConnectionWidgets();
+    }
+
+    @Override
+    protected void onRemoteObjectDisconnectedCloud() {
+        updateConnectionWidgets();
     }
 
 
-    // Remote obj and comp
+    // Remote object management
 
-    private void registerRemoteObject(JSLRemoteObject obj) {
-        remObj = obj;
+    private void registerRemoteObjectToUI() {
+        JSLRangeState component;
 
-        JSLRangeState component = searchComponent(remObj, COMP_POWER_PATH.getPath());
-        if (component != null)
-            registerPowerComp(component);
-        component = searchComponent(remObj, COMP_PANELS_PATH.getPath());
-        if (component != null)
-            registerPanelsComp(component);
-        component = searchComponent(remObj, COMP_SERVICES_PATH.getPath());
-        if (component != null)
-            registerServicesComp(component);
+        component = findRangeStateComponent(COMP_POWER_PATH.getPath());
+        if (component != null) registerPowerComp(component);
+        component = findRangeStateComponent(COMP_PANELS_PATH.getPath());
+        if (component != null) registerPanelsComp(component);
+        component = findRangeStateComponent(COMP_SERVICES_PATH.getPath());
+        if (component != null) registerServicesComp(component);
 
-        remObj.getComm().addListener(remObjConnListener);
-        remObj.getStruct().addListener(remObjStructListener);
-
-        updateRemoteObject(remObj);
-        updateConnectionWidgets(remObj);
+        updateRemoteObject();
+        updateConnectionWidgets();
     }
 
-    private void deregisterRemoteObject() {
-        if (powerComp != null)
-            deregisterPowerComp();
-        if (panelsComp != null)
-            deregisterPanelsComp();
-        if (servicesComp != null)
-            deregisterServicesComp();
+    private void deregisterRemoteObjectToUI() {
+        if (powerComp != null) deregisterPowerComp();
+        if (panelsComp != null) deregisterPanelsComp();
+        if (servicesComp != null) deregisterServicesComp();
 
-        remObj.getComm().removeListener(remObjConnListener);
-        remObj.getStruct().removeListener(remObjStructListener);
-
-        remObj = null;
-        updateRemoteObject(null);
-        updateConnectionWidgets(null);
-    }
-
-    private JSLRangeState searchComponent(JSLRemoteObject obj, String path) {
-        return (JSLRangeState) obj.getStruct().getComponent(path);
+        updateRemoteObject();
+        updateConnectionWidgets();
     }
 
     private void registerPowerComp(JSLRangeState component) {
@@ -183,72 +156,7 @@ public class SVMainActivity extends AppCompatActivity {
     }
 
 
-    // Remote listeners
-
-    private final JSLObjsMngr.ObjsMngrListener remObjByIdListener = new JSLObjsMngr.ObjsMngrListener(){
-
-        @Override
-        public void onObjAdded(JSLRemoteObject obj) {
-            if (remObj != null)
-                return;
-            registerRemoteObject(obj);
-        }
-
-        @Override
-        public void onObjRemoved(JSLRemoteObject obj) {
-            if (remObj == null || remObj != obj)
-                return;
-            deregisterRemoteObject();
-        }
-
-    };
-
-    private final ObjComm.RemoteObjectConnListener remObjConnListener = new ObjComm.RemoteObjectConnListener() {
-
-        @Override
-        public void onLocalConnected(JSLRemoteObject obj, JSLLocalClient localClient) {
-            updateConnectionWidgets(remObj);
-        }
-
-        @Override
-        public void onLocalDisconnected(JSLRemoteObject obj, JSLLocalClient localClient) {
-            updateConnectionWidgets(remObj);
-        }
-
-        @Override
-        public void onCloudConnected(JSLRemoteObject obj) {
-            updateConnectionWidgets(remObj);
-        }
-
-        @Override
-        public void onCloudDisconnected(JSLRemoteObject obj) {
-            updateConnectionWidgets(remObj);
-        }
-
-    };
-
-    private final ObjStruct.RemoteObjectStructListener remObjStructListener = new ObjStruct.RemoteObjectStructListener(){
-
-        @Override
-        public void onStructureChanged(JSLRemoteObject obj, JSLRoot newRoot) {
-            if (powerComp == null) {
-                JSLRangeState component = searchComponent(obj, COMP_POWER_PATH.getPath());
-                if (component != null)
-                    registerPowerComp(component);
-            }
-            if (panelsComp == null) {
-                JSLRangeState component = searchComponent(obj, COMP_PANELS_PATH.getPath());
-                if (component != null)
-                    registerPanelsComp(component);
-            }
-            if (servicesComp == null) {
-                JSLRangeState component = searchComponent(obj, COMP_SERVICES_PATH.getPath());
-                if (component != null)
-                    registerServicesComp(component);
-            }
-        }
-
-    };
+    // Components listeners
 
     private final JSLRangeState.RangeStateListener listenerPowerComp = new JSLRangeState.RangeStateListener() {
 
@@ -258,10 +166,12 @@ public class SVMainActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onMinReached(JSLRangeState component, double state, double min) {}
+        public void onMinReached(JSLRangeState component, double state, double min) {
+        }
 
         @Override
-        public void onMaxReached(JSLRangeState component, double state, double max) {}
+        public void onMaxReached(JSLRangeState component, double state, double max) {
+        }
 
     };
 
@@ -273,10 +183,12 @@ public class SVMainActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onMinReached(JSLRangeState component, double state, double min) {}
+        public void onMinReached(JSLRangeState component, double state, double min) {
+        }
 
         @Override
-        public void onMaxReached(JSLRangeState component, double state, double max) {}
+        public void onMaxReached(JSLRangeState component, double state, double max) {
+        }
 
     };
 
@@ -288,33 +200,36 @@ public class SVMainActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onMinReached(JSLRangeState component, double state, double min) {}
+        public void onMinReached(JSLRangeState component, double state, double min) {
+        }
 
         @Override
-        public void onMaxReached(JSLRangeState component, double state, double max) {}
+        public void onMaxReached(JSLRangeState component, double state, double max) {
+        }
 
     };
 
 
     // UI widgets
 
-    private void updateRemoteObject(JSLRemoteObject obj) {
+    private void updateRemoteObject() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                JSLRemoteObject obj = getRemoteObject();
                 String text = "WAITING";
-                if (obj != null)
-                    text = obj.getName();
+                if (obj != null) text = obj.getName();
 
                 binding.txtTitleName.setText(text);
             }
         });
     }
 
-    private void updateConnectionWidgets(JSLRemoteObject obj) {
+    private void updateConnectionWidgets() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                JSLRemoteObject obj = getRemoteObject();
                 int imgState = R.drawable.ic_not_available;
                 String text = "N/A";
                 if (obj != null) {
@@ -345,19 +260,19 @@ public class SVMainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 String text = "N/A";
-                if (comp!=null)
+                if (comp != null)
                     // text = String.format("%.2f", comp.getState() / 1000); // mV to V
                     text = String.format("%.2f", comp.getState()); // % to %
                 binding.txtPowerValue.setText(text);
 
                 //*
-                double state = ((JSLRangeState)remObj.getStruct().getComponent(SVSpecs.SVBox.Energy.Storage.Voltage.getPath())).getState();
+                double state = findRangeStateComponent(SVSpecs.SVBox.Energy.Storage.Voltage.getPath()).getState();
                 Log.v("SVMain", "###########      Battery voltage    : " + state);
-                state = ((JSLRangeState)remObj.getStruct().getComponent(SVSpecs.SVBox.Energy.Storage.Min_Voltage.getPath())).getState();
+                state = findRangeStateComponent(SVSpecs.SVBox.Energy.Storage.Min_Voltage.getPath()).getState();
                 Log.v("SVMain", "###########      Battery voltage min: " + state);
-                state = ((JSLRangeState)remObj.getStruct().getComponent(SVSpecs.SVBox.Energy.Storage.Max_Voltage.getPath())).getState();
+                state = findRangeStateComponent(SVSpecs.SVBox.Energy.Storage.Max_Voltage.getPath()).getState();
                 Log.v("SVMain", "###########      Battery voltage max: " + state);
-                state = ((JSLRangeState)remObj.getStruct().getComponent(SVSpecs.SVBox.Energy.Storage.Percentage.getPath())).getState();
+                state = findRangeStateComponent(SVSpecs.SVBox.Energy.Storage.Percentage.getPath()).getState();
                 Log.v("SVMain", "###########      Battery voltage %  : " + state);
                 // */
             }
@@ -370,21 +285,21 @@ public class SVMainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 String text = "N/A";
-                if (comp!=null)
+                if (comp != null)
                     // text = String.format("%.2f", comp.getState() / 1000); // mV to V
                     text = String.format("%.2f", comp.getState()); // % to %
                 binding.txtPanelsValue.setText(text);
 
                 //*
-                double state = ((JSLRangeState)remObj.getStruct().getComponent(SVSpecs.SVBox.Energy.Generation.Current.getPath())).getState();
+                double state = findRangeStateComponent(SVSpecs.SVBox.Energy.Generation.Current.getPath()).getState();
                 Log.v("SVMain", "###########      Panels current mA    : " + state);
-                state = ((JSLRangeState)remObj.getStruct().getComponent(SVSpecs.SVBox.Energy.Generation.Voltage.getPath())).getState();
+                state = findRangeStateComponent(SVSpecs.SVBox.Energy.Generation.Voltage.getPath()).getState();
                 Log.v("SVMain", "###########      Panels Voltage mV    : " + state);
-                state = ((JSLRangeState)remObj.getStruct().getComponent(SVSpecs.SVBox.Energy.Generation.Power.getPath())).getState();
+                state = findRangeStateComponent(SVSpecs.SVBox.Energy.Generation.Power.getPath()).getState();
                 Log.v("SVMain", "###########      Panels Power mW      : " + state);
-                state = ((JSLRangeState)remObj.getStruct().getComponent(SVSpecs.SVBox.Energy.Generation.Percentage.getPath())).getState();
-                Log.v("SVMain", "###########      Panels Power Perc %  : " + state);
-                state = ((JSLRangeState)remObj.getStruct().getComponent(SVSpecs.SVBox.Energy.Generation.Max_Power.getPath())).getState();
+                //state = findRangeStateComponent(SVSpecs.SVBox.Energy.Generation.Percentage.getPath()).getState();
+                //Log.v("SVMain", "###########      Panels Power Perc %  : " + state);
+                state = findRangeStateComponent(SVSpecs.SVBox.Energy.Generation.Max_Power.getPath()).getState();
                 Log.v("SVMain", "###########      Panels Power Max mW  : " + state);
                 // */
             }
@@ -397,22 +312,22 @@ public class SVMainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 String text = "N/A";
-                if (comp!=null)
+                if (comp != null)
                     // text = String.format("%.2f", comp.getState() / 1000); // mV to V
                     text = String.format("%.2f", comp.getState()); // % to %
                 binding.txtServicesValue.setText(text);
 
                 //*
-                double state = ((JSLRangeState)remObj.getStruct().getComponent(SVSpecs.SVBox.Energy.Consumption.Current.getPath())).getState();
-                Log.v("SVMain", "###########      AllServs current mA    : " + state);
-                state = ((JSLRangeState)remObj.getStruct().getComponent(SVSpecs.SVBox.Energy.Consumption.Voltage.getPath())).getState();
-                Log.v("SVMain", "###########      AllServs Voltage mV    : " + state);
-                state = ((JSLRangeState)remObj.getStruct().getComponent(SVSpecs.SVBox.Energy.Consumption.Power.getPath())).getState();
-                Log.v("SVMain", "###########      AllServs Power mW      : " + state);
-                state = ((JSLRangeState)remObj.getStruct().getComponent(SVSpecs.SVBox.Energy.Consumption.Percentage.getPath())).getState();
-                Log.v("SVMain", "###########      AllServs Power Perc %  : " + state);
-                state = ((JSLRangeState)remObj.getStruct().getComponent(SVSpecs.SVBox.Energy.Consumption.Max_Power.getPath())).getState();
-                Log.v("SVMain", "###########      AllServs Power Max mW  : " + state);
+                double state = findRangeStateComponent(SVSpecs.SVBox.Energy.Consumption.Current.getPath()).getState();
+                Log.v("SVMain", "###########      AllSrvs current mA    : " + state);
+                state = findRangeStateComponent(SVSpecs.SVBox.Energy.Consumption.Voltage.getPath()).getState();
+                Log.v("SVMain", "###########      AllSrvs Voltage mV    : " + state);
+                state = findRangeStateComponent(SVSpecs.SVBox.Energy.Consumption.Power.getPath()).getState();
+                Log.v("SVMain", "###########      AllSrvs Power mW      : " + state);
+                //state = findRangeStateComponent(SVSpecs.SVBox.Energy.Consumption.Percentage.getPath()).getState();
+                //Log.v("SVMain", "###########      AllSrvs Power Perc %  : " + state);
+                state = findRangeStateComponent(SVSpecs.SVBox.Energy.Consumption.Max_Power.getPath()).getState();
+                Log.v("SVMain", "###########      AllSrvs Power Max mW  : " + state);
                 // */
             }
         });
