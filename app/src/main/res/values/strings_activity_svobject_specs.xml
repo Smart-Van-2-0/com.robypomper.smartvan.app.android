@@ -1,0 +1,12 @@
+<resources>
+    <string name="activity_svobject_specs_txt_title_name_placeholder">{MyVan}</string>
+    <string name="activity_svobject_specs_txt_title_post">SV Specifications</string>
+    <string name="activity_svobject_specs_txt_content">Below, listed hierarchically,\nare all the specifications of the Smart Van project.\nFor each one it is shown whether or not\nit is provided by the current Smart Van Box.</string>
+    <string name="activity_svobject_specs__title">SVBox Specs</string>
+    <string name="activity_svobject_specs_title_path">Path</string>
+    <string name="activity_svobject_specs_title_sub_specs">Sub Specs</string>
+    <string name="activity_svobject_specs_root_placeholder">{Root}</string>
+    <string name="activity_svobject_specs_separator_placeholder">&gt;</string>
+    <string name="activity_svobject_specs_2ndlevel_placeholder">{2nd Level}</string>
+    <string name="activity_svobject_specs_more_details">More details</string>
+</resources>

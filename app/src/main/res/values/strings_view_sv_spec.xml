@@ -1,0 +1,4 @@
+<resources>
+    <string name="view_sv_specs_name_placeholder">{Spec Name}</string>
+    <string name="view_sv_specs_path_placeholder">{spec > path}</string>
+</resources>
