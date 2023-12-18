@@ -1,7 +1,7 @@
 <resources>
     <string name="activity_svmain__title">SV Mobile App</string>
     <string name="activity_svmain_txt_title_pre">Welcome to</string>
-    <string name="activity_svmain_txt_title_name">MyVan</string>
+    <string name="activity_svmain_txt_title_name_placeholder">{MyVan}</string>
     <string name="activity_svmain_txt_title_post">Smart Van</string>
     <string name="activity_svmain_txt_content">Here you can monitor\n and control your Smart Van.</string>
     <string name="activity_svmain_txt_connection_text">{CONN_STATE_STRING}</string>
