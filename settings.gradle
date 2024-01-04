@@ -19,3 +19,5 @@ include ':app'
 project(":app").name = "SVMobileApp"
 include ':jsl_android'
 project(":jsl_android").name = "JSL4Android"
+include ':chart_views'
+project(":chart_views").name = "ChartViews"
