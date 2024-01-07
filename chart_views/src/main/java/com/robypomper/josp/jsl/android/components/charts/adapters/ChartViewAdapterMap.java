@@ -5,6 +5,7 @@ import android.graphics.Color;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BaseEntry;
 import com.github.mikephil.charting.data.DataSet;
+import com.robypomper.josp.jsl.android.components.charts.ChartBaseView;
 import com.robypomper.josp.jsl.android.components.charts.formatters.ChartBaseFormatter;
 import com.robypomper.josp.jsl.android.components.charts.formatters.ChartDateTimeFormatter;
 import com.robypomper.josp.jsl.android.components.charts.formatters.ChartUnitFormatter;
@@ -18,9 +19,7 @@ import java.util.Map;
 import java.util.Random;
 
 
-/**
- * @noinspection unused
- */
+/** @noinspection unused*/
 public class ChartViewAdapterMap extends ChartViewAdapterAbs {
 
     /**
@@ -52,8 +51,7 @@ public class ChartViewAdapterMap extends ChartViewAdapterAbs {
                 public void run() {
                     try {
                         Thread.sleep(new Random().nextInt(1300) + 200);
-                    } catch (InterruptedException ignore) {
-                    }
+                    } catch (InterruptedException ignore) {}
                     Threaded.super.doFetch(dataSetName, timeRangeLimits);
                 }
             });
@@ -120,6 +118,8 @@ public class ChartViewAdapterMap extends ChartViewAdapterAbs {
             dataSetEntries.add(newEntry(xFormatter.from(date), yFormatter.from(value)));
         }
         DataSet<?> chartDataSet = newDataSet(dataSetEntries, dataSetName);
+
+        System.out.println("[DataSet: " + dataSetName + "] - doFetch from " + ChartBaseView.LOG_SDF.format(timeRangeLimits.getFromDate()) + " to " + ChartBaseView.LOG_SDF.format(timeRangeLimits.getToDate()) + " => " + dataSetEntries.size());
 
         // Notify chart
         notifyDataSetFetched(dataSetName, chartDataSet, timeRangeLimits);
