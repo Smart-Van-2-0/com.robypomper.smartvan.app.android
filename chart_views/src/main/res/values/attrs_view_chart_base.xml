@@ -1,0 +1,8 @@
+<resources>
+    <declare-styleable name="ChartBaseView">
+        <attr name="chart_range_offset" format="integer" />
+        <attr name="chart_range_unit" format="integer" />
+        <attr name="chart_range_qty" format="integer" />
+        <attr name="chart_reduction_count" format="integer" />
+    </declare-styleable>
+</resources>
