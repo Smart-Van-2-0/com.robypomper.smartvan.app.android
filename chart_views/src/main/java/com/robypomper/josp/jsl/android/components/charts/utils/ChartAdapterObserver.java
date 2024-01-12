@@ -31,7 +31,7 @@ public interface ChartAdapterObserver {
      * @param dataSet       data set to add/update.
      * @param historyLimits limits of the history.
      */
-    void updateDataSetToChart(String dataSetName, DataSet<?> dataSet, TimeRangeLimits historyLimits);
+    void processFetchedDataSet(String dataSetName, DataSet<?> dataSet, TimeRangeLimits historyLimits);
 
     /**
      * Remove specified data set from the chart.

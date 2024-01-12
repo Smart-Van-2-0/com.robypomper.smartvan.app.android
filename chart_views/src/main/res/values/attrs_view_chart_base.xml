@@ -4,5 +4,6 @@
         <attr name="chart_range_unit" format="integer" />
         <attr name="chart_range_qty" format="integer" />
         <attr name="chart_reduction_count" format="integer" />
+        <attr name="chart_fetch_timeout_ms" format="integer" />
     </declare-styleable>
 </resources>

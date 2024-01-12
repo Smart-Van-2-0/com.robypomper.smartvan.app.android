@@ -149,10 +149,6 @@ public class ChartLineView extends ChartBaseView {
         dataSet = MPAndroidChartUtils.removeZeroValueEntries(dataSet);
         Log.d("ChartLineView", String.format("DataSet '%s': removed zero-value entries %d -> %d items", dataSetName, preSize, dataSet.getEntryCount()));
 
-        // Prepare data set
-        getAdapter().setupDataSetStyle(dataSetName, dataSet);
-        dataSet.setAxisDependency(getAdapter().getDataSetYAxisDep(dataSetName));
-
         return dataSet;
     }
 

@@ -167,10 +167,6 @@ public class ChartBarView extends ChartBaseView {
         //dataSet = MPAndroidChartUtils.removeZeroValueEntries(dataSet);
         //Log.d("ChartBarView", String.format("DataSet '%s': removed zero-value entries %d -> %d items", dataSetName, preSize, dataSet.getEntryCount()));
 
-        // Prepare data set
-        getAdapter().setupDataSetStyle(dataSetName, dataSet);
-        dataSet.setAxisDependency(getAdapter().getDataSetYAxisDep(dataSetName));
-
         return dataSet;
     }
 
@@ -198,15 +194,13 @@ public class ChartBarView extends ChartBaseView {
 
     @Override
     protected void doInvalidateChart(boolean animate) {
-        Log.e("ChartBarView", "INVALIDATE LINE CHART " + animate);
+        Log.e("ChartBarView", "INVALIDATE BAR CHART " + animate);
+        chart.notifyDataSetChanged();
 
         if (!animate) {
-            //chart.invalidate();
+            chart.invalidate();
             return;
         }
-
-        if (getFetchCounter() > 0)
-            return;
 
         getActivity().runOnUiThread(new Runnable() {
             @Override

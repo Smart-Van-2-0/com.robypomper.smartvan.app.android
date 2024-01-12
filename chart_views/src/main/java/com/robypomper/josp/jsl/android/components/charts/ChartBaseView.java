@@ -10,10 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.github.mikephil.charting.data.DataSet;
+import com.github.mikephil.charting.data.Entry;
 import com.robypomper.java.JavaDate;
 import com.robypomper.josp.jsl.android.charts.R;
 import com.robypomper.josp.jsl.android.components.charts.adapters.ChartViewAdapter;
@@ -23,18 +25,32 @@ import com.robypomper.josp.jsl.android.components.charts.utils.ChartAdapterObser
 import com.robypomper.josp.jsl.android.components.charts.utils.TimeRangeLimits;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
 import java.util.TimerTask;
 
 
 /**
- * TODO: fetch timer
- * TODO: overlay message during fetching
+ fetch()
+ -> registerNewFetch()
+
+ notifyDataSetReceived()
+ -> updateDataSetToChart()
+ -> registerFetchReceived()
+ -> doPrepareDataSet()
+ -> registerFetchedCompletion()
+ -> registerFetchDataSet()
+
+ fetchTimerTimeout
+ -> registerFetchTimeout()
+ -> registerFetchDataSet()
+
  * TODO: exports from menu
  * TODO: chart settings from menu
  * TODO: chart predefined settings from menu
@@ -83,9 +99,20 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
      */
     boolean isTimeRangeToChartUpdated = true;
     /**
-     * Count the number of fetch operations in progress.
+     * The timer used to schedule the fetch time outs.
      */
-    private int fetchCounter = 0;
+    private final Timer timer = new Timer("TIMER_FOR_CHART_BASE_VIEW");
+    /**
+     * List of current fetch timeout's tasks.
+     * <p>
+     * Added when a fetch is started, removed when the fetch is completed or
+     * timed out.
+     */
+    private final Map<String, TimerTask> fetchTimeouts = new HashMap<>();
+    private final List<String> fetchingDataSet = new ArrayList<>();
+    private final Map<String,DataSet<?>> fetchedDataSet = new HashMap<>();
+    private long fetchTimeoutMs = 10 * 1000;
+
     /**
      * The time unit to consider for the current time range.
      * Valid units are:
@@ -204,6 +231,11 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
             }
         else
             rangePartitions = getDefaultPartitionsByUnitAndQty(rangeUnit, rangeQty);
+        if (a.hasValue(R.styleable.ChartBaseView_chart_fetch_timeout_ms))
+            try {
+                fetchTimeoutMs = a.getInt(R.styleable.ChartBaseView_chart_fetch_timeout_ms, (int)fetchTimeoutMs);
+            } catch (NumberFormatException ignore) {
+            }
 
         a.recycle();
 
@@ -509,8 +541,46 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
         throw new IllegalArgumentException("Invalid unit");
     }
 
-    protected int getFetchCounter() {
-        return fetchCounter;
+    public boolean isFetching() {
+        return !fetchingDataSet.isEmpty();
+    }
+
+    public boolean isFetching(String dataSetName) {
+        return fetchingDataSet.contains(dataSetName);
+    }
+
+    public int getFetchCounter() {
+        return fetchingDataSet.size();
+    }
+
+    public List<String> getProcessingDataSets() {
+        List<String> pDS = new ArrayList<>(fetchingDataSet);
+        pDS.removeAll(getWaitingDataSets());
+        return pDS;
+    }
+
+    public List<String> getWaitingDataSets() {
+        return new ArrayList<>(fetchTimeouts.keySet());
+    }
+
+    public List<String> getCompletedDataSets() {
+        return new ArrayList<>(fetchedDataSet.keySet());
+    }
+
+    private long getFetchTimeoutMs() {
+        return fetchTimeoutMs;
+    }
+
+    /**
+     * Set the fetch timeout in milliseconds.
+     * <p>
+     * If this method is called during a fetch, the timeout is applied to the
+     * next fetch.
+     *
+     * @param fetchTimeoutMs the fetch timeout in milliseconds.
+     */
+    public void setFetchTimeoutMs(long fetchTimeoutMs) {
+        this.fetchTimeoutMs = fetchTimeoutMs;
     }
 
     /**
@@ -626,6 +696,16 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
         rangeOffset = 0;
         rangePartitions = getDefaultPartitionsByUnitAndQty(rangeUnit, rangeQty);
 
+        // Update date formats
+        assert adapter != null : "Adapter not set";
+        String newDateFormat = getDefaultUnitPattern(rangeUnit, rangeQty);
+        ChartBaseFormatter xFormatter = adapter.getXFormatter();
+        if (xFormatter instanceof ChartDateTimeFormatter) {
+            ChartDateTimeFormatter formatter = (ChartDateTimeFormatter) xFormatter;
+            formatter.setDateFormat(newDateFormat);
+        }
+        timeNavigatorView.setDateTimeFormat(newDateFormat);
+
         // Update sub views
         Log.v("ChartBaseView", "Updated TimeRange Qty: " + rangeUnit);
         timeSettingsView.setRangeQty(rangeQty);
@@ -708,38 +788,13 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
         });
     }
 
-    @Override
-    public void updateDataSetToChart(String dataSetName, DataSet<?> dataSet, TimeRangeLimits limits) {
-        decreaseFetchCounter();
-
-        // Check if data set is empty
-        if (dataSet == null || dataSet.getEntryCount() == 0) {
-            String msg = String.format("DataSet '%s': empty data set received", dataSetName);
-            Log.w("ChartBaseView", msg);
-            removeDataSetFromChart(dataSetName);
-            updateTimeRangeToChart(limits);
-            return;
-        }
-
-        dataSet = doPrepareDataSet(dataSetName, dataSet, limits);
-
-        // Add data set to chart
-        assert adapter != null : "Adapter not set";
-        dataSet.setLabel(adapter.getDataSetLabel(dataSetName));
-
-        removeDataSetFromChart(dataSetName);
-        addDataSetToChart(dataSetName, dataSet);
-
-        invalidateChart(true);
-
-        updateTimeRangeToChart(limits);
-
-        @SuppressLint("DefaultLocale") String msg = String.format("DataSet '%s': fetched %s - %s range (%d)", dataSetName, LOG_SDF.format(limits.getFromDate()), LOG_SDF.format(limits.getToDate()), dataSet.getEntryCount());
-        Log.i("ChartBaseView", msg);
-    }
-
     private void addDataSetToChart(String dataSetName, DataSet<?> dataSet) {
         Log.v("ChartBaseView", String.format("Adding '%s data set to chart", dataSetName));
+
+        // style data set
+        getAdapter().setupDataSetStyle(dataSetName, dataSet);
+        dataSet.setAxisDependency(getAdapter().getDataSetYAxisDep(dataSetName));
+
         doAddDataSetFromChart(dataSetName, dataSet);
         Log.d("ChartBaseView", String.format("DataSet '%s': added to chart", dataSetName));
         invalidateChart(false);
@@ -763,22 +818,20 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
 
     // Data sets fetching
 
-    private void increaseFetchCounter(TimeRangeLimits limits) {
-        fetchCounter++;
-        Log.d("ChartBaseView", String.format(": fetchCounter >> %d", fetchCounter));
-        if (fetchCounter == 1) {
-            assert adapter != null : "Adapter not set";
-            ChartBaseFormatter xFormatter = adapter.getXFormatter();
-            Log.d("ChartBaseView", String.format("Fetching data from %s to %s...",
-                    xFormatter.toString(xFormatter.from(limits.getFromDate())),
-                    xFormatter.toString(xFormatter.from(limits.getToDate()))));
-        }
+    private void cleanCurrentFetching() {
+        for (TimerTask task : fetchTimeouts.values())
+            task.cancel();
+        fetchTimeouts.clear();
+        fetchedDataSet.clear();
+        fetchingDataSet.clear();
     }
 
-    private void decreaseFetchCounter() {
-        fetchCounter--;
-        Log.d("ChartBaseView", String.format(": fetchCounter << %d", fetchCounter));
-        //if (fetchCounter == 0) hideUIMessage();
+    private void cleanCurrentFetching(String dataSetName) {
+        TimerTask task = fetchTimeouts.remove(dataSetName);
+        if (task != null)
+            task.cancel();
+        fetchedDataSet.clear();
+        fetchingDataSet.remove(dataSetName);
     }
 
     public void fetch() {
@@ -800,11 +853,16 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
 
         for (String dataSetName : dataSetsToFetch) {
             try {
+                if (isFetching(dataSetName)) {
+                    String msg = String.format("DataSet '%s': already fetching", dataSetName);
+                    Log.w("ChartBaseView", msg);
+                    cleanCurrentFetching(dataSetName);
+                }
                 String msg = String.format("DataSet '%s': fetching", dataSetName);
                 Log.i("ChartBaseView", msg);
 
                 assert adapter != null : "Adapter not set";
-                increaseFetchCounter(limits);
+                registerNewFetch(dataSetName, limits);
                 adapter.doFetch(dataSetName, limits);
 
             } catch (Throwable e) {
@@ -813,6 +871,195 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
                 e.printStackTrace();
             }
         }
+    }
+
+    private void registerNewFetch(String dataSetName, TimeRangeLimits limits) {
+        // Fetching data sets list
+        fetchingDataSet.add(dataSetName);
+
+        // Timeout time task
+        TimerTask task = startFetchTimer(dataSetName, limits);
+        fetchTimeouts.put(dataSetName, task);
+
+        showUIFetchingMessage();
+    }
+
+    @Override
+    public void processFetchedDataSet(String dataSetName, DataSet<?> dataSet, TimeRangeLimits limits) {
+        Log.v("ChartBaseView", String.format("Processing '%s' data set data", dataSetName));
+        if (!isFetching(dataSetName))
+            return; // fetch deleted or timeout
+
+        // Check if data set is empty
+        if (dataSet == null || dataSet.getEntryCount() == 0) {
+            String msg = String.format("DataSet '%s': empty data set received", dataSetName);
+            Log.w("ChartBaseView", msg);
+            registerFetchReceived(dataSetName, limits, null);
+            registerFetchCompletion(dataSetName, limits, null);
+            return;
+        }
+
+        registerFetchReceived(dataSetName, limits, null);
+
+        dataSet = doPrepareDataSet(dataSetName, dataSet, limits);
+
+        // Add data set to chart
+        registerFetchCompletion(dataSetName, limits, dataSet);
+
+        @SuppressLint("DefaultLocale") String msg = String.format("DataSet '%s': fetched %s - %s range (%d)", dataSetName, LOG_SDF.format(limits.getFromDate()), LOG_SDF.format(limits.getToDate()), dataSet.getEntryCount());
+        Log.i("ChartBaseView", msg);
+    }
+
+    private void registerFetchReceived(String dataSetName, TimeRangeLimits limits, DataSet<?> dataSet) {
+        Log.v("ChartBaseView", String.format("DataSet '%s': fetch received", dataSetName));
+
+        // Timeout time task
+        TimerTask task = fetchTimeouts.remove(dataSetName);
+        assert task != null : String.format("Fetch timeout for '%s' dataSet not found", dataSetName);
+        task.cancel();
+
+        showUIFetchingMessage();
+    }
+
+    private void registerFetchCompletion(String dataSetName, TimeRangeLimits limits, DataSet<?> dataSet) {
+        Log.v("ChartBaseView", String.format("DataSet '%s': fetch completed", dataSetName));
+
+        // Fetching data sets list
+        fetchingDataSet.remove(dataSetName);
+        if (!isFetching()) hideUIMessage();
+
+        // Update chart
+        if (dataSet == null) {
+            dataSet = generateZeroDataSet(dataSetName, limits);
+            dataSet.setLabel(getAdapter().getDataSetLabel(dataSetName) + " - NO_DATA");
+        } else {
+            dataSet.setLabel(getAdapter().getDataSetLabel(dataSetName));
+        }
+        registerFetchDataSet(dataSetName, dataSet, limits);
+        //invalidateChart(true);
+        //updateTimeRangeToChart(limits);
+    }
+
+    private void registerFetchTimeout(String dataSetName, TimeRangeLimits limits) {
+        Log.w("ChartBaseView", String.format("DataSet '%s': fetch timeout", dataSetName));
+        displayToastMessage(String.format("DataSet '%s': fetch timeout", dataSetName));
+
+        // Timeout time task
+        fetchTimeouts.remove(dataSetName);
+
+        // Fetching data sets list
+        fetchingDataSet.remove(dataSetName);
+        if (!isFetching()) hideUIMessage();
+
+        // Update chart
+        DataSet<?> dataSet = generateZeroDataSet(dataSetName, limits);
+        dataSet.setLabel(getAdapter().getDataSetLabel(dataSetName) + " - TIMEOUT");
+        registerFetchDataSet(dataSetName, dataSet, limits);
+        //invalidateChart(true);
+        //updateTimeRangeToChart(limits);
+    }
+
+    private void registerFetchDataSet(String dataSetName, DataSet<?> dataSet, TimeRangeLimits limits) {
+        fetchedDataSet.put(dataSetName, dataSet);
+
+        // Sync fetched data sets with chart
+        if (!isFetching()) {
+            for (Map.Entry<String, DataSet<?>> entry : fetchedDataSet.entrySet()) {
+                removeDataSetFromChart(entry.getKey());
+                addDataSetToChart(entry.getKey(), entry.getValue());
+            }
+            fetchedDataSet.clear();
+            updateTimeRangeToChart(limits);
+            invalidateChart(true);
+        }
+    }
+
+    private <T extends DataSet<?>> T generateZeroDataSet(String dataSetName, TimeRangeLimits limits) {
+        List<Entry> dataSetFilteredEntries = new ArrayList<>();
+        for (int i=0; i < getRangePartitions(); i++)
+            dataSetFilteredEntries.add(new Entry(i, 0));
+
+        Map<Date, List<Float>> partitions = MPAndroidChartUtils.generatePartitionsMidDate((ChartDateTimeFormatter) adapter.getXFormatter(), limits, getRangePartitions());
+        for (List<Float> l : partitions.values())
+            l.add(0F);
+
+        // Convert Map<Date,List<Float>> to List<Entry>
+        T dataSet = MPAndroidChartUtils.mapPartitionsToDataSet(getChartDataSetClass(), dataSetName + " - NO_DATA", getChartEntryClass(), partitions, (ChartDateTimeFormatter) adapter.getXFormatter());
+        dataSet.setLabel(adapter.getDataSetLabel(dataSetName));
+        return dataSet;
+    }
+
+
+    // Fetch timer methods
+
+    private TimerTask startFetchTimer(String dataSetName, TimeRangeLimits limits) {
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                if (!isFetching(dataSetName))
+                    return; // already deleted or fetched
+
+                registerFetchTimeout(dataSetName, limits);
+            }
+        };
+
+        timer.schedule(task, getFetchTimeoutMs());
+        return task;
+    }
+
+
+    // UI and Toast messages
+
+    private void showUIFetchingMessage() {
+        List<String> wDS = getWaitingDataSets();
+        List<String> pDS = getProcessingDataSets();
+        List<String> cDS = getCompletedDataSets();
+        String message = "";
+        if (wDS.size() > 0) {
+            message += "Waiting data sets: \n";
+            for (String dataSetName : wDS)
+                message += "- " + getAdapter().getDataSetLabel(dataSetName) + "\n";
+        }
+        if (pDS.size() > 0) {
+            message += "Processing data sets: \n";
+            for (String dataSetName : pDS)
+                message += "- " + getAdapter().getDataSetLabel(dataSetName) + "\n";
+        }
+        if (cDS.size() > 0) {
+            message += "Completed data sets: \n";
+            for (String dataSetName : cDS)
+                message += "- " + getAdapter().getDataSetLabel(dataSetName) + "\n";
+        }
+        updateUIMessage(true, message);
+        Log.d("ChartBaseView", message);
+    }
+
+    private void hideUIMessage() {
+        updateUIMessage(false, "");
+    }
+
+    private void updateUIMessage(boolean visible, String text) {
+        assert activity != null : "Activity not set";
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ViewGroup overlayView = getOverlayView();
+                TextView overlayText = getOverlayText();
+
+                overlayText.setText(text);
+                overlayView.setVisibility(visible ? View.VISIBLE : View.GONE);
+            }
+        });
+    }
+
+    private void displayToastMessage(String text) {
+        assert activity != null : "Activity not set";
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(activity, text, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 
