@@ -7,6 +7,8 @@ import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -326,6 +328,10 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
      * @return the xml layout id to inflate.
      */
     protected abstract int getLayout();
+
+    protected abstract ViewGroup getOverlayView();
+
+    protected abstract TextView getOverlayText();
 
     /**
      * This method calls the {@link TimeRangeLimits#calculateTimeRangeLimits(Date, int, int, int)}

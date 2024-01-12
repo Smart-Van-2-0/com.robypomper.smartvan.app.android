@@ -3,6 +3,8 @@ package com.robypomper.josp.jsl.android.components.charts;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
@@ -26,6 +28,8 @@ public class ChartLineView extends ChartBaseView {
     // Internal vars
 
     private final LineChart chart;
+    private final ViewGroup layOverlay;
+    private final TextView txtOverlay;
 
 
     // Constructors
@@ -70,6 +74,10 @@ public class ChartLineView extends ChartBaseView {
         chart = findViewById(R.id.chartComponents);
         chart.setData(new LineData());
 
+        layOverlay = findViewById(R.id.layOverlay);
+        txtOverlay = findViewById(R.id.txtOverlay);
+        assert layOverlay != null || txtOverlay != null : "Overlay view not found";
+
         Log.v("ChartLineView", "Created");
     }
 
@@ -79,6 +87,16 @@ public class ChartLineView extends ChartBaseView {
     @Override
     protected int getLayout() {
         return LAYOUT;
+    }
+
+    @Override
+    protected ViewGroup getOverlayView() {
+        return layOverlay;
+    }
+
+    @Override
+    protected TextView getOverlayText() {
+        return txtOverlay;
     }
 
     @Override

@@ -3,6 +3,8 @@ package com.robypomper.josp.jsl.android.components.charts;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
@@ -25,6 +27,8 @@ public class ChartBarView extends ChartBaseView {
 
 
     private final BarChart chart;
+    private final ViewGroup layOverlay;
+    private final TextView txtOverlay;
 
     public ChartBarView(Context context) {
         this(context, null);
@@ -65,12 +69,27 @@ public class ChartBarView extends ChartBaseView {
         // Setup chart
         chart = findViewById(R.id.chartComponents);
         chart.setData(new BarData());
+
+        layOverlay = findViewById(R.id.layOverlay);
+        txtOverlay = findViewById(R.id.txtOverlay);
+        assert layOverlay != null || txtOverlay != null : "Overlay view not found";
+
         Log.v("ChartBarView", "Created");
     }
 
     @Override
     protected int getLayout() {
         return LAYOUT;
+    }
+
+    @Override
+    protected ViewGroup getOverlayView() {
+        return layOverlay;
+    }
+
+    @Override
+    protected TextView getOverlayText() {
+        return txtOverlay;
     }
 
     @Override
@@ -189,7 +208,6 @@ public class ChartBarView extends ChartBaseView {
         if (getFetchCounter() > 0)
             return;
 
-        chart.notifyDataSetChanged();
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
