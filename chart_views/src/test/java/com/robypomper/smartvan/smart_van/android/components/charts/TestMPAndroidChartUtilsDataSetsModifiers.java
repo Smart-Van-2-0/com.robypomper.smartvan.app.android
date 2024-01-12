@@ -1,6 +1,7 @@
 package com.robypomper.smartvan.smart_van.android.components.charts;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import android.graphics.Color;
 
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /** @noinspection UnnecessaryLocalVariable*/
 @RunWith(MockitoJUnitRunner.class)
@@ -697,7 +699,7 @@ public class TestMPAndroidChartUtilsDataSetsModifiers {
 
     @Test
     public void testReduceEqualsPartitionDataSet_count() {
-        final int MAX_COUNT = 5;        // 1st + 4 intermediate + Last
+        final int MAX_COUNT = 5;            // 4 partitions + ToDate
 
         // FROM: 2000-01-01 00:00:00, TO: +4 Hours, NOW = FROM
         long Y2000 = 946684800000L + FIX_1_HOUR; // 2000-01-01 00:00:00
@@ -726,7 +728,7 @@ public class TestMPAndroidChartUtilsDataSetsModifiers {
     @Deprecated
     @Test
     public void testReduceEqualsPartitionDataSet_firstMidAndLast() {
-        final int MAX_COUNT = 4 + 1;        // 4 partitions + ToDate
+        final int MAX_COUNT = 5;            // 4 partitions + ToDate
 
         // FROM: 2000-01-01 00:00:00, TO: +4 Hours, NOW = FROM
         long Y2000 = 946684800000L + FIX_1_HOUR; // 2000-01-01 00:00:00
@@ -779,7 +781,7 @@ public class TestMPAndroidChartUtilsDataSetsModifiers {
 
     @Test
     public void testReduceEqualsPartitionDataSet_Complete() {
-        final int MAX_COUNT = 4 + 1;        // 4 partitions + ToDate
+        final int MAX_COUNT = 5;            // 4 partitions + ToDate
 
         // FROM: 2000-01-01 00:00:00, TO: +4 Hours, NOW = FROM
         long Y2000 = 946684800000L + FIX_1_HOUR; // 2000-01-01 00:00:00
@@ -831,7 +833,7 @@ public class TestMPAndroidChartUtilsDataSetsModifiers {
 
     @Test
     public void testReduceEqualsPartitionDataSet_CompletePartialStart_PRE() {
-        final int MAX_COUNT = 4 + 1;        // 4 partitions + ToDate
+        final int MAX_COUNT = 5;            // 4 partitions + ToDate
 
         // FROM: 2000-01-01 00:00:00, TO: +4 Hours, NOW = FROM
         long Y2000 = 946684800000L + FIX_1_HOUR; // 2000-01-01 00:00:00
@@ -888,7 +890,7 @@ public class TestMPAndroidChartUtilsDataSetsModifiers {
 
     @Test
     public void testReduceEqualsPartitionDataSet_CompletePartialMiddle() {
-        final int MAX_COUNT = 4 + 1;        // 4 partitions + ToDate
+        final int MAX_COUNT = 5;            // 4 partitions + ToDate
 
         // FROM: 2000-01-01 00:00:00, TO: +4 Hours, NOW = FROM
         long Y2000 = 946684800000L + FIX_1_HOUR; // 2000-01-01 00:00:00
@@ -949,7 +951,7 @@ public class TestMPAndroidChartUtilsDataSetsModifiers {
 
     @Test
     public void testReduceEqualsPartitionDataSet_CompletePartialEnd_POST() {
-        final int MAX_COUNT = 4 + 1;        // 4 partitions + ToDate
+        final int MAX_COUNT = 5;            // 4 partitions + ToDate
 
         // FROM: 2000-01-01 00:00:00, TO: +4 Hours, NOW = FROM
         long Y2000 = 946684800000L + FIX_1_HOUR; // 2000-01-01 00:00:00
@@ -1006,7 +1008,7 @@ public class TestMPAndroidChartUtilsDataSetsModifiers {
 
     @Test
     public void testReduceEqualsPartitionDataSet_MissingStart() {
-        final int MAX_COUNT = 4 + 1;        // 4 partitions + ToDate
+        final int MAX_COUNT = 5;            // 4 partitions + ToDate
 
         // FROM: 2000-01-01 00:00:00, TO: +4 Hours, NOW = FROM
         long Y2000 = 946684800000L + FIX_1_HOUR; // 2000-01-01 00:00:00
@@ -1064,7 +1066,7 @@ public class TestMPAndroidChartUtilsDataSetsModifiers {
 
     @Test
     public void testReduceEqualsPartitionDataSet_MissingMiddle() {
-        final int MAX_COUNT = 4 + 1;        // 4 partitions + ToDate
+        final int MAX_COUNT = 5;            // 4 partitions + ToDate
 
         // FROM: 2000-01-01 00:00:00, TO: +4 Hours, NOW = FROM
         long Y2000 = 946684800000L + FIX_1_HOUR; // 2000-01-01 00:00:00
@@ -1127,7 +1129,7 @@ public class TestMPAndroidChartUtilsDataSetsModifiers {
 
     @Test
     public void testReduceEqualsPartitionDataSet_MissingEnd() {
-        final int MAX_COUNT = 4 + 1;        // 4 partitions + ToDate
+        final int MAX_COUNT = 5;            // 4 partitions + ToDate
 
         // FROM: 2000-01-01 00:00:00, TO: +4 Hours, NOW = FROM
         long Y2000 = 946684800000L + FIX_1_HOUR; // 2000-01-01 00:00:00
@@ -1183,7 +1185,7 @@ public class TestMPAndroidChartUtilsDataSetsModifiers {
 
     @Test
     public void testReduceEqualsPartitionDataSet_noData() {
-        final int MAX_COUNT = 4 + 1;        // 4 partitions + ToDate
+        final int MAX_COUNT = 5;            // 4 partitions + ToDate
 
         // FROM: 2000-01-01 00:00:00, TO: +4 Hours, NOW = FROM
         long Y2000 = 946684800000L + FIX_1_HOUR; // 2000-01-01 00:00:00
@@ -1221,6 +1223,74 @@ public class TestMPAndroidChartUtilsDataSetsModifiers {
         for (int i = 0; i < MAX_COUNT; i++) {
             value = reducedLineDataSet.getEntryForIndex(i).getY();
             assertEquals(expectedValues[i], value, 0);
+        }
+    }
+
+
+    // generatePartitions
+
+    @Test
+    public void testGeneratePartitionsMidDate() {
+        final int MAX_COUNT = 6;        // 1st + 4 intermediate + Last
+
+        // FROM: 2000-01-01 00:00:00, TO: +4 Hours, NOW = FROM
+        long Y2000 = 946684800000L + FIX_1_HOUR; // 2000-01-01 00:00:00
+        final Date FROM = new Date(Y2000);
+        final Date TO = new Date(Y2000 + (4 * 60 * 60 * 1000)); // 4 Hours
+        final TimeRangeLimits TIME_LIMITS = newTimeRangeLimits(FROM, TO);
+        final ChartDateTimeFormatter FORMATTER = ChartDateTimeFormatter.X_FORMATTER_MINUTES();
+        FORMATTER.setRelativeDate(FROM);
+
+        // Created partition 	00:00		 from 00:00 - 00:00
+        // Created partition 	00:30		 from 00:00 - 01:00
+        // Created partition 	01:30		 from 01:00 - 02:00
+        // Created partition 	02:30		 from 02:00 - 03:00
+        // Created partition 	03:30		 from 03:00 - 04:00
+        // Created partition 	04:00		 from 04:00 - 04:00
+
+        // Generate partitions
+        Map<Date, List<Float>> partitions = MPAndroidChartUtils.generatePartitionsMidDate(FORMATTER, TIME_LIMITS, MAX_COUNT);
+
+        // Test partition's size
+        assertEquals(MAX_COUNT, partitions.size());
+        // Test partition's size
+        assertEquals(MAX_COUNT, partitions.size());
+        Date firstDate = new Date(Y2000);
+        assertTrue(String.format("Can't find '%s' partition", firstDate), partitions.containsKey(firstDate));
+        for (int i = 0; i < MAX_COUNT-2; i++) {
+            Date date = new Date(Y2000 + (30 * 60 * 1000) + (i * 60 * 60 * 1000));
+            assertTrue(String.format("Can't find '%s' partition", date), partitions.containsKey(date));
+        }
+        Date lastDate = new Date(Y2000 + (4 * 60 * 60 * 1000));
+        assertTrue(String.format("Can't find '%s' as last partition", lastDate), partitions.containsKey(lastDate));
+    }
+
+    @Test
+    public void testGeneratePartitionsStartDate() {
+        final int MAX_COUNT = 5;            // 4 partitions + ToDate
+
+        // FROM: 2000-01-01 00:00:00, TO: +4 Hours, NOW = FROM
+        long Y2000 = 946684800000L + FIX_1_HOUR; // 2000-01-01 00:00:00
+        final Date FROM = new Date(Y2000);
+        final Date TO = new Date(Y2000 + (4 * 60 * 60 * 1000)); // 4 Hours
+        final TimeRangeLimits TIME_LIMITS = newTimeRangeLimits(FROM, TO);
+        final ChartDateTimeFormatter FORMATTER = ChartDateTimeFormatter.X_FORMATTER_MINUTES();
+        FORMATTER.setRelativeDate(FROM);
+
+        // Created partition 	00:00		 from 00:00 - 01:00
+        // Created partition 	01:00		 from 01:00 - 02:00
+        // Created partition 	02:00		 from 02:00 - 03:00
+        // Created partition 	03:00		 from 03:00 - 04:00
+        // Created partition 	04:00		 from 04:00 - 05:00
+
+        // Generate partitions
+        Map<Date, List<Float>> partitions = MPAndroidChartUtils.generatePartitionsStartDate(FORMATTER, TIME_LIMITS, MAX_COUNT);
+
+        // Test partition's size
+        assertEquals(MAX_COUNT, partitions.size());
+        for (int i = 0; i < MAX_COUNT; i++) {
+            Date date = new Date(Y2000 + (i * 60 * 60 * 1000));
+            assertTrue(String.format("Can't find '%s' partition", date), partitions.containsKey(date));
         }
     }
 

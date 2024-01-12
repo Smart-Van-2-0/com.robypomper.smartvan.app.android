@@ -288,31 +288,7 @@ public class MPAndroidChartUtils {
 
         long rangeLengthMs = timeLimits.getToDate().getTime() - timeLimits.getFromDate().getTime();
         long partitionMs = rangeLengthMs / (maxCount - 2);
-
-        Map<Date, List<Float>> partitions = new HashMap<>();
-        // Create empty partitions
-        // Map<MidDate, Values list>
-        partitions.put(timeLimits.getFromDate(), new ArrayList<>());
-        float firstPartitionDateFloat = xFormatter.from(timeLimits.getFromDate());
-        if (LOG)
-            System.out.println("Created partition \t" + xFormatter.toString(firstPartitionDateFloat) + "\t\t from " + xFormatter.toString(firstPartitionDateFloat) + " - " + xFormatter.toString(firstPartitionDateFloat));
-        Date currentDate = timeLimits.getFromDate();
-        while (currentDate.getTime() < timeLimits.getToDate().getTime()) {
-            Date partitionStartDate = currentDate;
-            Date partitionMidDate = new Date(partitionStartDate.getTime() + (partitionMs / 2));
-            partitions.put(partitionMidDate, new ArrayList<>());
-            currentDate = new Date(currentDate.getTime() + partitionMs);
-            Date partitionEndDate = currentDate;
-            float partitionStartDateFloat = xFormatter.from(partitionStartDate);
-            float partitionMidDateFloat = xFormatter.from(partitionMidDate);
-            float partitionEndDateFloat = xFormatter.from(partitionEndDate);
-            if (LOG)
-                System.out.println("Created partition \t" + xFormatter.toString(partitionMidDateFloat) + "\t\t from " + xFormatter.toString(partitionStartDateFloat) + " - " + xFormatter.toString(partitionEndDateFloat));
-        }
-        partitions.put(timeLimits.getToDate(), new ArrayList<>());
-        float lastPartitionDateFloat = xFormatter.from(timeLimits.getToDate());
-        if (LOG)
-            System.out.println("Created partition \t" + xFormatter.toString(lastPartitionDateFloat) + "\t\t from " + xFormatter.toString(lastPartitionDateFloat) + " - " + xFormatter.toString(lastPartitionDateFloat));
+        Map<Date, List<Float>> partitions = generatePartitionsMidDate(xFormatter, timeLimits, maxCount);
 
         int startIdx = 0;
         // Copy first item from original data set as first partition
@@ -323,8 +299,8 @@ public class MPAndroidChartUtils {
             Entry firstEntry = dataSet.getEntryForIndex(0);
             if (xFormatter.from(timeLimits.getFromDate()) <= firstEntry.getX() && firstEntry.getX() < xFormatter.from(startMidDate)) {
                 firstPartition.add(firstEntry.getY());
-                if (LOG)
-                    System.out.println("Populated partition " + xFormatter.toString(firstPartitionDateFloat) + "\t from " + xFormatter.toString(firstPartitionDateFloat) + " - " + xFormatter.toString(firstPartitionDateFloat) + "\t values: " + firstEntry.getY());
+                //if (LOG)
+                //    System.out.println("Populated partition " + xFormatter.toString(firstPartitionDateFloat) + "\t from " + xFormatter.toString(firstPartitionDateFloat) + " - " + xFormatter.toString(firstPartitionDateFloat) + "\t values: " + firstEntry.getY());
                 startIdx = 1;
             }
         }
@@ -339,8 +315,8 @@ public class MPAndroidChartUtils {
             Entry lastEntry = dataSet.getEntryForIndex(dataSet.getEntryCount() - 1);
             if (xFormatter.from(endMidDate) < lastEntry.getX() && lastEntry.getX() <= xFormatter.from(timeLimits.getToDate())) {
                 lastPartition.add(lastEntry.getY());
-                if (LOG)
-                    System.out.println("Populated partition " + xFormatter.toString(lastPartitionDateFloat) + "\t from " + xFormatter.toString(lastPartitionDateFloat) + " - " + xFormatter.toString(lastPartitionDateFloat) + "\t values: " + lastEntry.getY());
+                //if (LOG)
+                //    System.out.println("Populated partition " + xFormatter.toString(lastPartitionDateFloat) + "\t from " + xFormatter.toString(lastPartitionDateFloat) + " - " + xFormatter.toString(lastPartitionDateFloat) + "\t values: " + lastEntry.getY());
                 endIdxOffset = 1;
             }
         }
@@ -387,8 +363,8 @@ public class MPAndroidChartUtils {
             }
             partitionEntry.add(currentEntity.getY());
         }
-        if (LOG)
-            System.out.println("Populated partition " + xFormatter.toString(cP_MidFloat) + "\t from " + xFormatter.toString(cP_StartDateFloat) + " - " + xFormatter.toString(cP_EndDateFloat) + "\t values: " + partitions.get(cP_MidDate));
+        //if (LOG)
+        //    System.out.println("Populated partition " + xFormatter.toString(cP_MidFloat) + "\t from " + xFormatter.toString(cP_StartDateFloat) + " - " + xFormatter.toString(cP_EndDateFloat) + "\t values: " + partitions.get(cP_MidDate));
 
         // Convert Map<Date,List<Float>> to List<Entry>
         T reducedDataSet = mapPartitionsToDataSet(dataSet, entryClass, partitions, xFormatter);
@@ -412,34 +388,7 @@ public class MPAndroidChartUtils {
         long rangeLengthMs = timeLimits.getToDate().getTime() - timeLimits.getFromDate().getTime();
         long partitionMs = rangeLengthMs / (maxCount - 1);
 
-        Map<Date, List<Float>> partitions = new HashMap<>();
-        // Create empty partitions, based on StartDate
-        Date currentDate = timeLimits.getFromDate();
-        while (currentDate.getTime() <= timeLimits.getToDate().getTime()) {
-            Date partitionStartDate = currentDate;
-            Date partitionMidDate = new Date(partitionStartDate.getTime() + (partitionMs / 2));
-            partitions.put(partitionStartDate, new ArrayList<>());
-            currentDate = new Date(currentDate.getTime() + partitionMs);
-            Date partitionEndDate = currentDate;
-            float partitionStartDateFloat = xFormatter.from(partitionStartDate);
-            float partitionMidDateFloat = xFormatter.from(partitionMidDate);
-            float partitionEndDateFloat = xFormatter.from(partitionEndDate);
-            if (LOG)
-                System.out.println("Created partition \t" + xFormatter.toString(partitionStartDateFloat) + "\t\t from " + xFormatter.toString(partitionStartDateFloat) + " - " + xFormatter.toString(partitionEndDateFloat));
-        }
-
-        while (currentDate.getTime() < timeLimits.getToDate().getTime()) {
-            Date partitionStartDate = currentDate;
-            Date partitionMidDate = new Date(partitionStartDate.getTime() + (partitionMs / 2));
-            partitions.put(partitionMidDate, new ArrayList<>());
-            currentDate = new Date(currentDate.getTime() + partitionMs);
-            Date partitionEndDate = currentDate;
-            float partitionStartDateFloat = xFormatter.from(partitionStartDate);
-            float partitionMidDateFloat = xFormatter.from(partitionMidDate);
-            float partitionEndDateFloat = xFormatter.from(partitionEndDate);
-            if (LOG)
-                System.out.println("Created partition \t" + xFormatter.toString(partitionMidDateFloat) + "\t\t from " + xFormatter.toString(partitionStartDateFloat) + " - " + xFormatter.toString(partitionEndDateFloat));
-        }
+        Map<Date, List<Float>> partitions = generatePartitionsStartDate(xFormatter, timeLimits, maxCount);
 
         // Calculate partitions
         Date cP_StartDate = new Date(timeLimits.getFromDate().getTime());
@@ -503,8 +452,13 @@ public class MPAndroidChartUtils {
         return newDataSet(dataSet, dataSetFilteredEntries);
     }
 
-    private static <T extends DataSet<?>> T mapPartitionsToDataSet(T dataSet, Class<?> entryClass, Map<Date, List<Float>> partitions, ChartDateTimeFormatter xFormatter) {
+    public static <T extends DataSet<?>> T mapPartitionsToDataSet(T dataSet, Class<?> entryClass, Map<Date, List<Float>> partitions, ChartDateTimeFormatter xFormatter) {
+        return mapPartitionsToDataSet(dataSet.getClass(), dataSet.getLabel(), entryClass, partitions, xFormatter);
+    }
+
+    public static <T extends DataSet<?>> T mapPartitionsToDataSet(Class<?> dataSetClass, String dataSetLabel, Class<?> entryClass, Map<Date, List<Float>> partitions, ChartDateTimeFormatter xFormatter) {
         List<Entry> dataSetFilteredEntries = new ArrayList<>();
+
         for (Map.Entry<Date, List<Float>> partition : partitions.entrySet()) {
             float avgValue = 0;
             StringBuilder log = new StringBuilder();
@@ -520,7 +474,87 @@ public class MPAndroidChartUtils {
             dataSetFilteredEntries.add(newEntry(entryClass, date, avgValue));
         }
 
-        return newDataSet(dataSet, dataSetFilteredEntries);
+        return newDataSet(dataSetClass, dataSetLabel, dataSetFilteredEntries);
+    }
+
+    /**
+     * MAX_COUNT = 6;        // 1st + 4 intermediate + Last
+     * FROM = new Date(Y2000);
+     * TO = new Date(Y2000 + (4 * 60 * 60 * 1000)); // 4 Hours
+     * <p>
+     * Created partition 	00:00		 from 00:00 - 00:00
+     * Created partition 	00:30		 from 00:00 - 01:00
+     * Created partition 	01:30		 from 01:00 - 02:00
+     * Created partition 	02:30		 from 02:00 - 03:00
+     * Created partition 	03:30		 from 03:00 - 04:00
+     * Created partition 	04:00		 from 04:00 - 04:00
+     */
+    public static Map<Date, List<Float>> generatePartitionsMidDate(ChartDateTimeFormatter xFormatter, TimeRangeLimits timeLimits, int maxCount) {
+        boolean LOG = false;
+        long rangeLengthMs = timeLimits.getToDate().getTime() - timeLimits.getFromDate().getTime();
+        long partitionMs = rangeLengthMs / (maxCount - 2);
+
+        Map<Date, List<Float>> partitions = new HashMap<>();
+        // Create empty partitions based on MidDate
+        // Map<MidDate, Values list>
+        partitions.put(timeLimits.getFromDate(), new ArrayList<>());
+        float firstPartitionDateFloat = xFormatter.from(timeLimits.getFromDate());
+        if (LOG)
+            System.out.println("Created partition \t" + xFormatter.toString(firstPartitionDateFloat) + "\t\t from " + xFormatter.toString(firstPartitionDateFloat) + " - " + xFormatter.toString(firstPartitionDateFloat));
+        Date currentDate = timeLimits.getFromDate();
+        while (currentDate.getTime() < timeLimits.getToDate().getTime()) {
+            Date partitionStartDate = currentDate;
+            Date partitionMidDate = new Date(partitionStartDate.getTime() + (partitionMs / 2));
+            partitions.put(partitionMidDate, new ArrayList<>());
+            currentDate = new Date(currentDate.getTime() + partitionMs);
+            Date partitionEndDate = currentDate;
+            float partitionStartDateFloat = xFormatter.from(partitionStartDate);
+            float partitionMidDateFloat = xFormatter.from(partitionMidDate);
+            float partitionEndDateFloat = xFormatter.from(partitionEndDate);
+            if (LOG)
+                System.out.println("Created partition \t" + xFormatter.toString(partitionMidDateFloat) + "\t\t from " + xFormatter.toString(partitionStartDateFloat) + " - " + xFormatter.toString(partitionEndDateFloat));
+        }
+        partitions.put(timeLimits.getToDate(), new ArrayList<>());
+        float lastPartitionDateFloat = xFormatter.from(timeLimits.getToDate());
+        if (LOG)
+            System.out.println("Created partition \t" + xFormatter.toString(lastPartitionDateFloat) + "\t\t from " + xFormatter.toString(lastPartitionDateFloat) + " - " + xFormatter.toString(lastPartitionDateFloat));
+
+        return partitions;
+    }
+
+    /**
+     * MAX_COUNT = 5;            // 4 partitions + ToDate
+     * FROM = new Date(Y2000);
+     * TO = new Date(Y2000 + (4 * 60 * 60 * 1000)); // 4 Hours
+     * <p>
+     * Created partition 	00:00		 from 00:00 - 01:00
+     * Created partition 	01:00		 from 01:00 - 02:00
+     * Created partition 	02:00		 from 02:00 - 03:00
+     * Created partition 	03:00		 from 03:00 - 04:00
+     * Created partition 	04:00		 from 04:00 - 05:00
+     */
+    public static Map<Date, List<Float>> generatePartitionsStartDate(ChartDateTimeFormatter xFormatter, TimeRangeLimits timeLimits, int maxCount) {
+        boolean LOG = false;
+        long rangeLengthMs = timeLimits.getToDate().getTime() - timeLimits.getFromDate().getTime();
+        long partitionMs = rangeLengthMs / (maxCount - 1);
+
+        Map<Date, List<Float>> partitions = new HashMap<>();
+        // Create empty partitions, based on StartDate
+        Date currentDate = timeLimits.getFromDate();
+        while (currentDate.getTime() <= timeLimits.getToDate().getTime()) {
+            Date partitionStartDate = currentDate;
+            Date partitionMidDate = new Date(partitionStartDate.getTime() + (partitionMs / 2));
+            partitions.put(partitionStartDate, new ArrayList<>());
+            currentDate = new Date(currentDate.getTime() + partitionMs);
+            Date partitionEndDate = currentDate;
+            float partitionStartDateFloat = xFormatter.from(partitionStartDate);
+            float partitionMidDateFloat = xFormatter.from(partitionMidDate);
+            float partitionEndDateFloat = xFormatter.from(partitionEndDate);
+            if (LOG)
+                System.out.println("Created partition \t" + xFormatter.toString(partitionStartDateFloat) + "\t\t from " + xFormatter.toString(partitionStartDateFloat) + " - " + xFormatter.toString(partitionEndDateFloat));
+        }
+
+        return partitions;
     }
 
 }
