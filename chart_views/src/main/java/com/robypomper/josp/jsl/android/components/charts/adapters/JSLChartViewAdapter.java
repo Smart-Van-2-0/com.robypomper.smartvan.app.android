@@ -1,5 +1,7 @@
 package com.robypomper.josp.jsl.android.components.charts.adapters;
 
+import android.util.Log;
+
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BaseEntry;
 import com.robypomper.josp.jsl.android.app.JSLApplication;
@@ -86,7 +88,7 @@ public class JSLChartViewAdapter extends ChartViewAdapterAbs {
                             new HistoryCompStatus.StatusHistoryListener() {
                                 @Override
                                 public void receivedStatusHistory(List<JOSPStatusHistory> history) {
-                                    System.out.println("[DataSet: " + dataSetName + "] - doFetch from " + ChartLineView.LOG_SDF.format(historyLimits.getFromDate()) + " to " + ChartLineView.LOG_SDF.format(historyLimits.getToDate()) + " => " + history.size());
+                                    Log.d("JSLChartViewAdapter", "DataSet '" + dataSetName + "': doFetch-RX from " + ChartLineView.LOG_SDF.format(historyLimits.getFromDate()) + " to " + ChartLineView.LOG_SDF.format(historyLimits.getToDate()) + " => " + history.size());
 
                                     List<BaseEntry> dataSetEntry = new ArrayList<>();
                                     for (JOSPStatusHistory status : history) {
@@ -98,14 +100,16 @@ public class JSLChartViewAdapter extends ChartViewAdapterAbs {
 
                                     // Notify chart
                                     notifyDataSetFetched(dataSetName, newDataSet(dataSetEntry, dataSetName), timeRangeLimits);
-                                    //notifyDataSetFetched(dataSetName, new LineDataSet(dataSetEntry, dataSetName), timeRangeLimits);
                                 }
                             }
                     );
+                    Log.d("JSLChartViewAdapter", "DataSet '" + dataSetName + "': doFetch-TX from " + ChartLineView.LOG_SDF.format(historyLimits.getFromDate()) + " to " + ChartLineView.LOG_SDF.format(historyLimits.getToDate()));
                 } catch (JSLRemoteObject.ObjectNotConnected e) {
-                    throw new RuntimeException(e);
+                    Log.d("JSLChartViewAdapter", "Can't fetch data set '" + dataSetName + "' because the object '" + dataSetComp.getRemoteObject().getName() + "' is not connected.");
+                    // let timeout the fetch process, it can be improved
                 } catch (JSLRemoteObject.MissingPermission e) {
-                    throw new RuntimeException(e);
+                    Log.d("JSLChartViewAdapter", "Can't fetch data set '" + dataSetName + "' because missing required permission on the object '" + dataSetComp.getRemoteObject().getName() + "' is not connected.");
+                    // let timeout the fetch process, it can be improved
                 }
             }
         });

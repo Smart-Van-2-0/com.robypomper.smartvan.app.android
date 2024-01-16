@@ -380,6 +380,7 @@ public class TimeRangeLimits {
 
 
     // Time Range constants and maps
+    // TODO rename unit to period
 
     /** Name for the {@link Calendar#MINUTE} time range unit. */
     public static final String TIME_RANGE_UNIT_MINUTES = "Minutes";

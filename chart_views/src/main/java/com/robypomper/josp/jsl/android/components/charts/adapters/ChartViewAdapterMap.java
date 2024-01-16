@@ -1,6 +1,7 @@
 package com.robypomper.josp.jsl.android.components.charts.adapters;
 
 import android.graphics.Color;
+import android.util.Log;
 
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BaseEntry;
@@ -119,7 +120,7 @@ public class ChartViewAdapterMap extends ChartViewAdapterAbs {
         }
         DataSet<?> chartDataSet = newDataSet(dataSetEntries, dataSetName);
 
-        System.out.println("[DataSet: " + dataSetName + "] - doFetch from " + ChartBaseView.LOG_SDF.format(timeRangeLimits.getFromDate()) + " to " + ChartBaseView.LOG_SDF.format(timeRangeLimits.getToDate()) + " => " + dataSetEntries.size());
+        Log.d("ChartViewAdapterMap", "DataSet `" + dataSetName + "`: doFetch from " + ChartBaseView.LOG_SDF.format(timeRangeLimits.getFromDate()) + " to " + ChartBaseView.LOG_SDF.format(timeRangeLimits.getToDate()) + " => " + dataSetEntries.size());
 
         // Notify chart
         notifyDataSetFetched(dataSetName, chartDataSet, timeRangeLimits);

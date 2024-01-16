@@ -27,6 +27,9 @@ import java.util.List;
 
 /**
  * TODO: document your custom view class.
+ * TODO: move UI binding and setup into onCreateView() method
+ * TODO: handle ParseExeption in constructors and remove constructor's throws
+ * TODO: rename Unit to Period
  * <p>
  * TimeRangeView
  * => Reference Date        setReferenceDate(date)

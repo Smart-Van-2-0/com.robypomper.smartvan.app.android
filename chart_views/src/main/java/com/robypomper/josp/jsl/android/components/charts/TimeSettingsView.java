@@ -26,6 +26,9 @@ import java.util.List;
 
 /**
  * TODO: document your custom view class.
+ * TODO: move UI binding and setup into onCreateView() method
+ * TODO: handle ParseExeption in constructors and remove constructor's throws
+ * TODO: rename Unit to Period
  * <p>
  * TimeSettingsView
  * <= Time Range Unit       setRangeUnit(unit)
@@ -260,15 +263,6 @@ public class TimeSettingsView extends LinearLayout {
         listenersUnit.remove(listener);
     }
 
-
-    public void addQtyListener(QtyListener listener) {
-        listenersQty.add(listener);
-    }
-
-    public void removeQtyListener(QtyListener listener) {
-        listenersQty.remove(listener);
-    }
-
     private void emitOnUnitChanged(int newUnit, int oldUnit) {
         for (UnitListener l : listenersUnit)
             try {
@@ -276,6 +270,14 @@ public class TimeSettingsView extends LinearLayout {
             } catch (Throwable t) {
                 Log.w("TimeSettingsView", "Error executing unit listener", t);
             }
+    }
+
+    public void addQtyListener(QtyListener listener) {
+        listenersQty.add(listener);
+    }
+
+    public void removeQtyListener(QtyListener listener) {
+        listenersQty.remove(listener);
     }
 
     private void emitOnQtyChanged(int newQty, int oldQty) {
