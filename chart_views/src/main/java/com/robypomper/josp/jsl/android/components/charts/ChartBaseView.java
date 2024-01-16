@@ -9,10 +9,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
 import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
@@ -37,24 +40,24 @@ import java.util.TimerTask;
 
 
 /**
- fetch()
- -> registerNewFetch()
-
- notifyDataSetReceived()
- -> updateDataSetToChart()
- -> registerFetchReceived()
- -> doPrepareDataSet()
- -> registerFetchedCompletion()
- -> registerFetchDataSet()
-
- fetchTimerTimeout
- -> registerFetchTimeout()
- -> registerFetchDataSet()
-
+ * fetch()
+ * -> registerNewFetch()
+ * <p>
+ * notifyDataSetReceived()
+ * -> updateDataSetToChart()
+ * -> registerFetchReceived()
+ * -> doPrepareDataSet()
+ * -> registerFetchedCompletion()
+ * -> registerFetchDataSet()
+ * <p>
+ * fetchTimerTimeout
+ * -> registerFetchTimeout()
+ * -> registerFetchDataSet()
+ * <p>
  * TODO: exports from menu
- * TODO: chart settings from menu
  * TODO: chart predefined settings from menu
  * TODO: chart settings zoomer (+ and - buttons for Unit and Qty)
+ * TODO: remove assert activity and adapter not null
  */
 public abstract class ChartBaseView extends ConstraintLayout implements ChartAdapterObserver {
 
@@ -110,8 +113,11 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
      */
     private final Map<String, TimerTask> fetchTimeouts = new HashMap<>();
     private final List<String> fetchingDataSet = new ArrayList<>();
-    private final Map<String,DataSet<?>> fetchedDataSet = new HashMap<>();
+    private final Map<String, DataSet<?>> fetchedDataSet = new HashMap<>();
     private long fetchTimeoutMs = 10 * 1000;
+    private boolean isTimeSettingsViewEnabled = true;
+    private boolean isTimeNavigatorViewEnabled = true;
+    private boolean isTimeSettingsBottomSheetEnabled = true;
 
     /**
      * The time unit to consider for the current time range.
@@ -164,7 +170,7 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
 
     private final TimeSettingsView timeSettingsView;
     private final TimeNavigatorView timeNavigatorView;
-    //private Chart chart;
+    private final Button btnTimeSettings;
 
 
     // Constructors
@@ -208,7 +214,6 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
 
         // Parse attributes
         final TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.ChartBaseView, defStyleAttr, 0);
-
         if (a.hasValue(R.styleable.ChartBaseView_chart_range_offset))
             try {
                 rangeOffset = a.getInt(R.styleable.ChartBaseView_chart_range_offset, rangeOffset);
@@ -233,10 +238,12 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
             rangePartitions = getDefaultPartitionsByUnitAndQty(rangeUnit, rangeQty);
         if (a.hasValue(R.styleable.ChartBaseView_chart_fetch_timeout_ms))
             try {
-                fetchTimeoutMs = a.getInt(R.styleable.ChartBaseView_chart_fetch_timeout_ms, (int)fetchTimeoutMs);
+                fetchTimeoutMs = a.getInt(R.styleable.ChartBaseView_chart_fetch_timeout_ms, (int) fetchTimeoutMs);
             } catch (NumberFormatException ignore) {
             }
-
+        isTimeSettingsViewEnabled = a.getBoolean(R.styleable.ChartBaseView_chart_enable_time_settings_view, isTimeSettingsViewEnabled);
+        isTimeNavigatorViewEnabled = a.getBoolean(R.styleable.ChartBaseView_chart_enable_time_navigator_view, isTimeNavigatorViewEnabled);
+        isTimeSettingsBottomSheetEnabled = a.getBoolean(R.styleable.ChartBaseView_chart_enable_time_settings_bottom_sheet, isTimeSettingsBottomSheetEnabled);
         a.recycle();
 
         // Inflate ui
@@ -246,15 +253,9 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
         timeSettingsView = findViewById(R.id.timeSettingsView);
         timeNavigatorView = findViewById(R.id.timeNavigatorView);
 
-        // Setup time timeSettingsView
+        // Setup timeSettingsView
         timeSettingsView.setRangeUnit(rangeUnit);
         timeSettingsView.setRangeQty(rangeQty);
-
-        // Setup time timeNavigatorView
-        timeNavigatorView.setRangeUnit(rangeUnit);
-        timeNavigatorView.setRangeQty(rangeQty);
-        timeNavigatorView.setRangeOffset(rangeOffset);
-
         timeSettingsView.addUnitListener(new TimeSettingsView.UnitListener() {
             @Override
             public void onUnitChanged(int newUnit, int oldUnit) {
@@ -268,6 +269,11 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
                 setRangeQty(newQty);
             }
         });
+
+        // Setup timeNavigatorView
+        timeNavigatorView.setRangeUnit(rangeUnit);
+        timeNavigatorView.setRangeQty(rangeQty);
+        timeNavigatorView.setRangeOffset(rangeOffset);
         timeNavigatorView.addOffsetListener(new TimeNavigatorView.OffsetListener() {
             @Override
             public void onOffsetChanged(int newOffset, int oldOffset) {
@@ -276,7 +282,16 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
 
         });
 
-        Log.v("ChartBaseView", "Created");
+        // Setup BottomSheetTimeSetting
+        btnTimeSettings = findViewById(R.id.btnTimeSettings);
+        btnTimeSettings.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showBottomSheetTimeSetting(context);
+            }
+        });
+
+        // updateUI();  // called by setActivity() or setAdapter()
     }
 
 
@@ -310,7 +325,7 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
         if (adapter != null) {
             doInit();
             isInitializing = false;
-            Log.v("ChartBaseView", "Initialized");
+            updateUI();
             fetch();
         }
     }
@@ -343,7 +358,7 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
         if (activity != null) {
             doInit();
             isInitializing = false;
-            Log.v("ChartBaseView", "Initialized");
+            updateUI();
             fetch();
         }
     }
@@ -411,7 +426,6 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
         }
     }
 
-
     public static int getDefaultQtyByUnit(int unit) {
         switch (unit) {
             case Calendar.MINUTE:
@@ -428,7 +442,6 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
                 throw new IllegalArgumentException("Invalid unit");
         }
     }
-
 
     public static int getDefaultPartitionsByUnitAndQty(int unit, int qty) {
         // Partition counts for vertical screens
@@ -754,6 +767,8 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
     }
 
 
+    // Abstract methods
+
     protected abstract void doInit();
 
     protected abstract void doUpdateTimeRangeOnChart(TimeRangeLimits limits);
@@ -769,46 +784,46 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
 
     // UI Methods (Chart)
 
-    private void updateTimeRangeToChart(TimeRangeLimits limits) {
+    private void updateUI() {
+        assert !isInitializing : "Cannot update UI during initialization";
+
+        enableTimeSettingsView(isTimeSettingsViewEnabled);
+        enableTimeNavigatorView(isTimeNavigatorViewEnabled);
+        enableTimeSettingsBottomSheet(isTimeSettingsBottomSheetEnabled);
+    }
+
+    private void updateTimeRangeToChart(TimeRangeLimits limits, boolean invalidate) {
         assert activity != null : "Activity not set";
-        isTimeRangeToChartUpdated = false;
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (isTimeRangeToChartUpdated) return;
-                isTimeRangeToChartUpdated = true;
-
-                assert adapter != null : "Adapter not set";
-                Log.v("ChartBaseView", String.format("Updating chart time range: %s -> %s",
+                doUpdateTimeRangeOnChart(limits);
+                Log.v("ChartBaseView", String.format("Updated chart time range: %s -> %s",
                         LOG_SDF.format(limits.getFromDate()),
                         LOG_SDF.format(limits.getToDate())));
-                doUpdateTimeRangeOnChart(limits);
-                invalidateChart(false);
+                if (invalidate) invalidateChart(true);
             }
         });
     }
 
-    private void addDataSetToChart(String dataSetName, DataSet<?> dataSet) {
-        Log.v("ChartBaseView", String.format("Adding '%s data set to chart", dataSetName));
-
+    private void addDataSetToChart(String dataSetName, DataSet<?> dataSet, boolean invalidate) {
         // style data set
         getAdapter().setupDataSetStyle(dataSetName, dataSet);
         dataSet.setAxisDependency(getAdapter().getDataSetYAxisDep(dataSetName));
 
         doAddDataSetFromChart(dataSetName, dataSet);
-        Log.d("ChartBaseView", String.format("DataSet '%s': added to chart", dataSetName));
-        invalidateChart(false);
+        Log.v("ChartBaseView", String.format("Added data set '%s' to chart", dataSetName));
+        if (invalidate) invalidateChart(true);
     }
 
     /**
      * {@inheritDoc
      */
     @Override
-    public void removeDataSetFromChart(String dataSetName) {
-        Log.v("ChartBaseView", String.format("Removing '%s data set from chart", dataSetName));
+    public void removeDataSetFromChart(String dataSetName, boolean invalidate) {
         doRemoveDataSetFromChart(dataSetName);
-        Log.d("ChartBaseView", String.format("DataSet '%s': removed from chart", dataSetName));
-        invalidateChart(false);
+        Log.v("ChartBaseView", String.format("Removed data set '%s' from chart", dataSetName));
+        if (invalidate) invalidateChart(true);
     }
 
     private void invalidateChart(boolean animate) {
@@ -854,26 +869,26 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
         for (String dataSetName : dataSetsToFetch) {
             try {
                 if (isFetching(dataSetName)) {
-                    String msg = String.format("DataSet '%s': already fetching", dataSetName);
+                    String msg = String.format("Data set '%s' already fetching, skip it", dataSetName);
                     Log.w("ChartBaseView", msg);
                     cleanCurrentFetching(dataSetName);
                 }
-                String msg = String.format("DataSet '%s': fetching", dataSetName);
-                Log.i("ChartBaseView", msg);
+
+                registerNewFetch(dataSetName, limits);
 
                 assert adapter != null : "Adapter not set";
-                registerNewFetch(dataSetName, limits);
-                adapter.doFetch(dataSetName, limits);
+                getAdapter().doFetch(dataSetName, limits);
 
             } catch (Throwable e) {
                 String msg = String.format(String.format("Unknown error fetching the data sets: %s", e.getMessage()));
-                Log.w("ChartBaseView", msg);
-                e.printStackTrace();
+                Log.w("ChartBaseView", msg, e);
             }
         }
     }
 
     private void registerNewFetch(String dataSetName, TimeRangeLimits limits) {
+        Log.v("ChartBaseView", String.format("DataSet '%s': register fetching data set %s - %s range", dataSetName, LOG_SDF.format(limits.getFromDate()), LOG_SDF.format(limits.getToDate())));
+
         // Fetching data sets list
         fetchingDataSet.add(dataSetName);
 
@@ -886,32 +901,26 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
 
     @Override
     public void processFetchedDataSet(String dataSetName, DataSet<?> dataSet, TimeRangeLimits limits) {
-        Log.v("ChartBaseView", String.format("Processing '%s' data set data", dataSetName));
         if (!isFetching(dataSetName))
             return; // fetch deleted or timeout
 
         // Check if data set is empty
         if (dataSet == null || dataSet.getEntryCount() == 0) {
-            String msg = String.format("DataSet '%s': empty data set received", dataSetName);
-            Log.w("ChartBaseView", msg);
+            Log.w("ChartBaseView", String.format("Received empty data for the data set: '%s'", dataSetName));
             registerFetchReceived(dataSetName, limits, null);
             registerFetchCompletion(dataSetName, limits, null);
             return;
         }
 
-        registerFetchReceived(dataSetName, limits, null);
+        registerFetchReceived(dataSetName, limits, dataSet);
 
         dataSet = doPrepareDataSet(dataSetName, dataSet, limits);
 
-        // Add data set to chart
         registerFetchCompletion(dataSetName, limits, dataSet);
-
-        @SuppressLint("DefaultLocale") String msg = String.format("DataSet '%s': fetched %s - %s range (%d)", dataSetName, LOG_SDF.format(limits.getFromDate()), LOG_SDF.format(limits.getToDate()), dataSet.getEntryCount());
-        Log.i("ChartBaseView", msg);
     }
 
     private void registerFetchReceived(String dataSetName, TimeRangeLimits limits, DataSet<?> dataSet) {
-        Log.v("ChartBaseView", String.format("DataSet '%s': fetch received", dataSetName));
+        Log.v("ChartBaseView", String.format("DataSet '%s': register data received %s - %s range (%d)", dataSetName, LOG_SDF.format(limits.getFromDate()), LOG_SDF.format(limits.getToDate()), dataSet != null ? dataSet.getEntryCount() : -1));
 
         // Timeout time task
         TimerTask task = fetchTimeouts.remove(dataSetName);
@@ -922,7 +931,7 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
     }
 
     private void registerFetchCompletion(String dataSetName, TimeRangeLimits limits, DataSet<?> dataSet) {
-        Log.v("ChartBaseView", String.format("DataSet '%s': fetch completed", dataSetName));
+        Log.v("ChartBaseView", String.format("DataSet '%s': register completed/processed %s - %s range (%d)", dataSetName, LOG_SDF.format(limits.getFromDate()), LOG_SDF.format(limits.getToDate()), dataSet.getEntryCount()));
 
         // Fetching data sets list
         fetchingDataSet.remove(dataSetName);
@@ -936,12 +945,12 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
             dataSet.setLabel(getAdapter().getDataSetLabel(dataSetName));
         }
         registerFetchDataSet(dataSetName, dataSet, limits);
-        //invalidateChart(true);
-        //updateTimeRangeToChart(limits);
+
+        if (isFetching()) showUIFetchingMessage();
     }
 
-    private void registerFetchTimeout(String dataSetName, TimeRangeLimits limits) {
-        Log.w("ChartBaseView", String.format("DataSet '%s': fetch timeout", dataSetName));
+    protected void registerFetchTimeout(String dataSetName, TimeRangeLimits limits) {
+        Log.v("ChartBaseView", String.format("DataSet '%s': register time out %s - %s range", dataSetName, LOG_SDF.format(limits.getFromDate()), LOG_SDF.format(limits.getToDate())));
         displayToastMessage(String.format("DataSet '%s': fetch timeout", dataSetName));
 
         // Timeout time task
@@ -960,23 +969,24 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
     }
 
     private void registerFetchDataSet(String dataSetName, DataSet<?> dataSet, TimeRangeLimits limits) {
+        Log.v("ChartBaseView", String.format("DataSet '%s': register ready to be shown %s - %s range (%d)", dataSetName, LOG_SDF.format(limits.getFromDate()), LOG_SDF.format(limits.getToDate()), dataSet.getEntryCount()));
         fetchedDataSet.put(dataSetName, dataSet);
 
         // Sync fetched data sets with chart
         if (!isFetching()) {
             for (Map.Entry<String, DataSet<?>> entry : fetchedDataSet.entrySet()) {
-                removeDataSetFromChart(entry.getKey());
-                addDataSetToChart(entry.getKey(), entry.getValue());
+                removeDataSetFromChart(entry.getKey(), false);
+                addDataSetToChart(entry.getKey(), entry.getValue(), false);
             }
             fetchedDataSet.clear();
-            updateTimeRangeToChart(limits);
+            updateTimeRangeToChart(limits, false);
             invalidateChart(true);
         }
     }
 
     private <T extends DataSet<?>> T generateZeroDataSet(String dataSetName, TimeRangeLimits limits) {
         List<Entry> dataSetFilteredEntries = new ArrayList<>();
-        for (int i=0; i < getRangePartitions(); i++)
+        for (int i = 0; i < getRangePartitions(); i++)
             dataSetFilteredEntries.add(new Entry(i, 0));
 
         Map<Date, List<Float>> partitions = MPAndroidChartUtils.generatePartitionsMidDate((ChartDateTimeFormatter) adapter.getXFormatter(), limits, getRangePartitions());
@@ -1031,7 +1041,6 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
                 message += "- " + getAdapter().getDataSetLabel(dataSetName) + "\n";
         }
         updateUIMessage(true, message);
-        Log.d("ChartBaseView", message);
     }
 
     private void hideUIMessage() {
@@ -1063,32 +1072,83 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
     }
 
 
-    // Others old methods
+    // UI Listeners
 
-    private void enableTimeRangeLayout(boolean enabled) {
-        // todo
+    private void showBottomSheetTimeSetting(Context context) {
+        TimeSettingsBottomSheet frmTimeSettingsBottomSheet = new TimeSettingsBottomSheet(context);
 
+        // Setup time timeSettingsView
+        frmTimeSettingsBottomSheet.setRangePeriod(rangeUnit);
+        frmTimeSettingsBottomSheet.setRangeQty(rangeQty);
+        frmTimeSettingsBottomSheet.addPeriodListener(new TimeSettingsBottomSheet.PeriodListener() {
+            @Override
+            public void onPeriodChanged(int newPeriod, int oldPeriod) {
+                setRangeUnit(newPeriod);
+            }
+        });
+        frmTimeSettingsBottomSheet.addQtyListener(new TimeSettingsBottomSheet.QtyListener() {
+            @Override
+            public void onQtyChanged(int newQty, int oldQty) {
+                setRangeQty(newQty);
+            }
+        });
+
+        // Get the fragment manager
+        if (!(getContext() instanceof FragmentActivity))
+            throw new IllegalStateException("Context must be an Activity");
+        FragmentManager fragmentMngr = ((FragmentActivity) getContext()).getSupportFragmentManager();
+
+        // Show the bottom sheet
+        frmTimeSettingsBottomSheet.show(fragmentMngr, TimeSettingsBottomSheet.TAG);
+    }
+
+
+    // UI enable/disable options
+
+    private void enableTimeSettingsView(boolean enabled) {
+        isTimeSettingsViewEnabled = enabled;
         if (isInitializing) return;
-        assert activity != null : "Activity not set";
 
-        activity.runOnUiThread(new Runnable() {
+        getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                timeSettingsView.setEnabled(enabled);
-                timeNavigatorView.setEnabled(enabled);
+                timeSettingsView.setVisibility(isTimeSettingsViewEnabled ? View.VISIBLE : View.GONE);
             }
         });
     }
+
+    private void enableTimeNavigatorView(boolean enabled) {
+        isTimeNavigatorViewEnabled = enabled;
+        if (isInitializing) return;
+
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                timeNavigatorView.setVisibility(isTimeNavigatorViewEnabled ? View.VISIBLE : View.GONE);
+            }
+        });
+    }
+
+    private void enableTimeSettingsBottomSheet(boolean enabled) {
+        isTimeSettingsBottomSheetEnabled = enabled;
+        if (isInitializing) return;
+
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                btnTimeSettings.setVisibility(isTimeSettingsBottomSheetEnabled ? View.VISIBLE : View.GONE);
+            }
+        });
+    }
+
+
+    // Other older methods
 
     private void exportChartAsImage() {
         // todo
     }
 
     private void exportChartAsCSV() {
-        // todo
-    }
-
-    private void showOverlayTxt() {
         // todo
     }
 

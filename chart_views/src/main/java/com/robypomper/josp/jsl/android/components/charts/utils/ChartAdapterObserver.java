@@ -41,7 +41,7 @@ public interface ChartAdapterObserver {
      *
      * @param dataSetName name of the data set to remove.
      */
-    void removeDataSetFromChart(String dataSetName);
+    void removeDataSetFromChart(String dataSetName, boolean invalidate);
 
     Class<? extends DataSet<?>> getChartDataSetClass();
 

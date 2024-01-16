@@ -298,7 +298,7 @@ public abstract class ChartViewAdapterAbs implements ChartViewAdapter {
     }
 
     protected void notifyDataSetRemoved(String dataSetName) {
-        chartObserver.removeDataSetFromChart(dataSetName);
+        chartObserver.removeDataSetFromChart(dataSetName, true);
     }
 
 }

@@ -111,34 +111,43 @@ public class ChartBarView extends ChartBaseView {
 
     @Override
     protected void doUpdateTimeRangeOnChart(TimeRangeLimits limits) {
+        final boolean LOG = false;
         ChartBaseFormatter xFormatter = getAdapter().getXFormatter();
 
         chart.getXAxis().setLabelCount(getRangePartitions(), true);
 
         float GROUP_SPACE_FULL_PERCENTAGE = 0.15f;
         float BAR_SPACE_PERCENTAGE = 0.10f;
-        int dataSetsCount = chart.getBarData().getDataSetCount();
+        //int dataSetsCount = chart.getBarData().getDataSetCount();
+        int dataSetsCount = getAdapter().getDataSetNames().size();
+        if (LOG) System.out.println("dataSetsCount: " + dataSetsCount);
         // https://weeklycoding.com/mpandroidchart-documentation/setting-data/
         float fullWidth = xFormatter.from(limits.getToDate()) - xFormatter.from(limits.getFromDate());
         float spaceWidth = fullWidth * GROUP_SPACE_FULL_PERCENTAGE;                     // all spaces between bars
         float barWidth = (fullWidth - spaceWidth) / getRangePartitions();               // single bar
         chart.getBarData().setBarWidth(barWidth);
+        if (LOG) System.out.println("barWidth: " + barWidth);
         if (dataSetsCount > 1) {
             float fullGroupSpacesWidth = fullWidth * GROUP_SPACE_FULL_PERCENTAGE;       // all group spaces
             float groupSpaceWidth = fullGroupSpacesWidth / getRangePartitions();        // single group space
 
             float fullGroupsWidth = fullWidth - fullGroupSpacesWidth;                   // all groups including bars and bar spaces
             float groupWidth = fullGroupsWidth / getRangePartitions();                  // single group
+            if (LOG) System.out.println("groupWidth: " + groupWidth);
             float fullBarSpaceWidth = groupWidth * BAR_SPACE_PERCENTAGE;                // all bar spaces
+            if (LOG) System.out.println("fullBarSpaceWidth: " + fullBarSpaceWidth);
             float groupBarWidth = (groupWidth - fullBarSpaceWidth) / dataSetsCount;     // single bar
 
             float barSpaceWidth = fullBarSpaceWidth / dataSetsCount;                    // single group space
 
             chart.getBarData().setBarWidth(groupBarWidth);
             chart.getBarData().groupBars(xFormatter.from(limits.getFromDate()), groupSpaceWidth, barSpaceWidth);
+            if (LOG) System.out.println("groupBarWidth: " + groupBarWidth);
+            if (LOG) System.out.println("groupSpaceWidth: " + groupSpaceWidth);
+            if (LOG) System.out.println("barSpaceWidth: " + barSpaceWidth);
         }
 
-        Log.v("ChartBarView", String.format("Updated chart time range: %s -> %s",
+        Log.v("ChartBarView", String.format("doUpdated chart time range: %s -> %s",
                 LOG_SDF.format(limits.getFromDate()),
                 LOG_SDF.format(limits.getToDate())));
     }
@@ -177,6 +186,7 @@ public class ChartBarView extends ChartBaseView {
             assert dataSet instanceof BarDataSet : "DataSet must be BarDataSet";
             chartData.addDataSet((BarDataSet) dataSet);
             chart.setData(chartData);
+            chart.notifyDataSetChanged();
         }
     }
 
@@ -188,15 +198,11 @@ public class ChartBarView extends ChartBaseView {
             if (oldDataSet == null) return;
 
             chartData.removeDataSet(oldDataSet);
-            Log.v("ChartBarView", String.format("Removed '%s data set from chart", dataSetName));
         }
     }
 
     @Override
     protected void doInvalidateChart(boolean animate) {
-        Log.e("ChartBarView", "INVALIDATE BAR CHART " + animate);
-        chart.notifyDataSetChanged();
-
         if (!animate) {
             chart.invalidate();
             return;

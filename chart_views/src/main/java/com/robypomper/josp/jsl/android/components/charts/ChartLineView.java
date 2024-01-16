@@ -120,7 +120,7 @@ public class ChartLineView extends ChartBaseView {
     protected void doUpdateTimeRangeOnChart(TimeRangeLimits limits) {
         chart.getXAxis().setLabelCount(getRangePartitions(), true);
         chart.setLogEnabled(true);
-        Log.v("ChartLineView", String.format("Updated chart time range: %s -> %s",
+        Log.v("ChartLineView", String.format("doUpdated chart time range: %s -> %s",
                 LOG_SDF.format(limits.getFromDate()),
                 LOG_SDF.format(limits.getToDate())));
     }
@@ -158,6 +158,7 @@ public class ChartLineView extends ChartBaseView {
         assert dataSet instanceof LineDataSet : "DataSet must be LineDataSet";
         chartData.addDataSet((LineDataSet) dataSet);
         chart.setData(chartData);
+        chart.notifyDataSetChanged();
     }
 
     @Override
@@ -167,14 +168,10 @@ public class ChartLineView extends ChartBaseView {
         if (oldDataSet == null) return;
 
         chartData.removeDataSet(oldDataSet);
-        Log.v("ChartLineView", String.format("Removed '%s data set from chart", dataSetName));
     }
 
     @Override
     protected void doInvalidateChart(boolean animate) {
-        Log.e("ChartLineView", "INVALIDATE LINE CHART " + animate);
-        chart.notifyDataSetChanged();
-
         if (!animate) {
             chart.invalidate();
             return;

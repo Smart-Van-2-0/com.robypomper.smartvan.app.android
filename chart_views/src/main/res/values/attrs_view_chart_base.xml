@@ -5,5 +5,8 @@
         <attr name="chart_range_qty" format="integer" />
         <attr name="chart_reduction_count" format="integer" />
         <attr name="chart_fetch_timeout_ms" format="integer" />
+        <attr name="chart_enable_time_settings_view" format="boolean" />
+        <attr name="chart_enable_time_navigator_view" format="boolean" />
+        <attr name="chart_enable_time_settings_bottom_sheet" format="boolean" />
     </declare-styleable>
 </resources>
