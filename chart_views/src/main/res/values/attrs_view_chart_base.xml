@@ -8,5 +8,6 @@
         <attr name="chart_enable_time_settings_view" format="boolean" />
         <attr name="chart_enable_time_navigator_view" format="boolean" />
         <attr name="chart_enable_time_settings_bottom_sheet" format="boolean" />
+        <attr name="chart_enable_exports_bottom_sheet" format="boolean" />
     </declare-styleable>
 </resources>

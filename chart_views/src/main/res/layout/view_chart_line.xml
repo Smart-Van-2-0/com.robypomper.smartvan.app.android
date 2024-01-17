@@ -23,11 +23,7 @@
             <com.robypomper.josp.jsl.android.components.charts.TimeSettingsView
                 android:id="@+id/timeSettingsView"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1" />
 
             <Button
@@ -35,10 +31,25 @@
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:minHeight="32dp"
                 android:drawableEnd="@drawable/more_arrow_down"
                 android:drawablePadding="8dp"
                 android:drawableTint="@color/mtrl_text_btn_text_color_selector"
                 android:text="@string/bottom_sheet_time_settings_button"
+                android:textAllCaps="false" />
+
+            <Button
+                android:id="@+id/btnExports"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:minHeight="32dp"
+                android:drawableEnd="@drawable/more_arrow_down"
+                android:drawablePadding="8dp"
+                android:drawableTint="@color/mtrl_text_btn_text_color_selector"
+                android:text="@string/bottom_sheet_time_exports_button"
                 android:textAllCaps="false" />
 
         </LinearLayout>

@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -59,6 +61,7 @@ import java.util.TimerTask;
  * TODO: chart predefined settings from menu
  * TODO: chart settings zoomer (+ and - buttons for Unit and Qty)
  * TODO: remove assert activity and adapter not null
+ * @noinspection unused
  */
 public abstract class ChartBaseView extends ConstraintLayout implements ChartAdapterObserver, ChartExportable {
 
@@ -121,6 +124,7 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
     private boolean isTimeSettingsViewEnabled = true;
     private boolean isTimeNavigatorViewEnabled = true;
     private boolean isTimeSettingsBottomSheetEnabled = true;
+    private boolean isExportsBottomSheetEnabled = true;
 
     /**
      * The time unit to consider for the current time range.
@@ -174,6 +178,7 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
     private final TimeSettingsView timeSettingsView;
     private final TimeNavigatorView timeNavigatorView;
     private final Button btnTimeSettings;
+    private final Button btnExports;
 
 
     // Constructors
@@ -247,6 +252,7 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
         isTimeSettingsViewEnabled = a.getBoolean(R.styleable.ChartBaseView_chart_enable_time_settings_view, isTimeSettingsViewEnabled);
         isTimeNavigatorViewEnabled = a.getBoolean(R.styleable.ChartBaseView_chart_enable_time_navigator_view, isTimeNavigatorViewEnabled);
         isTimeSettingsBottomSheetEnabled = a.getBoolean(R.styleable.ChartBaseView_chart_enable_time_settings_bottom_sheet, isTimeSettingsBottomSheetEnabled);
+        isExportsBottomSheetEnabled = a.getBoolean(R.styleable.ChartBaseView_chart_enable_exports_bottom_sheet, isExportsBottomSheetEnabled);
         a.recycle();
 
         // Inflate ui
@@ -291,6 +297,15 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
             @Override
             public void onClick(View v) {
                 showBottomSheetTimeSetting(context);
+            }
+        });
+
+        // Setup BottomSheetExports
+        btnExports = findViewById(R.id.btnExports);
+        btnExports.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showBottomSheetExports(context);
             }
         });
 
@@ -793,6 +808,7 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
         enableTimeSettingsView(isTimeSettingsViewEnabled);
         enableTimeNavigatorView(isTimeNavigatorViewEnabled);
         enableTimeSettingsBottomSheet(isTimeSettingsBottomSheetEnabled);
+        enableExportsBottomSheet(isExportsBottomSheetEnabled);
     }
 
     private void updateTimeRangeToChart(TimeRangeLimits limits, boolean invalidate) {
@@ -941,7 +957,7 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
     }
 
     private void registerFetchCompletion(String dataSetName, TimeRangeLimits limits, DataSet<?> dataSet) {
-        Log.v("ChartBaseView", String.format("DataSet '%s': register completed/processed %s - %s range (%d)", dataSetName, LOG_SDF.format(limits.getFromDate()), LOG_SDF.format(limits.getToDate()), dataSet.getEntryCount()));
+        Log.v("ChartBaseView", String.format("DataSet '%s': register completed/processed %s - %s range (%d)", dataSetName, LOG_SDF.format(limits.getFromDate()), LOG_SDF.format(limits.getToDate()), dataSet != null ? dataSet.getEntryCount() : 0));
 
         // Fetching data sets list
         fetchingDataSet.remove(dataSetName);
@@ -1114,6 +1130,20 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
         frmTimeSettingsBottomSheet.show(fragmentMngr, TimeSettingsBottomSheet.TAG);
     }
 
+    private void showBottomSheetExports(Context context) {
+        ExportsBottomSheet frmExportsBottomSheet = new ExportsBottomSheet(context);
+        frmExportsBottomSheet.setChart(this);
+        frmExportsBottomSheet.setXFormatter(adapter.getXFormatter());
+
+        // Get the fragment manager
+        if (!(getContext() instanceof FragmentActivity))
+            throw new IllegalStateException("Context must be an Activity");
+        FragmentManager fragmentMngr = ((FragmentActivity) getContext()).getSupportFragmentManager();
+
+        // Show the bottom sheet
+        frmExportsBottomSheet.show(fragmentMngr, ExportsBottomSheet.TAG);
+    }
+
 
     // UI enable/disable options
 
@@ -1153,8 +1183,18 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
         });
     }
 
+    private void enableExportsBottomSheet(boolean enabled) {
+        isExportsBottomSheetEnabled = enabled;
+        if (isInitializing) return;
 
-    // Other older methods
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                btnExports.setVisibility(isExportsBottomSheetEnabled ? View.VISIBLE : View.GONE);
+            }
+        });
+    }
+
 
     // Export methods from ChartExportable
 
