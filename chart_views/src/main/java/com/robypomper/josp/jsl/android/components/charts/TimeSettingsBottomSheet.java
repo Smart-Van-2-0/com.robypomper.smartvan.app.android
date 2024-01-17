@@ -49,13 +49,19 @@ public class TimeSettingsBottomSheet extends BottomSheetDialogFragment {
     private int rangePeriodOld = Calendar.HOUR_OF_DAY;
     /** Original rangeQty, set only via {@link #setRangeQty(int)}. */
     private int rangeQtyOld = 1;
+
+
+    // View args
+
     private int textAppearanceTitle = 0;   //  com.google.android.material.R.attr.textAppearanceHeadline6
-    private int textAppearanceTxt = 0;   //  TODO update value => com.google.android.material.R.attr.textAppearanceHeadline6
+    private int textAppearanceTxt = 0;   //  com.google.android.material.R.attr.textAppearanceSubtitle1
     private int textAppearanceTgl = 0;   //  N/A (style: ?attr/materialButtonOutlinedStyle)
     private int textAppearanceBtn = 0;   //  N/A (style: ?android:attr/buttonBarButtonStyle)
 
     private TextView txtPeriodTitle;
+    private TextView txtPeriodDescription;
     private TextView txtQtyTitle;
+    private TextView txtQtyDescription;
     private MaterialButtonToggleGroup tglPeriod;
     private MaterialButtonToggleGroup tglQty;
     private Button btnCancel;
@@ -95,7 +101,9 @@ public class TimeSettingsBottomSheet extends BottomSheetDialogFragment {
         btnCancel = v.findViewById(R.id.btnCancel);
         btnApply = v.findViewById(R.id.btnApply);
         txtPeriodTitle = v.findViewById(R.id.txtPeriodTitle);
+        txtPeriodDescription = v.findViewById(R.id.txtPeriodDescription);
         txtQtyTitle = v.findViewById(R.id.txtQtyTitle);
+        txtQtyDescription = v.findViewById(R.id.txtQtyDescription);
 
         // setup periods buttons
         updatePeriodButtonsList(tglPeriod, getContext());
@@ -239,7 +247,8 @@ public class TimeSettingsBottomSheet extends BottomSheetDialogFragment {
 
     private void updateTxtTextAppearance() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            // txtMessage.setTextAppearance(textAppearanceTxt);
+            txtPeriodDescription.setTextAppearance(textAppearanceTxt);
+            txtQtyDescription.setTextAppearance(textAppearanceTxt);
         }
     }
 
@@ -304,7 +313,7 @@ public class TimeSettingsBottomSheet extends BottomSheetDialogFragment {
     };
 
 
-    // Offset listeners
+    // Period and Qty listeners
 
     private final List<PeriodListener> listenersPeriod = new ArrayList<>();
     private final List<QtyListener> listenersQty = new ArrayList<>();

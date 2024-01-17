@@ -22,6 +22,16 @@
                 android:textAppearance="?attr/textAppearanceHeadline6"
                 android:text="@string/bottom_sheet_time_settings_period" />
 
+            <TextView
+                android:id="@+id/txtPeriodDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                android:text="@string/bottom_sheet_time_settings_period_description" />
+
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -87,6 +97,16 @@
                 android:paddingLeft="16dp"
                 android:textAppearance="?attr/textAppearanceHeadline6"
                 android:text="@string/bottom_sheet_time_settings_quantity" />
+
+            <TextView
+                android:id="@+id/txtQtyDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                android:text="@string/bottom_sheet_time_settings_quantity_description" />
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
