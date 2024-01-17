@@ -1,6 +1,7 @@
 package com.robypomper.josp.jsl.android.components.charts;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ViewGroup;
@@ -183,6 +184,13 @@ public class ChartLineView extends ChartBaseView {
                 chart.animateX(1000, Easing.Linear);
             }
         });
+    }
+
+
+    // Export methods from ChartExportable
+
+    public Bitmap exportImg() {
+        return loadBitmapFromView(chart);
     }
 
 }

@@ -25,6 +25,7 @@ import com.robypomper.josp.jsl.android.components.charts.adapters.ChartViewAdapt
 import com.robypomper.josp.jsl.android.components.charts.formatters.ChartBaseFormatter;
 import com.robypomper.josp.jsl.android.components.charts.formatters.ChartDateTimeFormatter;
 import com.robypomper.josp.jsl.android.components.charts.utils.ChartAdapterObserver;
+import com.robypomper.josp.jsl.android.components.charts.utils.ChartExportable;
 import com.robypomper.josp.jsl.android.components.charts.utils.TimeRangeLimits;
 
 import java.text.SimpleDateFormat;
@@ -59,7 +60,7 @@ import java.util.TimerTask;
  * TODO: chart settings zoomer (+ and - buttons for Unit and Qty)
  * TODO: remove assert activity and adapter not null
  */
-public abstract class ChartBaseView extends ConstraintLayout implements ChartAdapterObserver {
+public abstract class ChartBaseView extends ConstraintLayout implements ChartAdapterObserver, ChartExportable {
 
     // Constants
 
@@ -113,7 +114,9 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
      */
     private final Map<String, TimerTask> fetchTimeouts = new HashMap<>();
     private final List<String> fetchingDataSet = new ArrayList<>();
-    private final Map<String, DataSet<?>> fetchedDataSet = new HashMap<>();
+    private Map<String, DataSet<?>> fetchedDataSet = new HashMap<>();
+    private Map<String, DataSet<?>> chartData = new HashMap<>();
+    private final Map<String, DataSet<?>> rawData = new HashMap<>();
     private long fetchTimeoutMs = 10 * 1000;
     private boolean isTimeSettingsViewEnabled = true;
     private boolean isTimeNavigatorViewEnabled = true;
@@ -896,6 +899,10 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
         TimerTask task = startFetchTimer(dataSetName, limits);
         fetchTimeouts.put(dataSetName, task);
 
+        // Remove raw data set
+        rawData.remove(dataSetName);
+        Runtime.getRuntime().gc();
+
         showUIFetchingMessage();
     }
 
@@ -921,6 +928,9 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
 
     private void registerFetchReceived(String dataSetName, TimeRangeLimits limits, DataSet<?> dataSet) {
         Log.v("ChartBaseView", String.format("DataSet '%s': register data received %s - %s range (%d)", dataSetName, LOG_SDF.format(limits.getFromDate()), LOG_SDF.format(limits.getToDate()), dataSet != null ? dataSet.getEntryCount() : -1));
+
+        // add raw data set
+        rawData.put(dataSetName, dataSet);
 
         // Timeout time task
         TimerTask task = fetchTimeouts.remove(dataSetName);
@@ -978,7 +988,9 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
                 removeDataSetFromChart(entry.getKey(), false);
                 addDataSetToChart(entry.getKey(), entry.getValue(), false);
             }
-            fetchedDataSet.clear();
+            chartData = fetchedDataSet;
+            fetchedDataSet = new HashMap<>();
+            Runtime.getRuntime().gc();
             updateTimeRangeToChart(limits, false);
             invalidateChart(true);
         }
@@ -1144,12 +1156,24 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
 
     // Other older methods
 
-    private void exportChartAsImage() {
-        // todo
+    // Export methods from ChartExportable
+
+    public Map<String, DataSet<?>> exportChartData() {
+        return chartData;
     }
 
-    private void exportChartAsCSV() {
-        // todo
+    public Map<String, DataSet<?>> exportRAW() {
+        return rawData;
+    }
+
+    protected Bitmap loadBitmapFromView(View v) {
+        int width = v.getLayoutParams().width > 0 ? v.getLayoutParams().width : v.getWidth();
+        int height = v.getLayoutParams().height > 0 ? v.getLayoutParams().height : v.getHeight();
+        Bitmap b = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(b);
+        v.layout(v.getLeft(), v.getTop(), v.getRight(), v.getBottom());
+        v.draw(c);
+        return b;
     }
 
 }
