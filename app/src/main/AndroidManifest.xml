@@ -52,6 +52,11 @@
             android:exported="false"
             android:label="@string/activity_svmain__title" />
         <activity
+            android:name=".activities.SVEnergyActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SmartVan"
+            android:label="@string/activity_svenergy__title" />
+        <activity
             android:name=".activities.SVObjectSpecsActivity"
             android:exported="false"
             android:theme="@style/Theme.SmartVan"

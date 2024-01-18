@@ -1,0 +1,7 @@
+<resources>
+    <string name="activity_svenergy__title">Energy Monitor</string>
+    <string name="activity_svenergy_txt_title_name_placeholder">{MyVan}</string>
+    <string name="activity_svenergy_txt_title_post">SV Power Monitor</string>
+    <string name="activity_svenergy_txt_sub_title_real_time">Real-time</string>
+    <string name="activity_svenergy_txt_sub_title_history">History</string>
+</resources>
