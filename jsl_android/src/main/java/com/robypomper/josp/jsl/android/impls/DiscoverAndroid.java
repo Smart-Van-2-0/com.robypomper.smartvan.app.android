@@ -50,7 +50,11 @@ public class DiscoverAndroid extends DiscoverAbs {
                 Log.d(LOG_TAG, String.format("Unknown Service Type '%s' with '%s' name instead %s", serviceInfo.getServiceType(), serviceInfo.getServiceName(), getServiceType()));
                 return;
             }
-            nsdManager.resolveService(serviceInfo, resolveListener);
+            try {
+                nsdManager.resolveService(serviceInfo, resolveListener);
+            } catch (IllegalArgumentException e) {
+                Log.e(LOG_TAG, String.format("Error resolving service '%s' with '%s' name because listener already in use", serviceInfo.getServiceType(), serviceInfo.getServiceName()), e);
+            }
         }
 
         @Override
