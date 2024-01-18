@@ -147,7 +147,6 @@ public abstract class JSLApplication<T extends JSLService> extends MultiDexAppli
     }
 
     public void runOnNetworkThread(Runnable action) {
-        Log.d(LOG_TAG, "JSLApplication running on network thread");
         executors_network.execute(action);
     }
 
