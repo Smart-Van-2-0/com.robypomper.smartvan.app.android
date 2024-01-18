@@ -1,7 +1,6 @@
 package com.robypomper.smartvan.smart_van.android.activities;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,7 +32,7 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
     public final static SVSpec COMP_SERVICES_PATH = SVSpecs.SVBox.Energy.Consumption.Power;
 
     private ActivitySvmainBinding binding;
-    private JSLRangeState powerComp;
+    private JSLRangeState energyComp;
     private JSLRangeState panelsComp;
     private JSLRangeState servicesComp;
 
@@ -49,13 +48,14 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
         super.onCreate(savedInstanceState);
 
         // register ui listeners and callbacks
+        binding.layPower.setOnClickListener((onClickMainLayoutsListener));
         binding.laySpecs.setOnClickListener((onClickMainLayoutsListener));
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (powerComp == null && getRemoteObject() != null)
+        if (energyComp == null && getRemoteObject() != null)
             registerRemoteObjectToUI();
     }
 
@@ -116,7 +116,7 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
     }
 
     private void deregisterRemoteObjectToUI() {
-        if (powerComp != null) deregisterPowerComp();
+        if (energyComp != null) deregisterPowerComp();
         if (panelsComp != null) deregisterPanelsComp();
         if (servicesComp != null) deregisterServicesComp();
 
@@ -125,17 +125,17 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
     }
 
     private void registerPowerComp(JSLRangeState component) {
-        powerComp = component;
+        energyComp = component;
 
-        powerComp.addListener(listenerPowerComp);
+        energyComp.addListener(listenerPowerComp);
 
-        updatePowerComp(powerComp);
+        updatePowerComp(energyComp);
     }
 
     private void deregisterPowerComp() {
-        powerComp.removeListener(listenerPowerComp);
+        energyComp.removeListener(listenerPowerComp);
 
-        powerComp = null;
+        energyComp = null;
 
         updatePowerComp(null);
     }
@@ -359,8 +359,22 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
             JSLRemoteObject obj = getRemoteObject();
             if (obj == null) return;
 
-            Intent intent = new Intent(SVMainActivity.this, SVObjectSpecsActivity.class);
-            intent.putExtra(SVObjectSpecsActivity.PARAM_OBJ_ID, obj.getId());
+            Intent intent;
+            if (v == binding.layPower) {
+                intent = new Intent(SVMainActivity.this, SVEnergyActivity.class);
+                intent.putExtra(SVEnergyActivity.PARAM_OBJ_ID, obj.getId());
+            //} else if (v == binding.layPanels) {
+            //    intent = new Intent(SVMainActivity.this, SVXYActivity.class);
+            //    intent.putExtra(SVXYActivity.PARAM_OBJ_ID, obj.getId());
+            //} else if (v == binding.layServices) {
+            //    intent = new Intent(SVMainActivity.this, SVXYActivity.class);
+            //    intent.putExtra(SVXYActivity.PARAM_OBJ_ID, obj.getId());
+            } else if (v == binding.laySpecs) {
+                intent = new Intent(SVMainActivity.this, SVObjectSpecsActivity.class);
+                intent.putExtra(SVObjectSpecsActivity.PARAM_OBJ_ID, obj.getId());
+            } else
+                return;
+
             startActivity(intent);
         }
     };

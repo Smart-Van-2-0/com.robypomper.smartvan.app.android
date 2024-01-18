@@ -78,7 +78,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="16dp"
-                android:text="@string/activity_svmain_txt_power_label"
+                android:text="@string/activity_svmain_txt_energy_label"
                 android:textAppearance="?attr/textAppearanceOverline"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -89,7 +89,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginLeft="16dp"
-                android:text="@string/activity_svmain_txt_power_value_placeholder"
+                android:text="@string/activity_svmain_txt_energy_value_placeholder"
                 android:textAppearance="?attr/textAppearanceHeadline6"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/txtPowerLabel" />
@@ -98,7 +98,7 @@
                 android:id="@+id/txtPowerUnit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/activity_svmain_txt_power_unit"
+                android:text="@string/activity_svmain_txt_energy_unit"
                 android:textAppearance="?attr/textAppearanceHeadline6"
                 app:layout_constraintBottom_toBottomOf="@id/txtPowerValue"
                 app:layout_constraintStart_toEndOf="@id/txtPowerValue" />
@@ -109,7 +109,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:layout_marginTop="8dp"
-                android:text="@string/activity_svmain_btn_power_more_details"
+                android:text="@string/activity_svmain_btn_energy_more_details"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/imgPower" />
 
@@ -161,7 +161,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginLeft="16dp"
-                android:text="@string/activity_svmain_txt_power_value_placeholder"
+                android:text="@string/activity_svmain_txt_energy_value_placeholder"
                 android:textAppearance="?attr/textAppearanceHeadline6"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/txtPanelsLabel" />
