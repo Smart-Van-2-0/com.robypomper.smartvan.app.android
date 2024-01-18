@@ -1,0 +1,5 @@
+<resources>
+    <string name="view_sv_donut_txt_value_placeholder">{Value}</string>
+    <string name="view_sv_donut_txt_unit_placeholder">{Unit}</string>
+    <string name="view_sv_donut_txt_label_placeholder">{Value Name}</string>
+</resources>
