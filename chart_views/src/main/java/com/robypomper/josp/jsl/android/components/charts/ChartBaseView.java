@@ -57,10 +57,8 @@ import java.util.TimerTask;
  * -> registerFetchTimeout()
  * -> registerFetchDataSet()
  * <p>
- * TODO: exports from menu
  * TODO: chart predefined settings from menu
  * TODO: chart settings zoomer (+ and - buttons for Unit and Qty)
- * TODO: remove assert activity and adapter not null
  * @noinspection unused
  */
 public abstract class ChartBaseView extends ConstraintLayout implements ChartAdapterObserver, ChartExportable {
@@ -683,9 +681,8 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
         rangePartitions = getDefaultPartitionsByUnitAndQty(rangeUnit, rangeQty);
 
         // Update date formats
-        assert adapter != null : "Adapter not set";
         String newDateFormat = getDefaultUnitPattern(rangeUnit, rangeQty);
-        ChartBaseFormatter xFormatter = adapter.getXFormatter();
+        ChartBaseFormatter xFormatter = getAdapter().getXFormatter();
         if (xFormatter instanceof ChartDateTimeFormatter) {
             ChartDateTimeFormatter formatter = (ChartDateTimeFormatter) xFormatter;
             formatter.setDateFormat(newDateFormat);
@@ -728,9 +725,8 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
         rangePartitions = getDefaultPartitionsByUnitAndQty(rangeUnit, rangeQty);
 
         // Update date formats
-        assert adapter != null : "Adapter not set";
         String newDateFormat = getDefaultUnitPattern(rangeUnit, rangeQty);
-        ChartBaseFormatter xFormatter = adapter.getXFormatter();
+        ChartBaseFormatter xFormatter = getAdapter().getXFormatter();
         if (xFormatter instanceof ChartDateTimeFormatter) {
             ChartDateTimeFormatter formatter = (ChartDateTimeFormatter) xFormatter;
             formatter.setDateFormat(newDateFormat);
@@ -812,8 +808,7 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
     }
 
     private void updateTimeRangeToChart(TimeRangeLimits limits, boolean invalidate) {
-        assert activity != null : "Activity not set";
-        activity.runOnUiThread(new Runnable() {
+        getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 doUpdateTimeRangeOnChart(limits);
@@ -870,8 +865,7 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
 
     public void fetch() {
         if (isInitializing) return;
-        assert adapter != null : "Adapter not set";
-        fetch(adapter.getDataSetNames());
+        fetch(getAdapter().getDataSetNames());
     }
 
     @Override
@@ -883,7 +877,6 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
         TimeRangeLimits limits = getTimeRangeLimits();
 
         if (isInitializing) return;
-        assert adapter != null : "Adapter not set";
 
         for (String dataSetName : dataSetsToFetch) {
             try {
@@ -895,7 +888,6 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
 
                 registerNewFetch(dataSetName, limits);
 
-                assert adapter != null : "Adapter not set";
                 getAdapter().doFetch(dataSetName, limits);
 
             } catch (Throwable e) {
@@ -1076,8 +1068,7 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
     }
 
     private void updateUIMessage(boolean visible, String text) {
-        assert activity != null : "Activity not set";
-        activity.runOnUiThread(new Runnable() {
+        getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 ViewGroup overlayView = getOverlayView();
@@ -1090,8 +1081,7 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
     }
 
     private void displayToastMessage(String text) {
-        assert activity != null : "Activity not set";
-        activity.runOnUiThread(new Runnable() {
+        getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 Toast.makeText(activity, text, Toast.LENGTH_SHORT).show();
