@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.robypomper.josp.jsl.android.components.charts.TimeSettingsBottomSheet" >
+
+        <LinearLayout
+            android:id="@+id/bottom_sheet_time_settings"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtPeriodTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:paddingLeft="16dp"
+                android:textAppearance="?attr/textAppearanceHeadline6"
+                android:text="@string/bottom_sheet_time_settings_period" />
+
+            <TextView
+                android:id="@+id/txtPeriodDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                android:text="@string/bottom_sheet_time_settings_period_description" />
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:id="@+id/tglPeriod"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:paddingTop="8dp"
+                    app:singleSelection="true"
+                    app:selectionRequired="true">
+
+                    <Button
+                        android:id="@+id/btnPeriodMinutes"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/bottom_sheet_time_settings_minutes"
+                        />
+
+                    <Button
+                        android:id="@+id/btnPeriodHours"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/bottom_sheet_time_settings_hours"
+                        />
+
+                    <Button
+                        android:id="@+id/btnPeriodDays"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/bottom_sheet_time_settings_days"
+                        />
+
+                    <Button
+                        android:id="@+id/btnPeriodMonths"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/bottom_sheet_time_settings_months"
+                        />
+
+                    <Button
+                        android:id="@+id/btnPeriodYears"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/bottom_sheet_time_settings_years"
+                        />
+
+                </com.google.android.material.button.MaterialButtonToggleGroup>
+
+            </HorizontalScrollView>
+
+            <TextView
+                android:id="@+id/txtQtyTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:paddingLeft="16dp"
+                android:textAppearance="?attr/textAppearanceHeadline6"
+                android:text="@string/bottom_sheet_time_settings_quantity" />
+
+            <TextView
+                android:id="@+id/txtQtyDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                android:text="@string/bottom_sheet_time_settings_quantity_description" />
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:id="@+id/tglQty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:paddingTop="8dp"
+                    app:singleSelection="true"
+                    app:selectionRequired="true">
+
+                </com.google.android.material.button.MaterialButtonToggleGroup>
+
+            </HorizontalScrollView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:paddingLeft="16dp"
+                android:orientation="horizontal"
+                android:gravity="right">
+
+            <Button
+                android:id="@+id/btnCancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="?android:attr/buttonBarButtonStyle"
+                android:textColor="#99909090"
+                android:text="@string/bottom_sheet_time_settings_cancel" />
+
+            <Button
+                android:id="@+id/btnApply"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="?android:attr/buttonBarButtonStyle"
+                android:text="@string/bottom_sheet_time_settings_apply" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

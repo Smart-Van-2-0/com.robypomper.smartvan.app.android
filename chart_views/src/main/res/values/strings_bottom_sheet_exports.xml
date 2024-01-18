@@ -1,0 +1,18 @@
+<resources>
+    <string name="bottom_sheet_time_exports_button">Export data</string>
+    <string name="bottom_sheet_time_exports_type">1. Type</string>
+    <string name="bottom_sheet_time_exports_type_description">Choose type for export/share based on your needs</string>
+    <string name="bottom_sheet_time_exports_type_image">As Image</string>
+    <string name="bottom_sheet_time_exports_type_csv">As CSV</string>
+    <string name="bottom_sheet_time_exports_type_json">As JSON</string>
+    <string name="bottom_sheet_time_exports_source">2. Source</string>
+    <string name="bottom_sheet_time_exports_source_description">\'Chart\' signifies the presentation of cleaned data for the chart, while \'RAW\' indicates data received directly from the source.\nIn both cases, the time interval remains unchanged.</string>
+    <string name="bottom_sheet_time_exports_source_chart">Chart Data</string>
+    <string name="bottom_sheet_time_exports_source_raw">RAW</string>
+    <string name="bottom_sheet_time_exports_dest">3. Destination</string>
+    <string name="bottom_sheet_time_exports_dest_description">Save to local file or share via chat, social, etc…\nWhen saved locally, a notification will allow you to open the file.</string>
+    <string name="bottom_sheet_time_exports_dest_share">Share…</string>
+    <string name="bottom_sheet_time_exports_dest_file">To File</string>
+    <string name="bottom_sheet_time_exports_cancel">Cancel</string>
+    <string name="bottom_sheet_time_exports_export">Export</string>
+</resources>

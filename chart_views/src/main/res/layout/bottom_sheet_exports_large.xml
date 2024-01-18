@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.robypomper.josp.jsl.android.components.charts.ExportsBottomSheet" >
+
+        <LinearLayout
+            android:id="@+id/bottom_sheet_exports"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtTypeTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:paddingLeft="16dp"
+                android:textAppearance="?attr/textAppearanceHeadline6"
+                android:text="@string/bottom_sheet_time_exports_type" />
+
+            <TextView
+                android:id="@+id/txtTypeDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                android:text="@string/bottom_sheet_time_exports_type_description" />
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:id="@+id/tglType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:padding="16dp"
+                    android:paddingTop="8dp"
+                    app:singleSelection="true"
+                    app:selectionRequired="true">
+
+                    <Button
+                        android:id="@+id/btnTypeImage"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/bottom_sheet_time_exports_type_image"
+                        />
+
+                    <Button
+                        android:id="@+id/btnTypeCSV"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/bottom_sheet_time_exports_type_csv"
+                        />
+
+                    <Button
+                        android:id="@+id/btnTypeJSON"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/bottom_sheet_time_exports_type_json"
+                        />
+
+                </com.google.android.material.button.MaterialButtonToggleGroup>
+
+            </HorizontalScrollView>
+
+            <TextView
+                android:id="@+id/txtSourceTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:paddingLeft="16dp"
+                android:textAppearance="?attr/textAppearanceHeadline6"
+                android:text="@string/bottom_sheet_time_exports_source" />
+
+            <TextView
+                android:id="@+id/txtSourceDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                android:text="@string/bottom_sheet_time_exports_source_description" />
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:id="@+id/tglSource"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:padding="16dp"
+                    android:paddingTop="8dp"
+                    app:singleSelection="true"
+                    app:selectionRequired="true">
+
+                    <Button
+                        android:id="@+id/btnSourceChart"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/bottom_sheet_time_exports_source_chart"
+                        />
+
+                    <Button
+                        android:id="@+id/btnSourceRAW"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/bottom_sheet_time_exports_source_raw"
+                        />
+
+                </com.google.android.material.button.MaterialButtonToggleGroup>
+
+            </HorizontalScrollView>
+
+
+            <TextView
+                android:id="@+id/txtDestTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:paddingLeft="16dp"
+                android:textAppearance="?attr/textAppearanceHeadline6"
+                android:text="@string/bottom_sheet_time_exports_dest" />
+
+            <TextView
+                android:id="@+id/txtDestDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                android:text="@string/bottom_sheet_time_exports_dest_description" />
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:id="@+id/tglDest"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:padding="16dp"
+                    android:paddingTop="8dp"
+                    app:singleSelection="true"
+                    app:selectionRequired="true">
+
+                    <Button
+                        android:id="@+id/btnDestShare"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/bottom_sheet_time_exports_dest_share"
+                        />
+
+                    <Button
+                        android:id="@+id/btnDestFile"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/bottom_sheet_time_exports_dest_file"
+                        />
+
+                </com.google.android.material.button.MaterialButtonToggleGroup>
+
+            </HorizontalScrollView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:paddingLeft="16dp"
+                android:orientation="horizontal"
+                android:gravity="right">
+
+                <Button
+                    android:id="@+id/btnCancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:textColor="#99909090"
+                    android:text="@string/bottom_sheet_time_exports_cancel" />
+
+                <Button
+                    android:id="@+id/btnExport"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:text="@string/bottom_sheet_time_exports_export" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

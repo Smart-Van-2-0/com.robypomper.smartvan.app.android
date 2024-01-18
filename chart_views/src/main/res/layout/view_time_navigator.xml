@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/baseLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    tools:context="com.robypomper.josp.jsl.android.components.charts.TimeNavigatorView" >
+
+    <Button
+        android:id="@+id/btnTimeRangeNav_Prev"
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        android:checked="false"
+        android:text="@string/view_time_navigator_prev" />
+
+    <TextView
+        android:id="@+id/txtTimeRangeStart"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:text="@string/view_time_navigator_date_placeholder"
+        android:textAlignment="textEnd"
+        />
+
+    <TextView
+        android:id="@+id/txtTimeRangeSeparator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/view_time_navigator_separator"
+        />
+
+    <TextView
+        android:id="@+id/txtTimeRangeEnd"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:text="@string/view_time_navigator_date_placeholder"
+        />
+
+    <Button
+        android:id="@+id/btnTimeRangeNav_Next"
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        android:checked="false"
+        android:text="@string/view_time_navigator_next" />
+
+</LinearLayout>
