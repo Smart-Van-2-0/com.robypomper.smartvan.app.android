@@ -1,6 +1,7 @@
 package com.robypomper.smartvan.smart_van.android.activities;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -48,8 +49,20 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
         super.onCreate(savedInstanceState);
 
         // register ui listeners and callbacks
-        binding.laySpecs.setOnClickListener((onClickSpecsListener));
-        //binding.txtTitleName.setOnClickListener(onClickTitleNameListener);
+        binding.laySpecs.setOnClickListener((onClickMainLayoutsListener));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (powerComp == null && getRemoteObject() != null)
+            registerRemoteObjectToUI();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        deregisterRemoteObjectToUI();
     }
 
 
@@ -340,7 +353,7 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
 
     // UI listeners
 
-    private final View.OnClickListener onClickSpecsListener = new View.OnClickListener() {
+    private final View.OnClickListener onClickMainLayoutsListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             JSLRemoteObject obj = getRemoteObject();

@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:background="@drawable/gradient_to_surface"
     tools:context=".activities.SVMainActivity">
 
     <LinearLayout
@@ -19,20 +20,12 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/txtTitlePre"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/activity_svmain_txt_title_pre"
-            android:textAppearance="?attr/textAppearanceHeadline5" />
-
-        <TextView
             android:id="@+id/txtTitleName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="@string/activity_svmain_txt_title_name_placeholder"
-            android:textAppearance="?attr/textAppearanceHeadline5" />
+            android:textAppearance="?attr/textAppearanceHeadline4" />
 
         <TextView
             android:id="@+id/txtTitlePost"
@@ -50,7 +43,7 @@
         android:layout_marginTop="16dp"
         android:text="@string/activity_svmain_txt_content"
         android:textAlignment="center"
-        android:textAppearance="?attr/textAppearanceCaption"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layTitle" />
@@ -65,7 +58,6 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/layPower"
-        style="@style/Widget.MaterialComponents.CardView"
         android:layout_width="0dp"
         app:layout_constraintHorizontal_weight="1"
         android:layout_height="wrap_content"
@@ -117,7 +109,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:layout_marginTop="8dp"
-                android:text="@string/activity_svmain_btn_more_details"
+                android:text="@string/activity_svmain_btn_power_more_details"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/imgPower" />
 
@@ -138,7 +130,6 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/layPanels"
-        style="@style/Widget.MaterialComponents.CardView"
         android:layout_width="0dp"
         app:layout_constraintHorizontal_weight="1"
         android:layout_height="wrap_content"
@@ -210,7 +201,6 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/layServices"
-        style="@style/Widget.MaterialComponents.CardView"
         android:layout_width="0dp"
         app:layout_constraintHorizontal_weight="1"
         android:layout_height="wrap_content"
@@ -282,7 +272,6 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/laySpecs"
-        style="@style/Widget.MaterialComponents.CardView"
         android:layout_width="0dp"
         app:layout_constraintHorizontal_weight="1"
         android:layout_height="wrap_content"
@@ -349,6 +338,7 @@
         android:text="@string/activity_svmain_txt_website"
         app:layout_constraintBottom_toTopOf="@+id/layConn"
         app:layout_constraintTop_toBottomOf="@+id/divider2" />
+
     <androidx.cardview.widget.CardView
         android:id="@+id/layConn"
         style="@style/Widget.MaterialComponents.CardView"

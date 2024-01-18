@@ -8,13 +8,13 @@
         android:name=".app.SVApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
+        android:enableOnBackInvokedCallback="true"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartVan.NoActionBar"
-        android:enableOnBackInvokedCallback="true"
         tools:targetApi="31">
 
         <service
@@ -32,31 +32,27 @@
         <activity
             android:name=".activities.SVStartupActivity"
             android:exported="true"
-            android:noHistory="true"
-            android:label="@string/activity_svstartup__title" >
+            android:label="@string/activity_svstartup__title"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".activities.SVSelectObjectActivity"
             android:exported="false"
-            android:noHistory="true"
-            android:label="@string/activity_svmain__title" />
-
+            android:label="@string/activity_svmain__title"
+            android:noHistory="true" />
         <activity
             android:name=".activities.SVMainActivity"
             android:exported="false"
             android:label="@string/activity_svmain__title" />
-
         <activity
             android:name=".activities.SVObjectSpecsActivity"
             android:exported="false"
             android:label="@string/activity_svobject_specs__title" />
-
     </application>
 
 </manifest>

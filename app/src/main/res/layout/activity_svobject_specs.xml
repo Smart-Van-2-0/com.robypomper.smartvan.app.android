@@ -42,7 +42,7 @@
         android:layout_marginTop="16dp"
         android:text="@string/activity_svobject_specs_txt_content"
         android:textAlignment="center"
-        android:textAppearance="?attr/textAppearanceCaption" />
+        android:textAppearance="?attr/textAppearanceSubtitle1" />
 
     <Space
         android:id="@+id/space1"
@@ -56,7 +56,8 @@
         android:id="@+id/txtCurrentSpecPathTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
+        android:paddingTop="16dp"
+        android:paddingLeft="16dp"
         android:textAppearance="?attr/textAppearanceHeadline6"
         android:text="@string/activity_svobject_specs_title_path" />
 
@@ -64,6 +65,7 @@
         android:id="@+id/layNavigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingTop="8dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:orientation="horizontal">
@@ -91,18 +93,12 @@
 
     </LinearLayout>
 
-    <View
-        android:id="@+id/divider"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?android:attr/listDivider" />
-
     <TextView
         android:id="@+id/txtName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
+        android:paddingTop="16dp"
+        android:paddingLeft="16dp"
         android:textAppearance="?attr/textAppearanceHeadline6"
         android:maxLines="1"
         android:text="@string/activity_svobject_specs_title_sub_specs" />
@@ -112,7 +108,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:paddingTop="16dp"
+        android:paddingTop="8dp"
         android:fadingEdge="horizontal"
         android:fadingEdgeLength="30dp"
         android:fillViewport="false"
@@ -123,7 +119,6 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_gravity="center"
-        android:layout_marginTop="16dp"
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:background="?attr/colorSurface"
         android:textColor="?attr/colorOnSurface"

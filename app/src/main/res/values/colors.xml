@@ -27,8 +27,12 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="red">#FF0000</color>
+    <color name="yellow">#FFFF00</color>
     <color name="green">#00FF00</color>
+    <color name="cyan">#00FFFF</color>
     <color name="blue">#0000FF</color>
+    <color name="purple">#FF00FF</color>
+    <color name="orange">#FFA500</color>
 
     <color name="gray_50">#f5f5f5</color>
     <color name="gray_100">#e9e9e9</color>
@@ -40,5 +44,21 @@
     <color name="gray_700">#434343</color>
     <color name="gray_800">#262626</color>
     <color name="gray_900">#000000</color>
+
+
+    <color name="black_transparent_50">#f5000000</color>
+    <color name="black_transparent_100">#e6000000</color>
+    <color name="black_transparent_200">#cc000000</color>
+    <color name="black_transparent_300">#b3000000</color>
+    <color name="black_transparent_400">#99000000</color>
+    <color name="black_transparent_500">#80000000</color>
+    <color name="black_transparent_600">#66000000</color>
+    <color name="black_transparent_700">#4d000000</color>
+    <color name="black_transparent_800">#33000000</color>
+    <color name="black_transparent_900">#1a000000</color>
+
+
+    <color name="light_blue_400">#FF29B6F6</color>
+    <color name="light_blue_600">#FF039BE5</color>
 
 </resources>
