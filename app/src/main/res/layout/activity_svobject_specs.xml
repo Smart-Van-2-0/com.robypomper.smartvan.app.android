@@ -10,47 +10,15 @@
     android:orientation="vertical"
     tools:context=".activities.SVObjectSpecsActivity">
 
-    <LinearLayout
-        android:id="@+id/layTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/txtTitleName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/activity_svobject_specs_txt_title_name_placeholder"
-            android:textAppearance="?attr/textAppearanceHeadline5" />
-
-        <TextView
-            android:id="@+id/txtTitlePost"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/activity_svobject_specs_txt_title_post"
-            android:textAppearance="?attr/textAppearanceHeadline5" />
-    </LinearLayout>
-
     <TextView
         android:id="@+id/txtContent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="16dp"
+        android:layout_margin="16dp"
         android:text="@string/activity_svobject_specs_txt_content"
         android:textAlignment="center"
         android:textAppearance="?attr/textAppearanceSubtitle1" />
-
-    <Space
-        android:id="@+id/space1"
-        android:layout_width="match_parent"
-        android:layout_height="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtContent" />
 
     <TextView
         android:id="@+id/txtCurrentSpecPathTitle"

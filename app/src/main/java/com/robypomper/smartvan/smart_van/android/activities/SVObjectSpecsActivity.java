@@ -121,13 +121,11 @@ public class SVObjectSpecsActivity extends BaseRemoteObjectActivity {
 
     @Override
     protected void onRemoteObjectReady() {
-        binding.txtTitleName.setText(getRemoteObject().getName());
         registerRemoteObjectToSpecs();
     }
 
     @Override
     protected void onRemoteObjectDeregistered() {
-        binding.txtTitleName.setText(R.string.activity_svobject_specs_txt_title_name_placeholder);
         deregisterRemoteObjectToSpecs();
     }
 

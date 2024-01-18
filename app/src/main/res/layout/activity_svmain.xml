@@ -111,7 +111,8 @@
                 android:layout_marginTop="8dp"
                 android:text="@string/activity_svmain_btn_energy_more_details"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/imgPower" />
+                app:layout_constraintTop_toBottomOf="@id/imgPower"
+                android:clickable="false" />
 
             <ImageView
                 android:id="@+id/imgPower"
@@ -182,7 +183,8 @@
                 android:layout_marginTop="8dp"
                 android:text="@string/activity_svmain_btn_more_details"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imgPanels" />
+                app:layout_constraintTop_toBottomOf="@+id/imgPanels"
+                android:clickable="false" />
 
             <ImageView
                 android:id="@+id/imgPanels"
@@ -253,7 +255,8 @@
                 android:layout_marginTop="8dp"
                 android:text="@string/activity_svmain_btn_more_details"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imgServices" />
+                app:layout_constraintTop_toBottomOf="@+id/imgServices"
+                android:clickable="false" />
 
             <ImageView
                 android:id="@+id/imgServices"
@@ -315,7 +318,8 @@
                 android:layout_marginTop="60dp"
                 android:text="@string/activity_svmain_btn_more_details"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/txtSpecsLabel" />
+                app:layout_constraintTop_toBottomOf="@id/txtSpecsLabel"
+                android:clickable="false" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -11,6 +11,16 @@
     tools:context=".activities.SVEnergyActivity">
 
     <TextView
+        android:id="@+id/txtContent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="16dp"
+        android:text="@string/activity_svenergy_description"
+        android:textAlignment="center"
+        android:textAppearance="?attr/textAppearanceSubtitle1" />
+
+    <TextView
         android:id="@+id/txtRealtimeTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -143,6 +153,7 @@
                 app:sv_donut_text_vertical_offset="30dp"
                 />
         </androidx.cardview.widget.CardView>
+
     </LinearLayout>
 
     <TextView
@@ -153,16 +164,6 @@
         android:paddingLeft="16dp"
         android:textAppearance="?attr/textAppearanceHeadline6"
         android:text="@string/activity_svenergy_txt_sub_title_history" />
-
-    <com.robypomper.josp.jsl.android.components.charts.ChartLineView
-        android:visibility="gone"
-        android:id="@+id/viewChartLine"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_margin="16dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
