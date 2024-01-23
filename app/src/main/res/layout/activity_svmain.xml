@@ -123,7 +123,7 @@
                 android:importantForAccessibility="no"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/txtPowerLabel"
-                app:srcCompat="@drawable/battery_transparent" />
+                android:src="@drawable/battery_transparent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -195,7 +195,7 @@
                 android:importantForAccessibility="no"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/txtPanelsLabel"
-                app:srcCompat="@drawable/solarpanles_transparent" />
+                android:src="@drawable/solarpanles_transparent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -267,7 +267,7 @@
                 android:importantForAccessibility="no"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/txtServicesLabel"
-                app:srcCompat="@drawable/services_transparent" />
+                android:src="@drawable/services_transparent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

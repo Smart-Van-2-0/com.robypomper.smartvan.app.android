@@ -27,8 +27,26 @@ import com.robypomper.smartvan.smart_van.android.databinding.ActivitySvmainBindi
 public class SVMainActivity extends BaseRemoteObjectActivity {
 
     public final static String PARAM_OBJ_ID = SVDefinitions.PARAM_ACTIVITY_SVMAIN_OBJID;
+    /**
+     * COMP_POWER_PATH
+     * - SVMobileApp:   SVSpecs.SVBox.Energy.Storage.Percentage
+     * - SV Specs:      Energy>Storage>Percentage
+     * - FW Victron:    com.victron.SmartSolarMPPT.battery_voltage_percent
+     */
     public final static SVSpec COMP_POWER_PATH = SVDefinitions.COMP_MAIN_POWER;
+    /**
+     * COMP_GENERATION_PATH
+     * - SVMobileApp:   SVSpecs.SVBox.Energy.Generation.Power
+     * - SV Specs:      Energy>Generation>Power
+     * - FW Victron:    com.victron.SmartSolarMPPT.panel_power
+     */
     public final static SVSpec COMP_PANELS_PATH = SVSpecs.SVBox.Energy.Generation.Power;
+    /**
+     * COMP_CONSUMPTION_PATH
+     * - SVMobileApp:   SVSpecs.SVBox.Energy.Consumption.Power
+     * - SV Specs:      Energy>Consumption>Power
+     * - FW Victron:    com.victron.SmartSolarMPPT.load_power
+     */
     public final static SVSpec COMP_SERVICES_PATH = SVSpecs.SVBox.Energy.Consumption.Power;
 
     private ActivitySvmainBinding binding;
@@ -196,7 +214,7 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
 
         @Override
         public void onStateChanged(JSLRangeState component, double newState, double oldState) {
-            updateServicesComp(component);
+            updatePanelsComp(component);
         }
 
         @Override
@@ -213,7 +231,7 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
 
         @Override
         public void onStateChanged(JSLRangeState component, double newState, double oldState) {
-            updatePanelsComp(component);
+            updateServicesComp(component);
         }
 
         @Override
@@ -276,49 +294,25 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
             @SuppressLint("DefaultLocale")
             @Override
             public void run() {
-                String text = "N/A";
-                if (comp != null)
-                    // text = String.format("%.2f", comp.getState() / 1000); // mV to V
-                    text = String.format("%.2f", comp.getState()); // % to %
+                if (comp == null)
+                    return;
+                String text = String.format("%.2f", comp.getState()); // % to %W
                 binding.txtPowerValue.setText(text);
-
-                //*
-                double state = findRangeStateComponent(SVSpecs.SVBox.Energy.Storage.Voltage.getPath()).getState();
-                Log.v("SVMain", "###########      Battery voltage    : " + state);
-                state = findRangeStateComponent(SVSpecs.SVBox.Energy.Storage.Min_Voltage.getPath()).getState();
-                Log.v("SVMain", "###########      Battery voltage min: " + state);
-                state = findRangeStateComponent(SVSpecs.SVBox.Energy.Storage.Max_Voltage.getPath()).getState();
-                Log.v("SVMain", "###########      Battery voltage max: " + state);
-                state = findRangeStateComponent(SVSpecs.SVBox.Energy.Storage.Percentage.getPath()).getState();
-                Log.v("SVMain", "###########      Battery voltage %  : " + state);
-                // */
             }
         });
     }
 
     private void updatePanelsComp(JSLRangeState comp) {
         runOnUiThread(new Runnable() {
+            // comp = SVSpecs.SVBox.Energy.Generation.Power
+
             @SuppressLint("DefaultLocale")
             @Override
             public void run() {
-                String text = "N/A";
-                if (comp != null)
-                    // text = String.format("%.2f", comp.getState() / 1000); // mV to V
-                    text = String.format("%.2f", comp.getState()); // % to %
+                if (comp == null)
+                    return;
+                String text = String.format("%.2f", comp.getState() / 1000); // mW to W
                 binding.txtPanelsValue.setText(text);
-
-                //*
-                double state = findRangeStateComponent(SVSpecs.SVBox.Energy.Generation.Current.getPath()).getState();
-                Log.v("SVMain", "###########      Panels current mA    : " + state);
-                state = findRangeStateComponent(SVSpecs.SVBox.Energy.Generation.Voltage.getPath()).getState();
-                Log.v("SVMain", "###########      Panels Voltage mV    : " + state);
-                state = findRangeStateComponent(SVSpecs.SVBox.Energy.Generation.Power.getPath()).getState();
-                Log.v("SVMain", "###########      Panels Power mW      : " + state);
-                //state = findRangeStateComponent(SVSpecs.SVBox.Energy.Generation.Percentage.getPath()).getState();
-                //Log.v("SVMain", "###########      Panels Power Perc %  : " + state);
-                state = findRangeStateComponent(SVSpecs.SVBox.Energy.Generation.Max_Power.getPath()).getState();
-                Log.v("SVMain", "###########      Panels Power Max mW  : " + state);
-                // */
             }
         });
     }
@@ -328,24 +322,10 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
             @SuppressLint("DefaultLocale")
             @Override
             public void run() {
-                String text = "N/A";
-                if (comp != null)
-                    // text = String.format("%.2f", comp.getState() / 1000); // mV to V
-                    text = String.format("%.2f", comp.getState()); // % to %
+                if (comp == null)
+                    return;
+                String text = String.format("%.2f", comp.getState() / 1000); // mW to W
                 binding.txtServicesValue.setText(text);
-
-                //*
-                double state = findRangeStateComponent(SVSpecs.SVBox.Energy.Consumption.Current.getPath()).getState();
-                Log.v("SVMain", "###########      AllSrvs current mA    : " + state);
-                state = findRangeStateComponent(SVSpecs.SVBox.Energy.Consumption.Voltage.getPath()).getState();
-                Log.v("SVMain", "###########      AllSrvs Voltage mV    : " + state);
-                state = findRangeStateComponent(SVSpecs.SVBox.Energy.Consumption.Power.getPath()).getState();
-                Log.v("SVMain", "###########      AllSrvs Power mW      : " + state);
-                //state = findRangeStateComponent(SVSpecs.SVBox.Energy.Consumption.Percentage.getPath()).getState();
-                //Log.v("SVMain", "###########      AllSrvs Power Perc %  : " + state);
-                state = findRangeStateComponent(SVSpecs.SVBox.Energy.Consumption.Max_Power.getPath()).getState();
-                Log.v("SVMain", "###########      AllSrvs Power Max mW  : " + state);
-                // */
             }
         });
     }

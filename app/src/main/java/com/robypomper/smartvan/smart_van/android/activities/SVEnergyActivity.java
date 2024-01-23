@@ -25,8 +25,26 @@ public class SVEnergyActivity extends BaseRemoteObjectActivity {
 
 
     public final static String PARAM_OBJ_ID = SVDefinitions.PARAM_ACTIVITY_SVMAIN_OBJID;
+    /**
+     * COMP_STORAGE_PATH
+     * - SVMobileApp:   SVSpecs.SVBox.Energy.Storage.Voltage
+     * - SV Specs:      Energy>Storage>Voltage
+     * - FW Victron:    com.victron.SmartSolarMPPT.battery_voltage
+     */
     public final static SVSpec COMP_STORAGE_PATH = SVSpecs.SVBox.Energy.Storage.Voltage;
+    /**
+     * COMP_GENERATION_PATH
+     * - SVMobileApp:   SVSpecs.SVBox.Energy.Generation.Power
+     * - SV Specs:      Energy>Generation>Power
+     * - FW Victron:    com.victron.SmartSolarMPPT.panel_power
+     */
     public final static SVSpec COMP_GENERATION_PATH = SVSpecs.SVBox.Energy.Generation.Power;
+    /**
+     * COMP_CONSUMPTION_PATH
+     * - SVMobileApp:   SVSpecs.SVBox.Energy.Consumption.Power
+     * - SV Specs:      Energy>Consumption>Power
+     * - FW Victron:    com.victron.SmartSolarMPPT.load_power
+     */
     public final static SVSpec COMP_CONSUMPTION_PATH = SVSpecs.SVBox.Energy.Consumption.Power;
     private final static String COMP_STORAGE_LABEL = "Battery";
     private final static String COMP_STORAGE_UNIT = "V";
@@ -81,8 +99,8 @@ public class SVEnergyActivity extends BaseRemoteObjectActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        //if (storageComp == null && getRemoteObject() != null)
-        registerRemoteObjectToUI();
+        if (storageComp == null && getRemoteObject() != null)
+            registerRemoteObjectToUI();
     }
 
     @Override
@@ -96,7 +114,7 @@ public class SVEnergyActivity extends BaseRemoteObjectActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 if (getParentActivityIntent() == null) {
-                    Log.w("SVPowerActivity", "You have forgotten to specify the parentActivityName in the AndroidManifest!");
+                    Log.w("SVEnergyActivity", "You have forgotten to specify the parentActivityName in the AndroidManifest!");
                     //onBackPressed();
                     getOnBackPressedDispatcher().onBackPressed();
                 } else
@@ -257,7 +275,7 @@ public class SVEnergyActivity extends BaseRemoteObjectActivity {
 
     private void updateStorageComp(JSLRangeState comp) {
         if (comp != null)
-            Log.d("SVPower", String.format("updateStorageComp(%s) => %f", comp.getState(), comp.getState() / 1000));
+            Log.d("SVEnergy", String.format("updateStorageComp(%s) => %f", comp.getState(), comp.getState() / 1000));
 
         runOnUiThread(new Runnable() {
             @SuppressLint("DefaultLocale")
@@ -270,26 +288,26 @@ public class SVEnergyActivity extends BaseRemoteObjectActivity {
 
     private void updateGenerationComp(JSLRangeState comp) {
         if (comp != null)
-            Log.d("SVPower", String.format("updateGenerationComp(%s) => %f", comp.getState(), comp.getState() / 1000));
+            Log.d("SVEnergy", String.format("updateGenerationComp(%s) => %f", comp.getState(), comp.getState() / 1000));
 
         runOnUiThread(new Runnable() {
             @SuppressLint("DefaultLocale")
             @Override
             public void run() {
-                binding.donutGenerationValue.setValue(comp == null ? 0 : comp.getState() / 1000); // mV to V
+                binding.donutGenerationValue.setValue(comp == null ? 0 : comp.getState() / 1000); // mW to W
             }
         });
     }
 
     private void updateConsumptionComp(JSLRangeState comp) {
         if (comp != null)
-            Log.d("SVPower", String.format("updateConsumptionComp(%s) => %f", comp.getState(), comp.getState() / 1000));
+            Log.d("SVEnergy", String.format("updateConsumptionComp(%s) => %f", comp.getState(), comp.getState() / 1000));
 
         runOnUiThread(new Runnable() {
             @SuppressLint("DefaultLocale")
             @Override
             public void run() {
-                binding.donutConsumptionValue.setValue(comp == null ? 0 : comp.getState() / 1000); // mV to V
+                binding.donutConsumptionValue.setValue(comp == null ? 0 : comp.getState() / 1000); // mW to W
             }
         });
     }
