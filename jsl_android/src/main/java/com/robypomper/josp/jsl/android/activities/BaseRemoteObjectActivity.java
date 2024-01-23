@@ -7,6 +7,7 @@ import com.robypomper.josp.jsl.comm.JSLLocalClient;
 import com.robypomper.josp.jsl.objs.JSLObjsMngr;
 import com.robypomper.josp.jsl.objs.JSLRemoteObject;
 import com.robypomper.josp.jsl.objs.remote.ObjComm;
+import com.robypomper.josp.jsl.objs.remote.ObjPerms;
 import com.robypomper.josp.jsl.objs.remote.ObjStruct;
 import com.robypomper.josp.jsl.objs.structure.JSLComponent;
 import com.robypomper.josp.jsl.objs.structure.JSLContainer;
@@ -15,6 +16,9 @@ import com.robypomper.josp.jsl.objs.structure.pillars.JSLBooleanAction;
 import com.robypomper.josp.jsl.objs.structure.pillars.JSLBooleanState;
 import com.robypomper.josp.jsl.objs.structure.pillars.JSLRangeAction;
 import com.robypomper.josp.jsl.objs.structure.pillars.JSLRangeState;
+import com.robypomper.josp.protocol.JOSPPerm;
+
+import java.util.List;
 
 
 /**
@@ -85,6 +89,7 @@ public class BaseRemoteObjectActivity extends BaseJSLActivity {
         super.onCreate(savedInstanceState);
 
         getJSLClient().getJSLListeners().addObjsMngrListenersByID(objId, remObjByIdListener);
+        getJSLClient().getJSLListeners().addObjsMngr_PermsListeners(remObjPermsListener);
     }
 
     /**
@@ -98,6 +103,7 @@ public class BaseRemoteObjectActivity extends BaseJSLActivity {
         if (remObj != null) deregisterRemoteObject();
 
         getJSLClient().getJSLListeners().removeObjsMngrListenersByID(objId, remObjByIdListener);
+        getJSLClient().getJSLListeners().removeObjsMngr_PermsListeners(remObjPermsListener);
     }
 
     @Override
@@ -208,6 +214,31 @@ public class BaseRemoteObjectActivity extends BaseJSLActivity {
      * This message is sent by the JSL service immediately after the object presentation message.
      */
     protected void onRemoteObjectStructureChanged() {
+    }
+
+    /**
+     * The method is called when the permissions of the remote object are changed.
+     * <p>
+     * This message is always sent by the object during object's presentation.
+     *
+     * @param obj     the remote object that has changed its permissions.
+     * @param newPerms the new permissions of the remote object.
+     * @param oldPerms the old permissions of the remote object.
+     */
+    protected void onRemoteObjectPermissionsChanged(JSLRemoteObject obj, List<JOSPPerm> newPerms, List<JOSPPerm> oldPerms) {
+    }
+
+    /**
+     * The method is called when the service permission to the remote object is changed.
+     * <p>
+     * This message is always sent by the object during object's presentation.
+     *
+     * @param obj       the remote object that has changed its permissions.
+     * @param connType  the connection type that has changed its permission.
+     * @param newPermType the new permission of the remote object.
+     * @param oldPermType the old permission of the remote object.
+     */
+    protected void onRemoteObjectServicePermChanged(JSLRemoteObject obj, JOSPPerm.Connection connType, JOSPPerm.Type newPermType, JOSPPerm.Type oldPermType) {
     }
 
     /**
@@ -402,10 +433,27 @@ public class BaseRemoteObjectActivity extends BaseJSLActivity {
 
     };
 
+    private final ObjPerms.RemoteObjectPermsListener remObjPermsListener = new ObjPerms.RemoteObjectPermsListener() {
+
+        @Override
+        public void onPermissionsChanged(JSLRemoteObject obj, List<JOSPPerm> newPerms, List<JOSPPerm> oldPerms) {
+            if (obj.getId().compareTo(getObjId()) != 0) return;
+            onRemoteObjectPermissionsChanged(obj, newPerms, oldPerms);
+        }
+
+        @Override
+        public void onServicePermChanged(JSLRemoteObject obj, JOSPPerm.Connection connType, JOSPPerm.Type newPermType, JOSPPerm.Type oldPermType) {
+            if (obj.getId().compareTo(getObjId()) != 0) return;
+            onRemoteObjectServicePermChanged(obj, connType, newPermType, oldPermType);
+        }
+
+    };
+
     private final ObjComm.RemoteObjectConnListener remObjConnListener = new ObjComm.RemoteObjectConnListener() {
 
         @Override
         public void onLocalConnected(JSLRemoteObject obj, JSLLocalClient localClient) {
+            if (obj.getId().compareTo(getObjId()) != 0) return;
             // emit only if not already connected via cloud
             if (!obj.getComm().isCloudConnected()) onRemoteObjectConnected();
             onRemoteObjectConnectedLocal();
@@ -413,6 +461,7 @@ public class BaseRemoteObjectActivity extends BaseJSLActivity {
 
         @Override
         public void onLocalDisconnected(JSLRemoteObject obj, JSLLocalClient localClient) {
+            if (obj.getId().compareTo(getObjId()) != 0) return;
             // emit only if not connected via cloud
             if (!obj.getComm().isCloudConnected()) onRemoteObjectConnected();
             onRemoteObjectDisconnectedLocal();
@@ -420,6 +469,7 @@ public class BaseRemoteObjectActivity extends BaseJSLActivity {
 
         @Override
         public void onCloudConnected(JSLRemoteObject obj) {
+            if (obj.getId().compareTo(getObjId()) != 0) return;
             // emit only if not already connected via local
             if (!obj.getComm().isLocalConnected()) onRemoteObjectConnected();
             onRemoteObjectConnectedCloud();
@@ -427,6 +477,7 @@ public class BaseRemoteObjectActivity extends BaseJSLActivity {
 
         @Override
         public void onCloudDisconnected(JSLRemoteObject obj) {
+            if (obj.getId().compareTo(getObjId()) != 0) return;
             // emit only if not connected via local
             if (!obj.getComm().isLocalConnected()) onRemoteObjectDisconnected();
             onRemoteObjectDisconnectedCloud();
@@ -438,6 +489,7 @@ public class BaseRemoteObjectActivity extends BaseJSLActivity {
 
         @Override
         public void onStructureChanged(JSLRemoteObject obj, JSLRoot newRoot) {
+            if (obj.getId().compareTo(getObjId()) != 0) return;
             onRemoteObjectStructureChanged();
             emitOnRemoteObjectReady();
         }
