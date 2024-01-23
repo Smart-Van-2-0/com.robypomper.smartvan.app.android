@@ -27,7 +27,7 @@ import com.robypomper.josp.jsl.android.service.JSLService;
  */
 public abstract class JSLStartupActivity<T extends JSLService> extends BaseJSLActivity {
 
-    private final String LOG_TAG = "JSLA.Actvt.JSLStartup";
+    private static final String LOG_TAG = "JSLA.Actvt.JSLStartup";
 
     // Android
 

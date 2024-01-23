@@ -92,7 +92,7 @@ public class BaseRemoteObjectActivity extends BaseJSLActivity {
      * as a listener for the remote object that is used by the activity.
      */
     @Override
-    public void onDestroy() {
+    protected void onDestroy() {
         super.onDestroy();
 
         if (remObj != null) deregisterRemoteObject();

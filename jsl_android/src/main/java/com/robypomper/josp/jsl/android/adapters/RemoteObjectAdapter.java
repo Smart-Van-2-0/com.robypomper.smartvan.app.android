@@ -30,6 +30,8 @@ import java.util.List;
  * method, client's can populate their own View with Remote Objects values and,
  * is also possible add listeners to the UI widgets like the
  * {#link {@link View#setOnClickListener(View.OnClickListener)}}.
+ * <p>
+ * TODO rename to RemoteObjectsAdapter (add the 's' at the end of the Object word)
  */
 public abstract class RemoteObjectAdapter extends RecyclerView.Adapter<RemoteObjectAdapter.ViewHolder> {
 
@@ -115,13 +117,13 @@ public abstract class RemoteObjectAdapter extends RecyclerView.Adapter<RemoteObj
     }
 
     private void addCachedObject(JSLRemoteObject obj) {
-        // TODO: FILTER - check if obj comply with adapter filter
-        _cached_objs.add(obj);
-        // TODO: SORTING - re-sorting
-
         parent.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                // TODO: FILTER - check if obj comply with adapter filter
+                _cached_objs.add(obj);
+                // TODO: SORTING - re-sorting
+
                 notifyItemInserted(_cached_objs.indexOf(obj));
             }
         });
@@ -137,24 +139,24 @@ public abstract class RemoteObjectAdapter extends RecyclerView.Adapter<RemoteObj
     }
 
     private void removeCachedObject(JSLRemoteObject obj) {
-        int old_pos = _cached_objs.indexOf(obj);
-        _cached_objs.remove(obj);
-
         parent.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                int old_pos = _cached_objs.indexOf(obj);
+                _cached_objs.remove(obj);
+
                 notifyItemRemoved(old_pos);
             }
         });
     }
 
     private void resetCachedObject() {
-        int old_objs_count = _cached_objs.size();
-        _cached_objs.clear();
-
         parent.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                int old_objs_count = _cached_objs.size();
+                _cached_objs.clear();
+
                 notifyItemRangeRemoved(0, old_objs_count);
             }
         });

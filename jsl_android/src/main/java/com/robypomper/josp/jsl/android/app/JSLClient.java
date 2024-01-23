@@ -45,7 +45,7 @@ import java.util.Vector;
  */
 public abstract class JSLClient<T extends JSLService> {
 
-    private final String LOG_TAG = "JSLA.JSLClient";
+    private static final String LOG_TAG = "JSLA.JSLClient";
     private final Context context;
     private T jslService;
     private JSLClientState extendedState = JSLClientState.NOT_BOUND;

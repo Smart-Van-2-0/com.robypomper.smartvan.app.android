@@ -26,7 +26,7 @@ import java.util.Map;
  */
 public class DiscoverAndroid extends DiscoverAbs {
 
-    private final String LOG_TAG = "JSLA.Discover";
+    private static final String LOG_TAG = "JSLA.Discover";
 
     // Internal vars
 

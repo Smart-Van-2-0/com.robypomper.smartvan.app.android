@@ -34,7 +34,7 @@ import java.util.List;
  */
 public abstract class JSLSelectObjectActivity extends BaseObjectsActivity {
 
-    private final String LOG_TAG = "JSLA.Actvt.SelectObject";
+    private static final String LOG_TAG = "JSLA.Actvt.SelectObject";
 
     private final String modelName;
     private final Class<? extends Activity> nextActivityClass;
