@@ -45,7 +45,7 @@ import java.util.Vector;
  */
 public abstract class JSLClient<T extends JSLService> {
 
-    private final String LOG_TAG = "JSLA.JSLClient";
+    private static final String LOG_TAG = "JSLA.JSLClient";
     private final Context context;
     private T jslService;
     private JSLClientState extendedState = JSLClientState.NOT_BOUND;
@@ -110,7 +110,11 @@ public abstract class JSLClient<T extends JSLService> {
         Log.i(LOG_TAG, "JSLApplication connecting to the JSL Service");
         Intent intent_service = new Intent(this.context, getJSLServiceClass());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            context.startForegroundService(intent_service);
+            try {
+                context.startForegroundService(intent_service);
+            } catch (Exception e) {
+                Log.w(LOG_TAG, "JSLApplication failed to start foreground service", e);
+            }
         context.startService(intent_service);
         context.bindService(intent_service, connection, Context.BIND_AUTO_CREATE);
         JSLClientState oldState = getState();
