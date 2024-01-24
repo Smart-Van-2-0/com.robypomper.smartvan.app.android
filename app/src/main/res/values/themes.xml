@@ -5,7 +5,9 @@
         <item name="colorSecondary">@color/smartvan_second_300</item>
         <item name="colorSurface">@color/smartvan_50</item>
         <item name="colorOnSurface">@color/smartvan_800</item>
+        <item name="colorError">@color/red_dark</item>
     </style>
+
     <!--
     <style name="Theme.SmartVan.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="Theme.SmartVan.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
