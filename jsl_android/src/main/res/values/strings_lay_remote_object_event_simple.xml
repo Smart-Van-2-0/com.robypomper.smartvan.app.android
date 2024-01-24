@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="adapter_remote_object_event_type_placeholder">{EVENT_TYPE}</string>
+    <string name="adapter_remote_object_event_count_placeholder">{0}</string>
+    <string name="adapter_remote_object_event_date_placeholder">{EVENT_DATE}</string>
+</resources>
