@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/copyEvent"
+        android:title="@string/bottom_sheet_event_details_menu_copy_event" />
+
+    <item
+        android:id="@+id/copyPayload"
+        android:title="@string/bottom_sheet_event_details_menu_copy_payload" />
+
+    <item
+        android:id="@+id/copyErrorMsg"
+        android:title="@string/bottom_sheet_event_details_menu_copy_error_msg" />
+
+    <item
+        android:id="@+id/copyErrorPayload"
+        android:title="@string/bottom_sheet_event_details_menu_copy_error_payload" />
+
+    <item
+        android:id="@+id/copyErrorStack"
+        android:title="@string/bottom_sheet_event_details_menu_copy_error_stack" />
+
+</menu>
