@@ -22,20 +22,16 @@ public class SVObjectDetailsActivity extends JSLObjectDetailsActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                if (getParentActivityIntent() == null) {
-                    Log.w("SVPowerActivity", "You have forgotten to specify the parentActivityName in the AndroidManifest!");
-                    //onBackPressed();
-                    getOnBackPressedDispatcher().onBackPressed();
-                } else
-                    NavUtils.navigateUpFromSameTask(this);
-
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            if (getParentActivityIntent() == null) {
+                Log.w("SVEnergy", "You have forgotten to specify the parentActivityName in the AndroidManifest!");
+                //onBackPressed();
+                getOnBackPressedDispatcher().onBackPressed();
+            } else
+                NavUtils.navigateUpFromSameTask(this);
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
 }

@@ -15,7 +15,7 @@ import androidx.core.app.NavUtils;
 
 import com.google.android.material.chip.Chip;
 import com.robypomper.josp.jsl.android.activities.BaseRemoteObjectActivity;
-import com.robypomper.smartvan.smart_van.android.R;
+import com.robypomper.josp.jsl.objs.JSLRemoteObject;
 import com.robypomper.smartvan.smart_van.android.commons.SVDefinitions;
 import com.robypomper.smartvan.smart_van.android.commons.SVSpec;
 import com.robypomper.smartvan.smart_van.android.commons.SVSpecGroup;
@@ -51,28 +51,33 @@ public class SVObjectSpecsActivity extends BaseRemoteObjectActivity {
     // Constants
 
     public final static String PARAM_SPECS_GROUP_PATH = SVDefinitions.PARAM_ACTIVITY_SVOBJECT_SPECS_SPECS_GROUP_PATH;
+    /** Allow to configure back button behaviour (true: follow the NavStack, false: go to parent). */
+    private final static boolean USE_NAVIGATION_STACK = false;
 
 
-    // Attributes
+    // Internal variables
 
-    private ActivitySvobjectSpecsBinding binding;
-    private boolean isRegistered = false;           // avoid duplicated registration/deregistration
-    private SVSpecsListAdapter specsListAdapter;
+    private JSLRemoteObject remoteObject;
     private SVSpecGroup specGroup;
     private final List<SVSpecGroup> specGroupsStack = new ArrayList<>();
     private String specGroupUrl;
-    private final boolean useNavStack = false;      // allow to configure back button behaviour (true: follow the NavStack, false: go to parent)
+
+
+    // UI widgets
+
+    private ActivitySvobjectSpecsBinding binding;
+    private SVSpecsListAdapter specsListAdapter;
 
 
     // Android
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
         // inflate ui
         binding = ActivitySvobjectSpecsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        super.onCreate(savedInstanceState);
 
         // register ui listeners and callbacks
         getOnBackPressedDispatcher().addCallback(this, onBackPressedCallback);
@@ -92,59 +97,92 @@ public class SVObjectSpecsActivity extends BaseRemoteObjectActivity {
         }
         goToSpecGroup(initSpecGroup);
 
+        // set up action bar
         if (getActionBar() != null)
             getActionBar().setDisplayHomeAsUpEnabled(true);
-        else
+        else if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        else
+            Log.w("SVEnergy", "No ActionBar available for this activity");
+    }
+
+    @Override
+    protected void onResume() {
+        // During the super.onResume() execution, it check if the remote object
+        // is ready, and if it is ready, it calls the onRemoteObjectReady()
+        // method. So, the registerRemoteObject() method is called by the
+        // super.onResume() method, only if required.
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        // Deregister and update UI
+        deregisterRemoteObject();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                if (getParentActivityIntent() == null) {
-                    Log.w("SVPowerActivity", "You have forgotten to specify the parentActivityName in the AndroidManifest!");
-                    //onBackPressed();
-                    getOnBackPressedDispatcher().onBackPressed();
-                } else
-                    NavUtils.navigateUpFromSameTask(this);
-
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            if (getParentActivityIntent() == null) {
+                Log.w("SVEnergy", "You have forgotten to specify the parentActivityName in the AndroidManifest!");
+                //onBackPressed();
+                getOnBackPressedDispatcher().onBackPressed();
+            } else
+                NavUtils.navigateUpFromSameTask(this);
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
 
-    // BaseSVObjectActivity re-implementations
+    // BaseRemoteObjectActivity
 
     @Override
     protected void onRemoteObjectReady() {
-        registerRemoteObjectToSpecs();
+        registerRemoteObject();
     }
 
     @Override
-    protected void onRemoteObjectDeregistered() {
-        deregisterRemoteObjectToSpecs();
-    }
-
-    private void registerRemoteObjectToSpecs() {
-        if (specsListAdapter == null) return;
-        if (isRegistered) return;
-        specsListAdapter.setRemoteObj(getRemoteObject());
-        isRegistered = true;
-    }
-
-    private void deregisterRemoteObjectToSpecs() {
-        if (specsListAdapter == null) return;
-        if (!isRegistered) return;
-        specsListAdapter.setRemoteObj(null);
-        isRegistered = false;
+    protected void onRemoteObjectNotReady() {
+        deregisterRemoteObject();
     }
 
 
-    // Navigation management
+    // Remote object management
+
+    private void registerRemoteObject() {
+        if (specsListAdapter != null)
+            specsListAdapter.setRemoteObj(getRemoteObject());
+
+        registerRemoteObjectListeners();
+        updateRemoteObjectUI();
+    }
+
+    private void deregisterRemoteObject() {
+        deregisterRemoteObjectListeners();
+        updateRemoteObjectUI();
+    }
+
+    private void registerRemoteObjectListeners() {
+        // N/A
+    }
+
+    private void deregisterRemoteObjectListeners() {
+        // N/A
+    }
+
+
+    // UI widgets
+
+    private void updateRemoteObjectUI() {
+        // N/A
+    }
+
+
+    // UI Navigation
 
     private void goToSpecGroup(SVSpecGroup specGroup) {
         this.specGroup = specGroup;
@@ -165,7 +203,7 @@ public class SVObjectSpecsActivity extends BaseRemoteObjectActivity {
     }
 
     private void goToBack() {
-        if (useNavStack) goToBack_FollowNavStack();
+        if (USE_NAVIGATION_STACK) goToBack_FollowNavStack();
         else goToBack_GoToParent();
     }
 
@@ -195,7 +233,7 @@ public class SVObjectSpecsActivity extends BaseRemoteObjectActivity {
     }
 
 
-    // Specs list management
+    // UI Specs list
 
     private void populateSpecsList() {
         specsListAdapter = new SVSpecsListAdapter(this, specGroup.getSpecs(), isRemoteObjectReady() ? getRemoteObject() : null);
@@ -203,7 +241,7 @@ public class SVObjectSpecsActivity extends BaseRemoteObjectActivity {
     }
 
 
-    // Breadcrumb management
+    // UI Breadcrumb
 
     private void populateNavigationBreadcrumb() {
         LinearLayout layNavigation = binding.layNavigation;
@@ -213,11 +251,9 @@ public class SVObjectSpecsActivity extends BaseRemoteObjectActivity {
         addNewChip(specGroup.getName(), specGroup, layNavigation, null);
 
         // Create chips for parent spec groups
-        List<SVSpecGroup> parents = new ArrayList<>();
         SVSpecGroup currentParent = specGroup != null ? specGroup.getParent() : null;
         while (currentParent != null) {
             addNewChip(currentParent.getName(), currentParent, layNavigation, onClickNavSpecListener);
-            parents.add(currentParent);
             currentParent = currentParent.getParent();
         }
     }
@@ -247,6 +283,9 @@ public class SVObjectSpecsActivity extends BaseRemoteObjectActivity {
         layNavigation.addView(chip, 0);
     }
 
+
+    // UI listeners
+
     private final AdapterView.OnItemClickListener onClickListItemListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -269,9 +308,6 @@ public class SVObjectSpecsActivity extends BaseRemoteObjectActivity {
             goToBack();
         }
     };
-
-
-    // UI listeners
 
     private final View.OnClickListener onClickMoreDetailsListener = new View.OnClickListener() {
         @Override

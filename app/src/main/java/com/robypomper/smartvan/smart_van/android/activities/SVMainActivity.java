@@ -9,6 +9,7 @@ import android.view.View;
 import androidx.appcompat.content.res.AppCompatResources;
 
 import com.robypomper.josp.jsl.android.activities.BaseRemoteObjectActivity;
+import com.robypomper.josp.jsl.comm.JSLLocalClient;
 import com.robypomper.josp.jsl.objs.JSLRemoteObject;
 import com.robypomper.josp.jsl.objs.remote.ObjComm;
 import com.robypomper.josp.jsl.objs.structure.pillars.JSLRangeState;
@@ -25,6 +26,8 @@ import com.robypomper.smartvan.smart_van.android.databinding.ActivitySvmainBindi
  * This activity shows the main components of the Smart Van object.
  */
 public class SVMainActivity extends BaseRemoteObjectActivity {
+
+    // Constants
 
     public final static String PARAM_OBJ_ID = SVDefinitions.PARAM_ACTIVITY_SVMAIN_OBJID;
     /**
@@ -49,21 +52,28 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
      */
     public final static SVSpec COMP_SERVICES_PATH = SVSpecs.SVBox.Energy.Consumption.Power;
 
-    private ActivitySvmainBinding binding;
-    private JSLRangeState energyComp;
+
+    // Internal variables
+
+    private JSLRangeState powerComp;
     private JSLRangeState panelsComp;
-    private JSLRangeState servicesComp;
+    private JSLRangeState serviceComp;
+
+
+    // UI widgets
+
+    private ActivitySvmainBinding binding;
 
 
     // Android
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
         // inflate ui
         binding = ActivitySvmainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        super.onCreate(savedInstanceState);
 
         // register ui listeners and callbacks
         binding.layPower.setOnClickListener((onClickMainLayoutsListener));
@@ -73,166 +83,107 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
 
     @Override
     protected void onResume() {
+        // During the super.onResume() execution, it check if the remote object
+        // is ready, and if it is ready, it calls the onRemoteObjectReady()
+        // method. So, the registerRemoteObject() method is called by the
+        // super.onResume() method, only if required.
         super.onResume();
-        if (energyComp == null && getRemoteObject() != null)
-            registerRemoteObjectToUI();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        deregisterRemoteObjectToUI();
+
+        // Deregister and update UI
+        deregisterRemoteObject();
     }
 
 
-    // BaseRemoteObjectActivity re-implementations
+    // BaseRemoteObjectActivity
 
     @Override
     protected void onRemoteObjectReady() {
-        registerRemoteObjectToUI();
+        registerRemoteObject();
     }
 
     @Override
-    protected void onRemoteObjectDeregistered() {
-        deregisterRemoteObjectToUI();
-    }
-
-    @Override
-    protected void onRemoteObjectConnectedLocal() {
-        updateConnectionWidgets();
-    }
-
-    @Override
-    protected void onRemoteObjectDisconnectedLocal() {
-        updateConnectionWidgets();
-    }
-
-    @Override
-    protected void onRemoteObjectConnectedCloud() {
-        updateConnectionWidgets();
-    }
-
-    @Override
-    protected void onRemoteObjectDisconnectedCloud() {
-        updateConnectionWidgets();
+    protected void onRemoteObjectNotReady() {
+        deregisterRemoteObject();
     }
 
 
     // Remote object management
 
-    private void registerRemoteObjectToUI() {
-        JSLRangeState component;
+    private void registerRemoteObject() {
+        powerComp = findRangeStateComponent(COMP_POWER_PATH.getPath());
+        if (powerComp == null) throw new RuntimeException("Power component not found");
+        panelsComp = findRangeStateComponent(COMP_PANELS_PATH.getPath());
+        if (panelsComp == null) throw new RuntimeException("Panels component not found");
+        serviceComp = findRangeStateComponent(COMP_SERVICES_PATH.getPath());
+        if (serviceComp == null) throw new RuntimeException("Consumption component not found");
 
-        component = findRangeStateComponent(COMP_POWER_PATH.getPath());
-        if (component != null) registerPowerComp(component);
-        component = findRangeStateComponent(COMP_PANELS_PATH.getPath());
-        if (component != null) registerPanelsComp(component);
-        component = findRangeStateComponent(COMP_SERVICES_PATH.getPath());
-        if (component != null) registerServicesComp(component);
-
-        updateRemoteObject();
-        updateConnectionWidgets();
+        registerRemoteObjectListeners();
+        updateRemoteObjectUI();
     }
 
-    private void deregisterRemoteObjectToUI() {
-        if (energyComp != null) deregisterPowerComp();
-        if (panelsComp != null) deregisterPanelsComp();
-        if (servicesComp != null) deregisterServicesComp();
+    private void deregisterRemoteObject() {
+        deregisterRemoteObjectListeners();
+        updateRemoteObjectUI();
 
-        updateRemoteObject();
-        updateConnectionWidgets();
-    }
-
-    private void registerPowerComp(JSLRangeState component) {
-        energyComp = component;
-
-        energyComp.addListener(listenerPowerComp);
-
-        updatePowerComp(energyComp);
-    }
-
-    private void deregisterPowerComp() {
-        energyComp.removeListener(listenerPowerComp);
-
-        energyComp = null;
-
-        updatePowerComp(null);
-    }
-
-    private void registerPanelsComp(JSLRangeState component) {
-        panelsComp = component;
-
-        panelsComp.addListener(listenerPanelsComp);
-
-        updatePanelsComp(panelsComp);
-    }
-
-    private void deregisterPanelsComp() {
-        panelsComp.removeListener(listenerPanelsComp);
-
+        powerComp = null;
         panelsComp = null;
-
-        updatePanelsComp(null);
+        serviceComp = null;
     }
 
-    private void registerServicesComp(JSLRangeState component) {
-        servicesComp = component;
-
-        servicesComp.addListener(listenerServicesComp);
-
-        updateServicesComp(servicesComp);
+    private void registerRemoteObjectListeners() {
+        getRemoteObject().getComm().addListener(listenerComm);
+        powerComp.addListener(listenerComps);
+        panelsComp.addListener(listenerComps);
+        serviceComp.addListener(listenerComps);
     }
 
-    private void deregisterServicesComp() {
-        servicesComp.removeListener(listenerServicesComp);
-
-        servicesComp = null;
-
-        updateServicesComp(null);
+    private void deregisterRemoteObjectListeners() {
+        getRemoteObject().getComm().removeListener(listenerComm);
+        powerComp.removeListener(listenerComps);
+        panelsComp.removeListener(listenerComps);
+        serviceComp.removeListener(listenerComps);
     }
 
 
-    // Components listeners
+    // Remote Object listeners
 
-    private final JSLRangeState.RangeStateListener listenerPowerComp = new JSLRangeState.RangeStateListener() {
+    private final ObjComm.RemoteObjectConnListener listenerComm = new ObjComm.RemoteObjectConnListener() {
 
         @Override
-        public void onStateChanged(JSLRangeState component, double newState, double oldState) {
-            updatePowerComp(component);
+        public void onLocalConnected(JSLRemoteObject obj, JSLLocalClient localClient) {
+            updateConnectionWidgets();
         }
 
         @Override
-        public void onMinReached(JSLRangeState component, double state, double min) {
+        public void onLocalDisconnected(JSLRemoteObject obj, JSLLocalClient localClient) {
+            updateConnectionWidgets();
         }
 
         @Override
-        public void onMaxReached(JSLRangeState component, double state, double max) {
+        public void onCloudConnected(JSLRemoteObject obj) {
+            updateConnectionWidgets();
+        }
+
+        @Override
+        public void onCloudDisconnected(JSLRemoteObject obj) {
+            updateConnectionWidgets();
         }
 
     };
 
-    private final JSLRangeState.RangeStateListener listenerPanelsComp = new JSLRangeState.RangeStateListener() {
+    private final JSLRangeState.RangeStateListener listenerComps = new JSLRangeState.RangeStateListener() {
 
         @Override
         public void onStateChanged(JSLRangeState component, double newState, double oldState) {
-            updatePanelsComp(component);
-        }
-
-        @Override
-        public void onMinReached(JSLRangeState component, double state, double min) {
-        }
-
-        @Override
-        public void onMaxReached(JSLRangeState component, double state, double max) {
-        }
-
-    };
-
-    private final JSLRangeState.RangeStateListener listenerServicesComp = new JSLRangeState.RangeStateListener() {
-
-        @Override
-        public void onStateChanged(JSLRangeState component, double newState, double oldState) {
-            updateServicesComp(component);
+            if (component == powerComp) updatePowerComp();
+            else if (component == panelsComp) updatePanelsComp();
+            else if (component == serviceComp) updateServicesComp();
+            else assert false : "Unknown component";
         }
 
         @Override
@@ -248,12 +199,25 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
 
     // UI widgets
 
+    private void updateRemoteObjectUI() {
+        updateRemoteObject();
+        updateConnectionWidgets();
+        updatePowerComp();
+        updatePanelsComp();
+        updateServicesComp();
+    }
+
     private void updateRemoteObject() {
+        if (binding == null) return;
+
+        if (getRemoteObject() == null)
+            Log.i("SVMain", "updateRemoteObject() for unregistered remote object");
+
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                String text = getObjId();   // fallback to objId
                 JSLRemoteObject obj = getRemoteObject();
-                String text = "WAITING";
                 if (obj != null) text = obj.getName();
 
                 binding.txtTitleName.setText(text);
@@ -262,6 +226,10 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
     }
 
     private void updateConnectionWidgets() {
+        if (binding == null) return;
+
+        // TODO check communication module availability
+
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -290,42 +258,55 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
         });
     }
 
-    private void updatePowerComp(JSLRangeState comp) {
+    private void updatePowerComp() {
+        if (binding == null) return;
+
+        if (powerComp == null) Log.i("SVMain", "updateConnectionWidgets() for unregistered power component");
+        else Log.d("SVMain", String.format("updateConnectionWidgets(%s) => %f", powerComp.getState(), powerComp.getState() / 1000));
+
         runOnUiThread(new Runnable() {
             @SuppressLint("DefaultLocale")
             @Override
             public void run() {
-                if (comp == null)
-                    return;
-                String text = String.format("%.2f", comp.getState()); // % to %W
+                String text = "N/A";
+                if (powerComp != null)
+                    text = String.format("%.2f", powerComp.getState()); // % to %
                 binding.txtPowerValue.setText(text);
             }
         });
     }
 
-    private void updatePanelsComp(JSLRangeState comp) {
-        runOnUiThread(new Runnable() {
-            // comp = SVSpecs.SVBox.Energy.Generation.Power
+    private void updatePanelsComp() {
+        if (binding == null) return;
 
+        if (panelsComp == null) Log.i("SVMain", "updatePanelsComp() for unregistered panels component");
+        else Log.d("SVMain", String.format("updatePanelsComp(%s) => %f", panelsComp.getState(), panelsComp.getState() / 1000));
+
+        runOnUiThread(new Runnable() {
             @SuppressLint("DefaultLocale")
             @Override
             public void run() {
-                if (comp == null)
-                    return;
-                String text = String.format("%.2f", comp.getState() / 1000); // mW to W
+                String text = "N/A";
+                if (panelsComp != null)
+                    text = String.format("%.2f", panelsComp.getState() / 1000); // mW to W
                 binding.txtPanelsValue.setText(text);
             }
         });
     }
 
-    private void updateServicesComp(JSLRangeState comp) {
+    private void updateServicesComp() {
+        if (binding == null) return;
+
+        if (serviceComp == null) Log.i("SVMain", "updateServicesComp() for unregistered services component");
+        else Log.d("SVMain", String.format("updateServicesComp(%s) => %f", serviceComp.getState(), serviceComp.getState() / 1000));
+
         runOnUiThread(new Runnable() {
             @SuppressLint("DefaultLocale")
             @Override
             public void run() {
-                if (comp == null)
-                    return;
-                String text = String.format("%.2f", comp.getState() / 1000); // mW to W
+                String text = "N/A";
+                if (serviceComp != null)
+                    text = String.format("%.2f", serviceComp.getState() / 1000); // mW to W
                 binding.txtServicesValue.setText(text);
             }
         });

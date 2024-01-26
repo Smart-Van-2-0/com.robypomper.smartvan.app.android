@@ -23,6 +23,7 @@ import com.robypomper.smartvan.smart_van.android.databinding.ActivitySvenergyBin
 
 public class SVEnergyActivity extends BaseRemoteObjectActivity {
 
+    // Constants
 
     public final static String PARAM_OBJ_ID = SVDefinitions.PARAM_ACTIVITY_SVMAIN_OBJID;
     /**
@@ -56,11 +57,18 @@ public class SVEnergyActivity extends BaseRemoteObjectActivity {
     private final static String COMP_CONSUMPTION_UNIT = "W";
     private final static int COMP_CONSUMPTION_COLOR = Color.rgb(0, 200, 200);
 
-    private ActivitySvenergyBinding binding;
+
+    // Internal variables
+
     private JSLRangeState storageComp;
     private JSLRangeState generationComp;
     private JSLRangeState consumptionComp;
     private JSLChartViewAdapter chartAdapter;
+
+
+    // UI widgets
+
+    private ActivitySvenergyBinding binding;
 
 
     // Android
@@ -73,7 +81,7 @@ public class SVEnergyActivity extends BaseRemoteObjectActivity {
         binding = ActivitySvenergyBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // set value's donnuts
+        // set up donuts views
         binding.donutStorageValue.setLabel(COMP_STORAGE_LABEL);
         binding.donutStorageValue.setUnit(COMP_STORAGE_UNIT);
         binding.donutStorageValue.setColor(COMP_STORAGE_COLOR);
@@ -84,167 +92,114 @@ public class SVEnergyActivity extends BaseRemoteObjectActivity {
         binding.donutConsumptionValue.setUnit(COMP_CONSUMPTION_UNIT);
         binding.donutConsumptionValue.setColor(COMP_CONSUMPTION_COLOR);
 
-        // set chart view
+        // set up chart view
         chartAdapter = new JSLChartViewAdapter(getJSLApplication(), binding.viewChart,
                 ChartDateTimeFormatter.X_FORMATTER_MINUTES(), ChartUnitFormatter.Y_FORMATTER_UNIT_0001(), ChartUnitFormatter.Y_FORMATTER_UNIT_0001());
         binding.viewChart.setAdapter(chartAdapter);
         binding.viewChart.setActivity(this);
 
+        // set up action bar
         if (getActionBar() != null)
             getActionBar().setDisplayHomeAsUpEnabled(true);
-        else
+        else if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        else
+            Log.w("SVEnergy", "No ActionBar available for this activity");
     }
 
     @Override
     protected void onResume() {
+        // During the super.onResume() execution, it check if the remote object
+        // is ready, and if it is ready, it calls the onRemoteObjectReady()
+        // method. So, the registerRemoteObject() method is called by the
+        // super.onResume() method, only if required.
         super.onResume();
-        if (storageComp == null && getRemoteObject() != null)
-            registerRemoteObjectToUI();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        deregisterRemoteObjectToUI();
+
+        // Deregister, update UI and remove component from chart
+        deregisterRemoteObject();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
+        if (item.getItemId() == android.R.id.home) {
                 if (getParentActivityIntent() == null) {
-                    Log.w("SVEnergyActivity", "You have forgotten to specify the parentActivityName in the AndroidManifest!");
+                    Log.w("SVEnergy", "You have forgotten to specify the parentActivityName in the AndroidManifest!");
                     //onBackPressed();
                     getOnBackPressedDispatcher().onBackPressed();
                 } else
                     NavUtils.navigateUpFromSameTask(this);
-
                 return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
         }
+        return super.onOptionsItemSelected(item);
     }
 
 
-    // BaseRemoteObjectActivity re-implementations
+    // BaseRemoteObjectActivity
 
     @Override
     protected void onRemoteObjectReady() {
-        if (binding != null)
-            registerRemoteObjectToUI();
+        registerRemoteObject();
     }
 
     @Override
-    protected void onRemoteObjectDeregistered() {
-        if (binding != null)
-            deregisterRemoteObjectToUI();
+    protected void onRemoteObjectNotReady() {
+        deregisterRemoteObject();
     }
 
 
     // Remote object management
 
-    private void registerRemoteObjectToUI() {
-        JSLRangeState component;
+    private void registerRemoteObject() {
+        storageComp = findRangeStateComponent(COMP_STORAGE_PATH.getPath());
+        if (storageComp == null) throw new RuntimeException("Storage component not found");
+        generationComp = findRangeStateComponent(COMP_GENERATION_PATH.getPath());
+        if (generationComp == null) throw new RuntimeException("Generation component not found");
+        consumptionComp = findRangeStateComponent(COMP_CONSUMPTION_PATH.getPath());
+        if (consumptionComp == null) throw new RuntimeException("Consumption component not found");
 
-        component = findRangeStateComponent(COMP_STORAGE_PATH.getPath());
-        if (component != null) registerStorageComp(component);
-        component = findRangeStateComponent(COMP_GENERATION_PATH.getPath());
-        if (component != null) registerGenerationComp(component);
-        component = findRangeStateComponent(COMP_CONSUMPTION_PATH.getPath());
-        if (component != null) registerConsumptionComp(component);
-
-        updateRemoteObject();
+        registerRemoteObjectListeners();
+        updateRemoteObjectUI();
+        addComponentsToChart();
     }
 
-    private void deregisterRemoteObjectToUI() {
-        if (storageComp != null) deregisterStorageComp();
-        if (generationComp != null) deregisterGenerationComp();
-        if (consumptionComp != null) deregisterConsumptionComp();
-
-        updateRemoteObject();
-    }
-
-    private void registerStorageComp(JSLRangeState component) {
-        storageComp = component;
-
-        storageComp.addListener(listenerComps);
-
-        updateStorageComp(storageComp);
-        try {
-            chartAdapter.addComponent(storageComp, COMP_STORAGE_LABEL, COMP_STORAGE_COLOR, YAxis.AxisDependency.LEFT);
-        } catch (IllegalArgumentException e) {
-            if (e.getMessage() != null && !e.getMessage().contains("already added"))
-                throw e;
-        }
-    }
-
-    private void deregisterStorageComp() {
-        storageComp.removeListener(listenerComps);
+    private void deregisterRemoteObject() {
+        deregisterRemoteObjectListeners();
+        updateRemoteObjectUI();
+        removeComponentsFromChart();
 
         storageComp = null;
-
-        updateStorageComp(null);
-    }
-
-    private void registerGenerationComp(JSLRangeState component) {
-        generationComp = component;
-
-        generationComp.addListener(listenerComps);
-
-        updateGenerationComp(generationComp);
-        try {
-            chartAdapter.addComponent(generationComp, COMP_GENERATION_LABEL, COMP_GENERATION_COLOR, YAxis.AxisDependency.RIGHT);
-        } catch (IllegalArgumentException e) {
-            if (e.getMessage() != null && !e.getMessage().contains("already added"))
-                throw e;
-        }
-    }
-
-    private void deregisterGenerationComp() {
-        generationComp.removeListener(listenerComps);
-
         generationComp = null;
-
-        updateGenerationComp(null);
-    }
-
-    private void registerConsumptionComp(JSLRangeState component) {
-        consumptionComp = component;
-
-        consumptionComp.addListener(listenerComps);
-
-        updateConsumptionComp(consumptionComp);
-        try {
-            chartAdapter.addComponent(consumptionComp, COMP_CONSUMPTION_LABEL, COMP_CONSUMPTION_COLOR, YAxis.AxisDependency.RIGHT);
-        } catch (IllegalArgumentException e) {
-            if (e.getMessage() != null && !e.getMessage().contains("already added"))
-                throw e;
-        }
-    }
-
-    private void deregisterConsumptionComp() {
-        consumptionComp.removeListener(listenerComps);
-
         consumptionComp = null;
+    }
 
-        updateConsumptionComp(null);
+    private void registerRemoteObjectListeners() {
+        storageComp.addListener(listenerComps);
+        generationComp.addListener(listenerComps);
+        consumptionComp.addListener(listenerComps);
+    }
+
+    private void deregisterRemoteObjectListeners() {
+        storageComp.removeListener(listenerComps);
+        generationComp.removeListener(listenerComps);
+        consumptionComp.removeListener(listenerComps);
     }
 
 
-    // Components listeners
+    // Remote Object listeners
 
     private final JSLRangeState.RangeStateListener listenerComps = new JSLRangeState.RangeStateListener() {
 
         @Override
         public void onStateChanged(JSLRangeState component, double newState, double oldState) {
-            if (component == storageComp)
-                updateStorageComp(storageComp);
-            else if (component == generationComp)
-                updateGenerationComp(generationComp);
-            else if (component == consumptionComp)
-                updateConsumptionComp(consumptionComp);
+            if (component == storageComp) updateStorageComp();
+            else if (component == generationComp) updateGenerationComp();
+            else if (component == consumptionComp) updateConsumptionComp();
+            else assert false : "Unknown component";
         }
 
         @Override
@@ -260,12 +215,24 @@ public class SVEnergyActivity extends BaseRemoteObjectActivity {
 
     // UI widgets
 
+    private void updateRemoteObjectUI() {
+        updateRemoteObject();
+        updateStorageComp();
+        updateGenerationComp();
+        updateConsumptionComp();
+    }
+
     private void updateRemoteObject() {
+        if (binding == null) return;
+
+        if (getRemoteObject() == null)
+            Log.i("SVEnergy", "updateRemoteObject() for unregistered remote object");
+
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                String text = getObjId();   // fallback to objId
                 JSLRemoteObject obj = getRemoteObject();
-                String text = "WAITING";
                 if (obj != null) text = obj.getName();
 
                 //binding.txtTitleName.setText(text);
@@ -273,43 +240,79 @@ public class SVEnergyActivity extends BaseRemoteObjectActivity {
         });
     }
 
-    private void updateStorageComp(JSLRangeState comp) {
-        if (comp != null)
-            Log.d("SVEnergy", String.format("updateStorageComp(%s) => %f", comp.getState(), comp.getState() / 1000));
+    private void updateStorageComp() {
+        if (binding == null) return;
+
+        if (storageComp == null) Log.i("SVEnergy", "updateStorageComp() for unregistered storage component");
+        else Log.d("SVEnergy", String.format("updateStorageComp(%s) => %f", storageComp.getState(), storageComp.getState() / 1000));
 
         runOnUiThread(new Runnable() {
             @SuppressLint("DefaultLocale")
             @Override
             public void run() {
-                binding.donutStorageValue.setValue(comp == null ? 0 : comp.getState() / 1000); // mV to V
+                binding.donutStorageValue.setValue(storageComp == null ? 0 : storageComp.getState() / 1000); // mV to V
             }
         });
     }
 
-    private void updateGenerationComp(JSLRangeState comp) {
-        if (comp != null)
-            Log.d("SVEnergy", String.format("updateGenerationComp(%s) => %f", comp.getState(), comp.getState() / 1000));
+    private void updateGenerationComp() {
+        if (binding == null) return;
+
+        if (generationComp == null) Log.i("SVEnergy", "updateGenerationComp() for unregistered storage component");
+        else Log.d("SVEnergy", String.format("updateGenerationComp(%s) => %f", generationComp.getState(), generationComp.getState() / 1000));
 
         runOnUiThread(new Runnable() {
             @SuppressLint("DefaultLocale")
             @Override
             public void run() {
-                binding.donutGenerationValue.setValue(comp == null ? 0 : comp.getState() / 1000); // mW to W
+                binding.donutGenerationValue.setValue(generationComp == null ? 0 : generationComp.getState() / 1000); // mW to W
             }
         });
     }
 
-    private void updateConsumptionComp(JSLRangeState comp) {
-        if (comp != null)
-            Log.d("SVEnergy", String.format("updateConsumptionComp(%s) => %f", comp.getState(), comp.getState() / 1000));
+    private void updateConsumptionComp() {
+        if (binding == null) return;
+
+        if (consumptionComp == null) Log.i("SVEnergy", "updateGenerationComp() for unregistered storage component");
+        else Log.d("SVEnergy", String.format("updateConsumptionComp(%s) => %f", consumptionComp.getState(), consumptionComp.getState() / 1000));
 
         runOnUiThread(new Runnable() {
             @SuppressLint("DefaultLocale")
             @Override
             public void run() {
-                binding.donutConsumptionValue.setValue(comp == null ? 0 : comp.getState() / 1000); // mW to W
+                binding.donutConsumptionValue.setValue(consumptionComp == null ? 0 : consumptionComp.getState() / 1000); // mW to W
             }
         });
+    }
+
+
+    // UI Chart
+
+    private void addComponentsToChart() {
+        addComponentToChart(storageComp, COMP_STORAGE_LABEL, COMP_STORAGE_COLOR, YAxis.AxisDependency.LEFT);
+        addComponentToChart(generationComp, COMP_GENERATION_LABEL, COMP_GENERATION_COLOR, YAxis.AxisDependency.RIGHT);
+        addComponentToChart(consumptionComp, COMP_CONSUMPTION_LABEL, COMP_CONSUMPTION_COLOR, YAxis.AxisDependency.RIGHT);
+    }
+
+    private void removeComponentsFromChart() {
+        removeComponentFromChart(storageComp);
+        removeComponentFromChart(generationComp);
+        removeComponentFromChart(consumptionComp);
+    }
+
+    private void addComponentToChart(JSLRangeState comp, String compLabel, int compColor, YAxis.AxisDependency axisDependency) {
+        if (chartAdapter == null) return;
+        try {
+            chartAdapter.addComponent(comp, compLabel, compColor, axisDependency);
+        } catch (IllegalArgumentException e) {
+            if (e.getMessage() != null && !e.getMessage().contains("already added"))
+                throw e;
+        }
+    }
+
+    private void removeComponentFromChart(JSLRangeState comp) {
+        if (chartAdapter == null) return;
+        chartAdapter.removeComponent(comp);
     }
 
 }
