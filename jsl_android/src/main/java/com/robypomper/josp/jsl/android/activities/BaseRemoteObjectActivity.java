@@ -3,11 +3,8 @@ package com.robypomper.josp.jsl.android.activities;
 import android.os.Bundle;
 
 import com.robypomper.josp.jsl.android.JSLAndroid;
-import com.robypomper.josp.jsl.comm.JSLLocalClient;
 import com.robypomper.josp.jsl.objs.JSLObjsMngr;
 import com.robypomper.josp.jsl.objs.JSLRemoteObject;
-import com.robypomper.josp.jsl.objs.remote.ObjComm;
-import com.robypomper.josp.jsl.objs.remote.ObjPerms;
 import com.robypomper.josp.jsl.objs.remote.ObjStruct;
 import com.robypomper.josp.jsl.objs.structure.JSLComponent;
 import com.robypomper.josp.jsl.objs.structure.JSLContainer;
@@ -16,44 +13,38 @@ import com.robypomper.josp.jsl.objs.structure.pillars.JSLBooleanAction;
 import com.robypomper.josp.jsl.objs.structure.pillars.JSLBooleanState;
 import com.robypomper.josp.jsl.objs.structure.pillars.JSLRangeAction;
 import com.robypomper.josp.jsl.objs.structure.pillars.JSLRangeState;
-import com.robypomper.josp.protocol.JOSPPerm;
-
-import java.util.List;
 
 
 /**
- * Base class for all activities that need to work with a JSLRemoteObject.
+ * Base class for all activities that need to work with a single JSLRemoteObject.
  * <p>
- * The BaseRemoteObjectActivity class is an abstract class that extends AppCompatActivity. This class
- * serves as a base class for other activities in the application that require common
- * functionalities related to JSL remote objects.
+ * Like the {@link BaseJSLActivity} class, this class extends the {@link androidx.appcompat.app.AppCompatActivity},
+ * and provides the specified {@link JSLRemoteObject} reference that can be used by the
+ * activities subclasses.
  * <p>
- * The BaseRemoteObjectActivity class provides the following functionalities:
+ * Subclasses can reimplement the {@link #onRemoteObjectReady()} and the
+ * {@link #onRemoteObjectNotReady()} methods to handle the remote object ready/not ready
+ * events and update the activity's UI. As heper methods, this class provides the
+ * {@link #isRemoteObjectReady()} method that returns true if the remote object is ready.
  * <p>
- * - It provides a reference to the JSLClient object that is used to communicate with the JSLService
- * - It look for the object ID of the remote object that must be used by the activity from the
- * activity's intent, or from the activity's saved instance state.
- * - It provides a reference to the JSLRemoteObject object that represents the remote object
- * that is used by the activity
- * - It provides a set of methods to handle the events related with the remote object
- * - It provides a set of methods to find the JSLComponent exposed by the activity's remote object
+ * During his creation, the class looks for the object ID of the remote object
+ * that must be used by the activity from the activity's intent (like activity's
+ * argument), from the activity's saved instance state or from the shared
+ * preferences (last one is not yet implemented). If the object ID is not found,
+ * the method throws a RuntimeException.
  * <p>
- * This class registers itself as a listener for the JSLRemoteObject object that is used by the
- * activity. When the JSLRemoteObject object is ready, the class emits the onRemoteObjectReady
- * event. This event is used by the activity to initialize its UI.<br/>
- * The onRemoteObjectReady event is emitted only when the remote object is ready. It means that
- * the remote object has been registered, and its structure has been received from the JSLService.
- * To get notified when the remote object is (de)registered or his structure is changed, the
- * activity must implement the onRemoteObjectRegistered, onRemoteObjectDeregistered or the
- * onRemoteObjectStructureChanged methods.
+ * Every time the JSL Service become ready, or during the activity's resume, if
+ * the JSL Service is already ready, this class looks for the specified object
+ * ID. If the object ID is found, the class try to emits the {@link #onRemoteObjectReady()}
+ * event.<br/>
+ * The event {@link #onRemoteObjectReady()} is emitted only if the remote object
+ * is ready. It means that the remote object has been registered, and its structure
+ * has been received from the remote object.
  * <p>
- * This class also registers itself as a listener for the JSLRemoteObject object that is used by
- * the activity. When the JSLRemoteObject object is connected or disconnected, the class emits the
- * onRemoteObjectConnected and onRemoteObjectDisconnected events. These events are used by the
- * activity to update its UI.<br/>
- * As expected those events are emitted only when the connection status of the remote object
- * changes. Regardless of the connection type (local or cloud) the object is using.<br/>
- * The class also emits the Local/Cloud versions of the previous events.
+ * Finally, this class provides also a set of methods that can be used by the
+ * subclasses to find the {@link JSLComponent} objects that are exposed by the
+ * remote object that is used by the activity. Those methods allow the subclasses
+ * to look for the desired component by its path.
  */
 public class BaseRemoteObjectActivity extends BaseJSLActivity {
 
@@ -63,7 +54,6 @@ public class BaseRemoteObjectActivity extends BaseJSLActivity {
     public final static String PARAM_OBJ_ID = JSLAndroid.Params.OBJID;
     private String objId = null;
     private JSLRemoteObject remObj;
-    private boolean onReadyEmitted = false;
 
     // Android
 
@@ -83,13 +73,9 @@ public class BaseRemoteObjectActivity extends BaseJSLActivity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        onReadyEmitted = false;
-        lookForObjId(savedInstanceState);
-
         super.onCreate(savedInstanceState);
 
-        getJSLClient().getJSLListeners().addObjsMngrListenersByID(objId, remObjByIdListener);
-        getJSLClient().getJSLListeners().addObjsMngr_PermsListeners(remObjPermsListener);
+        lookForObjId(savedInstanceState);
     }
 
     /**
@@ -99,37 +85,46 @@ public class BaseRemoteObjectActivity extends BaseJSLActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-        if (remObj != null) deregisterRemoteObject();
-
-        getJSLClient().getJSLListeners().removeObjsMngrListenersByID(objId, remObjByIdListener);
-        getJSLClient().getJSLListeners().removeObjsMngr_PermsListeners(remObjPermsListener);
     }
+
+    @Override
+    protected void onResume() {
+        // During the super.onResume() execution, it check if the JSL instance is ready, and if
+        // it is ready, it calls the onJSLReady() method. So, the onJSLReady() method is called
+        // by the super.onResume() method.
+        super.onResume();
+
+        // Register remote object (by obj's id)
+        getJSLListeners().addObjsMngrListenersByID(objId, remObjByIdListener);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        // Deregister remote object (by obj's id)
+        getJSLListeners().removeObjsMngrListenersByID(objId, remObjByIdListener);
+    }
+
+
+    // BaseJSLActivity
 
     @Override
     protected void onJSLReady() {
         super.onJSLReady();
 
+        // If already set, use old remote object reference
+        JSLRemoteObject obj = remObj;
         // Search for remote object by obj's id
-        JSLObjsMngr objsMngr = getJSLClient().getJSL().getObjsMngr();
-        JSLRemoteObject obj = objsMngr.getById(objId);
-        if (obj != null)
-            // register remote object
-            registerRemoteObject(obj);
-    }
-
-    private void lookForObjId(Bundle savedInstanceState) {
-        // get object id
-        objId = null;
-        if (getIntent().getExtras() != null)
-            objId = getIntent().getExtras().getString(PARAM_OBJ_ID);
-        if (objId == null && savedInstanceState != null)
-            objId = savedInstanceState.getString(PARAM_OBJ_ID);
-        // TODO implement obj id storage into shared preferences
-        //if (objId == null)
-        // look into shared preferences
-        if (objId == null)
-            throw new RuntimeException(String.format("Can't init '%s' without specify '%s' param", this.getLocalClassName(), PARAM_OBJ_ID));
+        if (obj == null || obj.getId().compareTo(getObjId()) != 0) {
+            JSLObjsMngr objsMngr = getJSLClient().getJSL().getObjsMngr();
+            obj = objsMngr.getById(objId);
+        }
+        if (obj != null) {
+            remObj = null;  // force the onRemoteObjectReady() event
+            emitOnRemoteObjectReady(obj);
+        }
+        else emitOnRemoteObjectNotReady();
     }
 
 
@@ -156,152 +151,63 @@ public class BaseRemoteObjectActivity extends BaseJSLActivity {
         return remObj;
     }
 
+    // TODO add getRemoteObjectName(), getServicePermissionOnObject() and more...
+
     /**
      * The method returns true if the remote object is ready. It means that the remote object has
      * been registered, and its structure has been received.
      */
     protected boolean isRemoteObjectReady() {
-        return onReadyEmitted;
+        return remObj != null;
     }
 
-    // Events methods for sub-classes
 
-    private void emitOnRemoteObjectReady() {
-        if (!onReadyEmitted && remObj != null && remObj.getStruct() != null && remObj.getStruct().getStructure() != null) {
-            onReadyEmitted = true;
+    // Events emitters
+
+    private void emitOnRemoteObjectReady(JSLRemoteObject obj) {
+        assert obj != null : "can't emit onRemoteObjectReady with null obj";
+        assert remObj == null;
+
+        remObj = obj;
+        if (remObj.getStruct() != null
+                && remObj.getStruct().getStructure() != null) {
             onRemoteObjectReady();
         }
     }
 
-    private void resetOnRemoteObjectReady() {
-        onReadyEmitted = false;
+    private void emitOnRemoteObjectNotReady() {
+        // the method is called also when the remObj is null, like
+        // on the onJSLReady() event when the object is not found
+        // assert remObj != null;
+
+        onRemoteObjectNotReady();
+        remObj = null;
     }
 
+
+    // Events methods (to be overridden by sub-classes)
+
     /**
-     * The method is called when the remote object is ready. It means that the remote object has
-     * been registered, and its structure has been received.
+     * The method is called when the remote object is ready. It means that the
+     * remote object has been registered, and its structure has been received.
      * <p>
-     * The value returned by the isRemoteObjectReady method is updated before this method is called.
+     * This method is emitted every time an activity is resumed or when the
+     * remote object is added to the JSL Service. But always when the activity
+     * is resumed.
+     * <p>
+     * The value returned by the isRemoteObjectReady method is updated before
+     * this method is called.
      */
     protected void onRemoteObjectReady() {
     }
 
     /**
-     * The method is called when the remote object is registered.
+     * The method is called when the remote object become not ready. It means
+     * that the remote object has been deregistered.
      * <p>
-     * In the John ecosystem, that correspond to the JOD object connection to the current JSL
-     * service, and the reception of the object presentation message. So, after this method is
-     * called, the remote object can provide is info and the connection status, but the structure
-     * of the object is not yet available.
+     * The value returned by the isRemoteObjectReady method is updated after this method is called.
      */
-    protected void onRemoteObjectRegistered() {
-    }
-
-    /**
-     * The method is called when the remote object is deregistered.
-     * <p>
-     * In the John ecosystem, that correspond to the JOD object disconnection from the current JSL
-     * service. So, after this method is called, the remote object can still provide object's info,
-     * connection status and structure, but it will not receive any update.
-     */
-    protected void onRemoteObjectDeregistered() {
-    }
-
-    /**
-     * The method is called when the structure of the remote object is changed.
-     * <p>
-     * In the John ecosystem, that correspond to the reception of the object structure message.
-     * This message is sent by the JSL service immediately after the object presentation message.
-     */
-    protected void onRemoteObjectStructureChanged() {
-    }
-
-    /**
-     * The method is called when the permissions of the remote object are changed.
-     * <p>
-     * This message is always sent by the object during object's presentation.
-     *
-     * @param obj     the remote object that has changed its permissions.
-     * @param newPerms the new permissions of the remote object.
-     * @param oldPerms the old permissions of the remote object.
-     */
-    protected void onRemoteObjectPermissionsChanged(JSLRemoteObject obj, List<JOSPPerm> newPerms, List<JOSPPerm> oldPerms) {
-    }
-
-    /**
-     * The method is called when the service permission to the remote object is changed.
-     * <p>
-     * This message is always sent by the object during object's presentation.
-     *
-     * @param obj       the remote object that has changed its permissions.
-     * @param connType  the connection type that has changed its permission.
-     * @param newPermType the new permission of the remote object.
-     * @param oldPermType the old permission of the remote object.
-     */
-    protected void onRemoteObjectServicePermChanged(JSLRemoteObject obj, JOSPPerm.Connection connType, JOSPPerm.Type newPermType, JOSPPerm.Type oldPermType) {
-    }
-
-    /**
-     * The method is called when the remote object is connected.
-     * <p>
-     * In the John ecosystem, that correspond to the JOD object connection to the current JSL
-     * service. So, after this method is called, the remote object can send updates to the current
-     * JSL service.
-     * <p>
-     * This method is called only if the remote object is not already connected via local or cloud.
-     * So, it will be called only if the remote object was not connected nor via local or cloud.
-     */
-    protected void onRemoteObjectConnected() {
-    }
-
-    /**
-     * The method is called when the remote object is connected via local.
-     * <p>
-     * In the John ecosystem, that correspond to the JOD object connection to the current JSL
-     * service via local communication.
-     */
-    protected void onRemoteObjectConnectedLocal() {
-    }
-
-    /**
-     * The method is called when the remote object is connected via cloud.
-     * <p>
-     * In the John ecosystem, that correspond to the JOD object connection to the current JSL
-     * service via cloud communication.
-     */
-    protected void onRemoteObjectConnectedCloud() {
-    }
-
-    /**
-     * The method is called when the remote object is disconnected.
-     * <p>
-     * In the John ecosystem, that correspond to the JOD object disconnection from the current JSL
-     * service. So, after this method is called, the remote object can't send updates to the current
-     * JSL service.
-     * <p>
-     * This method is called only if the remote object is not already disconnected via local or
-     * cloud. So, it will be called only if the remote object was not disconnected nor via local
-     * or cloud.
-     */
-    protected void onRemoteObjectDisconnected() {
-    }
-
-    /**
-     * The method is called when the remote object is disconnected via local.
-     * <p>
-     * In the John ecosystem, that correspond to the JOD object disconnection from the current JSL
-     * service via local communication.
-     */
-    protected void onRemoteObjectDisconnectedLocal() {
-    }
-
-    /**
-     * The method is called when the remote object is disconnected via cloud.
-     * <p>
-     * In the John ecosystem, that correspond to the JOD object disconnection from the current JSL
-     * service via cloud communication.
-     */
-    protected void onRemoteObjectDisconnectedCloud() {
+    protected void onRemoteObjectNotReady() {
     }
 
 
@@ -392,26 +298,20 @@ public class BaseRemoteObjectActivity extends BaseJSLActivity {
     }
 
 
-    // Remote obj
+    // Remote obj mngm
 
-    private void registerRemoteObject(JSLRemoteObject obj) {
-        remObj = obj;
-
-        remObj.getComm().addListener(remObjConnListener);
-        remObj.getStruct().addListener(remObjStructListener);
-
-        onRemoteObjectRegistered();
-        emitOnRemoteObjectReady();
-    }
-
-    private void deregisterRemoteObject() {
-        onRemoteObjectDeregistered();
-        resetOnRemoteObjectReady();
-
-        remObj.getComm().removeListener(remObjConnListener);
-        remObj.getStruct().removeListener(remObjStructListener);
-
-        remObj = null;
+    private void lookForObjId(Bundle savedInstanceState) {
+        // get object id
+        objId = null;
+        if (getIntent().getExtras() != null)
+            objId = getIntent().getExtras().getString(PARAM_OBJ_ID);
+        if (objId == null && savedInstanceState != null)
+            objId = savedInstanceState.getString(PARAM_OBJ_ID);
+        // TODO implement obj id storage into shared preferences
+        //if (objId == null)
+        // look into shared preferences
+        if (objId == null)
+            throw new RuntimeException(String.format("Can't init '%s' without specify '%s' param", this.getLocalClassName(), PARAM_OBJ_ID));
     }
 
 
@@ -422,65 +322,13 @@ public class BaseRemoteObjectActivity extends BaseJSLActivity {
         @Override
         public void onObjAdded(JSLRemoteObject obj) {
             if (remObj != null) return;
-            registerRemoteObject(obj);
+            emitOnRemoteObjectReady(obj);
         }
 
         @Override
         public void onObjRemoved(JSLRemoteObject obj) {
             if (remObj == null || remObj != obj) return;
-            deregisterRemoteObject();
-        }
-
-    };
-
-    private final ObjPerms.RemoteObjectPermsListener remObjPermsListener = new ObjPerms.RemoteObjectPermsListener() {
-
-        @Override
-        public void onPermissionsChanged(JSLRemoteObject obj, List<JOSPPerm> newPerms, List<JOSPPerm> oldPerms) {
-            if (obj.getId().compareTo(getObjId()) != 0) return;
-            onRemoteObjectPermissionsChanged(obj, newPerms, oldPerms);
-        }
-
-        @Override
-        public void onServicePermChanged(JSLRemoteObject obj, JOSPPerm.Connection connType, JOSPPerm.Type newPermType, JOSPPerm.Type oldPermType) {
-            if (obj.getId().compareTo(getObjId()) != 0) return;
-            onRemoteObjectServicePermChanged(obj, connType, newPermType, oldPermType);
-        }
-
-    };
-
-    private final ObjComm.RemoteObjectConnListener remObjConnListener = new ObjComm.RemoteObjectConnListener() {
-
-        @Override
-        public void onLocalConnected(JSLRemoteObject obj, JSLLocalClient localClient) {
-            if (obj.getId().compareTo(getObjId()) != 0) return;
-            // emit only if not already connected via cloud
-            if (!obj.getComm().isCloudConnected()) onRemoteObjectConnected();
-            onRemoteObjectConnectedLocal();
-        }
-
-        @Override
-        public void onLocalDisconnected(JSLRemoteObject obj, JSLLocalClient localClient) {
-            if (obj.getId().compareTo(getObjId()) != 0) return;
-            // emit only if not connected via cloud
-            if (!obj.getComm().isCloudConnected()) onRemoteObjectConnected();
-            onRemoteObjectDisconnectedLocal();
-        }
-
-        @Override
-        public void onCloudConnected(JSLRemoteObject obj) {
-            if (obj.getId().compareTo(getObjId()) != 0) return;
-            // emit only if not already connected via local
-            if (!obj.getComm().isLocalConnected()) onRemoteObjectConnected();
-            onRemoteObjectConnectedCloud();
-        }
-
-        @Override
-        public void onCloudDisconnected(JSLRemoteObject obj) {
-            if (obj.getId().compareTo(getObjId()) != 0) return;
-            // emit only if not connected via local
-            if (!obj.getComm().isLocalConnected()) onRemoteObjectDisconnected();
-            onRemoteObjectDisconnectedCloud();
+            emitOnRemoteObjectNotReady();
         }
 
     };
@@ -490,8 +338,7 @@ public class BaseRemoteObjectActivity extends BaseJSLActivity {
         @Override
         public void onStructureChanged(JSLRemoteObject obj, JSLRoot newRoot) {
             if (obj.getId().compareTo(getObjId()) != 0) return;
-            onRemoteObjectStructureChanged();
-            emitOnRemoteObjectReady();
+            emitOnRemoteObjectReady(obj);
         }
 
     };

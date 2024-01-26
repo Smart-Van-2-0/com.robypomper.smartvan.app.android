@@ -1,42 +1,50 @@
 package com.robypomper.josp.jsl.android.activities;
 
-import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.robypomper.josp.jsl.JSL;
+import com.robypomper.josp.jsl.JSLListeners;
 import com.robypomper.josp.jsl.android.app.JSLApplication;
 import com.robypomper.josp.jsl.android.app.JSLClient;
 import com.robypomper.josp.jsl.android.app.JSLClientState;
 import com.robypomper.josp.jsl.android.service.JSLService;
-import com.robypomper.josp.jsl.comm.JSLLocalClient;
-import com.robypomper.josp.jsl.objs.JSLObjsMngr;
-import com.robypomper.josp.jsl.objs.JSLRemoteObject;
-import com.robypomper.josp.jsl.objs.remote.ObjComm;
-import com.robypomper.josp.jsl.objs.remote.ObjStruct;
-import com.robypomper.josp.jsl.objs.structure.JSLComponent;
-import com.robypomper.josp.jsl.objs.structure.JSLContainer;
-import com.robypomper.josp.jsl.objs.structure.JSLRoot;
-import com.robypomper.josp.jsl.objs.structure.pillars.JSLBooleanAction;
-import com.robypomper.josp.jsl.objs.structure.pillars.JSLBooleanState;
-import com.robypomper.josp.jsl.objs.structure.pillars.JSLRangeAction;
-import com.robypomper.josp.jsl.objs.structure.pillars.JSLRangeState;
-import com.robypomper.josp.states.JSLState;
 
 /**
  * Base class for all activities that need to work with the JSL Service.
- *
- * ...
- *
+ * <p>
+ * This class extends the {@link AppCompatActivity} and get the {@link JSLApplication}
+ * reference during the {@link #onCreate(Bundle)} method execution, casting the
+ * activity's application. That means that <b>any activity inheriting from this
+ * class must use a {@link JSLApplication} as application</b>.
+ * <p>
+ * Moreover, the class provides the {@link JSLClient}, the {@link JSL} and the
+ * {@link JSLListeners} references that can be used by the activities subclasses
+ * to access the JSL Service.
+ * <p>
+ * In order to help subclasses handle the JSL ready/not ready states, this class
+ * handle also the {@link JSLClient} events. In particular, when the JSL Service
+ * is ready, the class emits the {@link #onJSLReady()} event, and when the JSL
+ * Service is not ready, the class emits the {@link #onNotReady()} event. Then,
+ * the class emits the {@link #onStateChanged(JSLClientState, JSLClientState)
+ * event when the JSLClient state changes.
+ * <p>
+ * Note: the {@link #onJSLReadyEventEmitted} variable is used to avoid to emit the
+ * {@link #onJSLReady()} and the {@link #onNotReady()} events more than once. It is
+ * set by the {@link #emitOnJSLReady()} and the {@link #emitOnJSLNotReady()} methods.
+ * <p>
  * TODO: when the JSL Service is not ready, show an overlay with a warning message
  *       the message view must be customizable
  */
 public class BaseJSLActivity extends AppCompatActivity {
 
+    // Internal variables
+
     private JSLApplication<? extends JSLService> jslApp;
     private JSLClient<? extends JSLService> jslClient;
-
-    private boolean onJSLReadyEmitted = false;
+    private JSLListeners jslListeners;
+    private boolean onJSLReadyEventEmitted = false;
 
 
     // Android
@@ -59,20 +67,15 @@ public class BaseJSLActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        onJSLReadyEmitted = false;
+        onJSLReadyEventEmitted = false;
 
-        // Check JSL state, registerRemoteObject
         try {
             jslApp = (JSLApplication<? extends JSLService>) this.getApplication();
         } catch (ClassCastException e) {
             throw new RuntimeException("The application must be a JSLApplication", e);
         }
         jslClient = jslApp.getJSLClient();
-        if (jslClient.isReady())
-            emitOnJSLReady();
-        else
-            resetOnJSLReady();
-        jslClient.registerOnJSLStateChange(onJSLStateChangeListener);
+        jslListeners = jslClient.getJSLListeners();
     }
 
     /**
@@ -82,6 +85,29 @@ public class BaseJSLActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    protected void onResume() {
+        super.onResume();
+
+        // Check JSL state
+        if (jslClient.isReady()) {
+            onJSLReadyEventEmitted = false;  // force the onJSLReady() event
+            emitOnJSLReady();
+        } else {
+            onJSLReadyEventEmitted = true;  // force the onNotReady() event
+            emitOnJSLNotReady();
+        }
+
+        // Register JSL state listener
+        jslClient.registerOnJSLStateChange(onJSLStateChangeListener);
+    }
+
+    protected void onPause() {
+        super.onPause();
+
+        // Deregister JSL state listener
+        jslClient.deregisterOnJSLStateChange(onJSLStateChangeListener);
     }
 
 
@@ -102,28 +128,54 @@ public class BaseJSLActivity extends AppCompatActivity {
     }
 
     /**
+     * @return the JSL object that is used by the activity.
+     */
+    public JSL getJSL() {
+        return jslClient.getJSL();
+    }
+
+    /**
+     * @return the JSL object that is used by the activity.
+     */
+    public JSLListeners getJSLListeners() {
+        return jslListeners;
+    }
+
+    /**
      * The method returns true if the remote object is ready. It means that the remote object has
      * been registered, and its structure has been received.
      */
     public boolean isJSLReady() {
-        return onJSLReadyEmitted;
+        return onJSLReadyEventEmitted;
     }
 
-    // Events methods for sub-classes
+
+    // Event emitters
 
     private void emitOnJSLReady() {
-        if (!onJSLReadyEmitted) {
-            onJSLReadyEmitted = true;
-            onJSLReady();
-        }
+        // this method can be called more than once, like each time the activity
+        // is resumed and the JSL state is RUN
+        if (onJSLReadyEventEmitted) return;
+
+        onJSLReadyEventEmitted = true;
+        onJSLReady();
     }
 
-    private void resetOnJSLReady() {
-        if (onJSLReadyEmitted) {
-            onJSLReadyEmitted = false;
-            onJSLNotReady();
-        }
+    private void emitOnJSLNotReady() {
+        // this method can be called more than once (from the onResume and
+        // onJSLStateChangeListener:stateChanged() methods)
+        if (!onJSLReadyEventEmitted) return;
+
+        onJSLReadyEventEmitted = false;
+        onNotReady();
     }
+
+    private void emitOnStateChanged(JSLClientState newState, JSLClientState oldState) {
+        onStateChanged(newState, oldState);
+    }
+
+
+    // Events methods (to be overridden by sub-classes)
 
     /**
      * The method is called when the JSL service is ready. It means that the JSL Service has been
@@ -134,25 +186,46 @@ public class BaseJSLActivity extends AppCompatActivity {
     protected void onJSLReady() {
     }
 
-
     /**
      * The method is called when the JSL service is NOT ready. It means that the JSL Service has
      * been stopped, or it is not in the RUN state.
      * <p>
      * The value returned by the isJSLReady method is updated before this method is called.
      */
-    protected void onJSLNotReady() {
+    protected void onNotReady() {
+    }
+
+    /**
+     * The method is called when the JSLClient state changes.
+     * <p>
+     * The value returned by the {@link #isJSLReady()} method is updated before
+     * this method is called. Also the {@link #onJSLReady()} and the
+     * {@link #onNotReady()} methods are called before this method.
+     */
+    protected void onStateChanged(JSLClientState newState, JSLClientState oldState) {
     }
 
 
     // JSL (Client) listeners
 
+    /**
+     * Listener for the JSLClient state changes.
+     * <p>
+     * It emits the {@link #onJSLReady()} event when the JSLClient state changes to RUN,
+     * and it emits the {@link #onNotReady()} event when the JSLClient state changes
+     * to any state different from RUN.
+     * <p>
+     * It emits the {@link #onStateChanged(JSLClientState, JSLClientState)} event
+     * every time the JSLClient state changes.
+     */
     private final JSLClient.JSLClientStateListener onJSLStateChangeListener = new JSLClient.JSLClientStateListener() {
 
         @Override
         public void stateChanged(JSLClientState newState, JSLClientState oldState) {
             if (newState == JSLClientState.RUN) emitOnJSLReady();
-            else resetOnJSLReady();
+            else emitOnJSLNotReady();
+
+            emitOnStateChanged(newState, oldState);
         }
 
     };
