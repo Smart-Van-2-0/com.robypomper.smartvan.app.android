@@ -67,11 +67,11 @@ public abstract class ChartViewAdapterAbs implements ChartViewAdapter {
     }
 
     public void removeDataSet(String dataSetName) {
+        notifyDataSetRemoved(dataSetName);
         dataSetNames.remove(dataSetName);
         dataSetLabels.remove(dataSetName);
         dataSetColors.remove(dataSetName);
         dataSetYAxisDeps.remove(dataSetName);
-        notifyDataSetRemoved(dataSetName);
     }
 
     @Override
