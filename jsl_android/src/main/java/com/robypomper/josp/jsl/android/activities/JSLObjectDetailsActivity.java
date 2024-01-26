@@ -25,6 +25,7 @@ import com.robypomper.josp.jsl.android.adapters.RemoteObjectEventsAdapter;
 import com.robypomper.josp.jsl.android.components.EventDetailsBottomSheet;
 import com.robypomper.josp.jsl.android.databinding.ActivityJslObjectDetailsBinding;
 import com.robypomper.josp.jsl.android.utils.ThemeUtils;
+import com.robypomper.josp.jsl.comm.JSLLocalClient;
 import com.robypomper.josp.jsl.objs.JSLRemoteObject;
 import com.robypomper.josp.jsl.objs.history.HistoryObjEvents;
 import com.robypomper.josp.jsl.objs.remote.ObjComm;
@@ -57,14 +58,10 @@ public abstract class JSLObjectDetailsActivity extends BaseRemoteObjectActivity 
 
     private static final String LOG_TAG = "JSLA.Actvt.ObjDetails";
     private static final boolean PREVENT_EVENT_COUNT_FETCH = true;
-
-
-    // Internal vars
-
-    private DateFormat TIME_FORMAT;
-    private DateFormat DATE_FORMAT;
-    int colorOriginal = 0;
-    int colorError;
+    private static DateFormat TIME_FORMAT;
+    private static DateFormat DATE_FORMAT;
+    private static int COLOR_ERROR;
+    private static int COLOR_ORIGINAL;
 
 
     // UI widgets
@@ -90,8 +87,8 @@ public abstract class JSLObjectDetailsActivity extends BaseRemoteObjectActivity 
         public void bind(JOSPEventGroup event) {
             TextView txtEventType = view.findViewById(R.id.txtEventType);
             txtEventType.setText(event.getPhase());
-            if (colorOriginal==0) colorOriginal = txtEventType.getCurrentTextColor();
-            txtEventType.setTextColor(event.getErrorPayload() != null ? colorError : colorOriginal);
+            if (COLOR_ORIGINAL ==0) COLOR_ORIGINAL = txtEventType.getCurrentTextColor();
+            txtEventType.setTextColor(event.getErrorPayload() != null ? COLOR_ERROR : COLOR_ORIGINAL);
 
             TextView txtEventCount = view.findViewById(R.id.txtEventCount);
             txtEventCount.setVisibility(event.getCount() > 1 ? View.VISIBLE : View.GONE);
@@ -127,10 +124,14 @@ public abstract class JSLObjectDetailsActivity extends BaseRemoteObjectActivity 
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // assign static vars
         if (TIME_FORMAT == null || DATE_FORMAT == null) {
             TIME_FORMAT = android.text.format.DateFormat.getTimeFormat(getApplicationContext());
             DATE_FORMAT = android.text.format.DateFormat.getMediumDateFormat(getApplicationContext());
-            colorError = ThemeUtils.getAppColor(this, com.google.android.material.R.attr.colorError);
+            COLOR_ERROR = ThemeUtils.getAppColor(this, com.google.android.material.R.attr.colorError);
+            COLOR_ORIGINAL = 0;
         }
         Log.d(LOG_TAG, String.format("JSLObjectDetailsActivity is being created to show `%s` object", getObjId()));
 
@@ -138,11 +139,7 @@ public abstract class JSLObjectDetailsActivity extends BaseRemoteObjectActivity 
         binding = ActivityJslObjectDetailsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        super.onCreate(savedInstanceState);
-
-        binding.imgObjectNameEdit.setOnClickListener(onObjectNameEditClickListener);
-
-        // Set adapter to events list
+        // Set up adapter for events list
         binding.listEvents.setAdapter(new RemoteObjectEventsAdapter(this, getJSLApplication(), getObjId()) {
             @NonNull
             @Override
@@ -152,6 +149,9 @@ public abstract class JSLObjectDetailsActivity extends BaseRemoteObjectActivity 
             }
         });
         binding.listEvents.setLayoutManager(new LinearLayoutManager(this));
+
+        // set listeners
+        binding.imgObjectNameEdit.setOnClickListener(onObjectNameEditClickListener);
     }
 
     /**
@@ -165,83 +165,115 @@ public abstract class JSLObjectDetailsActivity extends BaseRemoteObjectActivity 
 
     @Override
     protected void onResume() {
+        // During the super.onResume() execution, it check if the remote object
+        // is ready, and if it is ready, it calls the onRemoteObjectReady()
+        // method. So, the registerRemoteObject() method is called by the
+        // super.onResume() method, only if required.
         super.onResume();
-        //if (getRemoteObject() != null)
-        //    registerRemoteObjectToUI();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        deregisterRemoteObjectToUI();
+
+        // Deregister and update UI
+        deregisterRemoteObject();
     }
 
 
-    // BaseRemoteObjectActivity re-implementations
+    // BaseRemoteObjectActivity
 
     @Override
     protected void onRemoteObjectReady() {
-        registerRemoteObjectToUI();
+        registerRemoteObject();
     }
 
     @Override
-    protected void onRemoteObjectDeregistered() {
-        deregisterRemoteObjectToUI();
-    }
-
-    @Override
-    protected void onRemoteObjectConnectedLocal() {
-        updateComm();
-    }
-
-    @Override
-    protected void onRemoteObjectDisconnectedLocal() {
-        updateComm();
-    }
-
-    @Override
-    protected void onRemoteObjectConnectedCloud() {
-        updateComm();
-    }
-
-    @Override
-    protected void onRemoteObjectDisconnectedCloud() {
-        updateComm();
-    }
-
-    @Override
-    protected void onRemoteObjectPermissionsChanged(JSLRemoteObject obj, List<JOSPPerm> newPerms, List<JOSPPerm> oldPerms) {
-        updatePerms();
-    }
-
-    @Override
-    protected void onRemoteObjectServicePermChanged(JSLRemoteObject obj, JOSPPerm.Connection connType, JOSPPerm.Type newPermType, JOSPPerm.Type oldPermType) {
-        updatePerms();
+    protected void onRemoteObjectNotReady() {
+        deregisterRemoteObject();
     }
 
 
     // Remote object management
 
-    private void registerRemoteObjectToUI() {
-        updateRemoteObject();
-        updateComm();
-        updatePerms();
-        updateEvents(true);
-        updateStruct();
+    private void registerRemoteObject() {
+        registerRemoteObjectListeners();
+        updateRemoteObjectUI();
     }
 
-    private void deregisterRemoteObjectToUI() {
-        updateRemoteObject();
-        updateComm();
-        updatePerms();
-        updateEvents(false);
-        updateStruct();
+    private void deregisterRemoteObject() {
+        deregisterRemoteObjectListeners();
+        updateRemoteObjectUI();
     }
+
+    private void registerRemoteObjectListeners() {
+        getRemoteObject().getComm().addListener(listenerComm);
+        getRemoteObject().getPerms().addListener(listenerPerms);
+    }
+
+    private void deregisterRemoteObjectListeners() {
+        getRemoteObject().getComm().removeListener(listenerComm);
+        getRemoteObject().getPerms().removeListener(listenerPerms);
+    }
+
+
+    // Remote Object listeners
+
+    private final ObjComm.RemoteObjectConnListener listenerComm = new ObjComm.RemoteObjectConnListener() {
+
+        @Override
+        public void onLocalConnected(JSLRemoteObject obj, JSLLocalClient localClient) {
+            updateComm();
+        }
+
+        @Override
+        public void onLocalDisconnected(JSLRemoteObject obj, JSLLocalClient localClient) {
+            updateComm();
+        }
+
+        @Override
+        public void onCloudConnected(JSLRemoteObject obj) {
+            updateComm();
+        }
+
+        @Override
+        public void onCloudDisconnected(JSLRemoteObject obj) {
+            updateComm();
+        }
+
+    };
+
+    private final ObjPerms.RemoteObjectPermsListener listenerPerms = new ObjPerms.RemoteObjectPermsListener() {
+
+        @Override
+        public void onPermissionsChanged(JSLRemoteObject obj, List<JOSPPerm> newPerms, List<JOSPPerm> oldPerms) {
+            updatePerms();
+        }
+
+        @Override
+        public void onServicePermChanged(JSLRemoteObject obj, JOSPPerm.Connection connType, JOSPPerm.Type newPermType, JOSPPerm.Type oldPermType) {
+            updatePerms();
+        }
+
+    };
 
 
     // UI widgets
 
+    private void updateRemoteObjectUI() {
+        updateRemoteObject();
+        updateComm();
+        updatePerms();
+        updateEvents();
+        updateStruct();
+    }
+
     private void updateRemoteObject() {
+        if (binding == null) return;
+
+        if (getRemoteObject() == null)
+            Log.i("SVEnergy", "updateRemoteObject() for unregistered remote object");
+
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -257,6 +289,10 @@ public abstract class JSLObjectDetailsActivity extends BaseRemoteObjectActivity 
     }
 
     private void updateComm() {
+        if (binding == null) return;
+
+        // TODO check communication module availability
+
         // update value and enable/disable
         runOnUiThread(new Runnable() {
             @Override
@@ -265,9 +301,8 @@ public abstract class JSLObjectDetailsActivity extends BaseRemoteObjectActivity 
                 binding.layComm.setEnabled(obj != null);
                 if (obj == null) return;
 
-                //int imgState = R.drawable.ic_not_available;
                 String text = "N/A";
-                int img = R.drawable.communication;
+                int img;
                 ObjComm comm = obj.getComm();
                 if (comm.isLocalConnected() && comm.isCloudConnected()) {
                     text = "Object fully connected";
@@ -283,14 +318,17 @@ public abstract class JSLObjectDetailsActivity extends BaseRemoteObjectActivity 
                     text = "Object NOT connected";
                     img = R.drawable.communication_offline;
                 }
-                //binding.imgComm.setImageDrawable(AppCompatResources.getDrawable(JSLObjectDetailsActivity.this, imgState));
-                //binding.txtComm.setText(text);
+
                 binding.imgComm.setImageResource(img);
             }
         });
     }
 
     private void updatePerms() {
+        if (binding == null) return;
+
+        // TODO check permissions module availability
+
         // update value and enable/disable
         runOnUiThread(new Runnable() {
             @Override
@@ -341,7 +379,11 @@ public abstract class JSLObjectDetailsActivity extends BaseRemoteObjectActivity 
         });
     }
 
-    private void updateEvents(boolean autoFetch) {
+    private void updateEvents() {
+        if (binding == null) return;
+
+        // TODO check events module availability
+
         JSLRemoteObject obj = getRemoteObject();
 
         // update value and enable/disable
@@ -349,13 +391,12 @@ public abstract class JSLObjectDetailsActivity extends BaseRemoteObjectActivity 
             @Override
             public void run() {
                 binding.layEvents.setEnabled(obj != null);
-                if (obj == null) return;
 
                 // values are updated by the events listener
             }
         });
 
-        if (obj == null || !autoFetch || PREVENT_EVENT_COUNT_FETCH) return;
+        if (obj == null || PREVENT_EVENT_COUNT_FETCH) return;
         HistoryLimits limits = new HistoryLimits(null, null, null, null,
                 JavaDate.getDateAltered(Calendar.DAY_OF_MONTH, -1), JavaDate.getNowDate(), null, null);
         getJSLApplication().runOnNetworkThread(new Runnable() {
@@ -373,6 +414,10 @@ public abstract class JSLObjectDetailsActivity extends BaseRemoteObjectActivity 
     }
 
     private void updateStruct() {
+        if (binding == null) return;
+
+        // TODO check structure module availability
+
         // only enable/disable
         runOnUiThread(new Runnable() {
             @Override
@@ -449,11 +494,6 @@ public abstract class JSLObjectDetailsActivity extends BaseRemoteObjectActivity 
             JOSPEventGroup event = (JOSPEventGroup) v.getTag();
             if (event == null) return;
             showBottomSheetEventDetails(JSLObjectDetailsActivity.this, event);
-
-            System.out.println(event.getErrorPayload());
-            // TODO show event details
-            event.getType().name();
-            event.getPayload();
         }
 
     };
