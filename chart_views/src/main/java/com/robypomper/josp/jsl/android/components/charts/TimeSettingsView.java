@@ -163,6 +163,14 @@ public class TimeSettingsView extends LinearLayout {
         updateTxtTextAppearance();
     }
 
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        txtLabel.setEnabled(enabled);
+        spnQty.setEnabled(enabled);
+        spnUnit.setEnabled(enabled);
+    }
+
 
     // UI
 

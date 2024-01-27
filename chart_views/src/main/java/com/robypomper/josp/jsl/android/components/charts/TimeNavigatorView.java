@@ -180,6 +180,16 @@ public class TimeNavigatorView extends LinearLayout {
         updateTxtTextAppearance();
     }
 
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        btnTimeRangeNavPrev.setEnabled(enabled);
+        btnTimeRangeNavNext.setEnabled(enabled);
+        txtTimeRangeStart.setEnabled(enabled);
+        txtTimeRangeEnd.setEnabled(enabled);
+        txtTimeRangeSeparator.setEnabled(enabled);
+    }
+
 
     // UI
 

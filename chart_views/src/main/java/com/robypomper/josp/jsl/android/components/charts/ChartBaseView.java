@@ -780,6 +780,15 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
         fetch();
     }
 
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        timeSettingsView.setEnabled(enabled);
+        timeNavigatorView.setEnabled(enabled);
+        btnTimeSettings.setEnabled(enabled);
+        btnExports.setEnabled(enabled);
+    }
+
 
     // Abstract methods
 

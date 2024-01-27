@@ -103,6 +103,12 @@ public class ChartBarView extends ChartBaseView {
         return BarEntry.class;
     }
 
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        chart.setEnabled(enabled);
+    }
+
 
     @Override
     protected void doInit() {

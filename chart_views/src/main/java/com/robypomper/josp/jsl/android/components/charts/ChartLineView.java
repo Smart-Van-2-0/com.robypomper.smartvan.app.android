@@ -110,6 +110,12 @@ public class ChartLineView extends ChartBaseView {
         return Entry.class;
     }
 
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        chart.setEnabled(enabled);
+    }
+
 
     @Override
     protected void doInit() {
