@@ -187,6 +187,7 @@ public class TimeNavigatorView extends LinearLayout {
         TimeRangeLimits hl = TimeRangeLimits.calculateTimeRangeLimits(getReferenceDate(), rangeUnit, rangeOffset, rangeQty);
         txtTimeRangeStart.setText(dateFormatter.format(hl.getFromDate()));
         txtTimeRangeEnd.setText(dateFormatter.format(hl.getToDate()));
+        btnTimeRangeNavNext.setEnabled(rangeOffset < 0);
     }
 
     private void updateBtnTextAppearance() {

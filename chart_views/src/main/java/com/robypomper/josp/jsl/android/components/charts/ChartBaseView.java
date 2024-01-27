@@ -403,7 +403,7 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
      * @return the time range limits calculated from the current time range
      * settings (unit, qty and offset).
      */
-    TimeRangeLimits getTimeRangeLimits() {
+    private TimeRangeLimits getTimeRangeLimits() {
         return TimeRangeLimits.calculateTimeRangeLimits(JavaDate.getNowDate(), rangeUnit, rangeOffset, rangeQty);
     }
 

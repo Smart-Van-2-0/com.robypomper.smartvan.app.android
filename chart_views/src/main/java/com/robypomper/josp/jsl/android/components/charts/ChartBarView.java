@@ -196,7 +196,10 @@ public class ChartBarView extends ChartBaseView {
     protected void doRemoveDataSetFromChart(String dataSetName) {
         synchronized (chart) {
             BarData chartData = chart.getData();
-            IBarDataSet oldDataSet = chartData.getDataSetByLabel(getAdapter().getDataSetLabel(dataSetName), false);
+            IBarDataSet oldDataSet = null;
+            try {
+                oldDataSet = chartData.getDataSetByLabel(getAdapter().getDataSetLabel(dataSetName), false);
+            } catch (IllegalArgumentException ignore) { }
             if (oldDataSet == null) return;
 
             chartData.removeDataSet(oldDataSet);
