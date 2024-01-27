@@ -13,7 +13,9 @@ import com.robypomper.josp.jsl.android.activities.BaseRemoteObjectActivity;
 import com.robypomper.josp.jsl.android.components.charts.adapters.JSLChartViewAdapter;
 import com.robypomper.josp.jsl.android.components.charts.formatters.ChartDateTimeFormatter;
 import com.robypomper.josp.jsl.android.components.charts.formatters.ChartUnitFormatter;
+import com.robypomper.josp.jsl.comm.JSLLocalClient;
 import com.robypomper.josp.jsl.objs.JSLRemoteObject;
+import com.robypomper.josp.jsl.objs.remote.ObjComm;
 import com.robypomper.josp.jsl.objs.structure.pillars.JSLRangeState;
 import com.robypomper.smartvan.smart_van.android.commons.SVDefinitions;
 import com.robypomper.smartvan.smart_van.android.commons.SVSpec;
@@ -47,15 +49,15 @@ public class SVEnergyActivity extends BaseRemoteObjectActivity {
      * - FW Victron:    com.victron.SmartSolarMPPT.load_power
      */
     public final static SVSpec COMP_CONSUMPTION_PATH = SVSpecs.SVBox.Energy.Consumption.Power;
-    private final static String COMP_STORAGE_LABEL = "Battery";
-    private final static String COMP_STORAGE_UNIT = "V";
-    private final static int COMP_STORAGE_COLOR = Color.rgb(0, 200, 0);
-    private final static String COMP_GENERATION_LABEL = "Generation";
-    private final static String COMP_GENERATION_UNIT = "W";
-    private final static int COMP_GENERATION_COLOR = Color.rgb(200, 200, 0);
-    private final static String COMP_CONSUMPTION_LABEL = "Cons.";
-    private final static String COMP_CONSUMPTION_UNIT = "W";
-    private final static int COMP_CONSUMPTION_COLOR = Color.rgb(0, 200, 200);
+    public final static String COMP_STORAGE_LABEL = "Battery";
+    public final static String COMP_STORAGE_UNIT = "V";
+    public final static int COMP_STORAGE_COLOR = Color.rgb(0, 200, 0);
+    public final static String COMP_GENERATION_LABEL = "Generation";
+    public final static String COMP_GENERATION_UNIT = "W";
+    public final static int COMP_GENERATION_COLOR = Color.rgb(200, 200, 0);
+    public final static String COMP_CONSUMPTION_LABEL = "Cons.";
+    public final static String COMP_CONSUMPTION_UNIT = "W";
+    public final static int COMP_CONSUMPTION_COLOR = Color.rgb(0, 200, 200);
 
 
     // Internal variables
@@ -178,12 +180,14 @@ public class SVEnergyActivity extends BaseRemoteObjectActivity {
     }
 
     private void registerRemoteObjectListeners() {
+        getRemoteObject().getComm().addListener(listenerComm);
         storageComp.addListener(listenerComps);
         generationComp.addListener(listenerComps);
         consumptionComp.addListener(listenerComps);
     }
 
     private void deregisterRemoteObjectListeners() {
+        getRemoteObject().getComm().removeListener(listenerComm);
         storageComp.removeListener(listenerComps);
         generationComp.removeListener(listenerComps);
         consumptionComp.removeListener(listenerComps);
@@ -191,6 +195,28 @@ public class SVEnergyActivity extends BaseRemoteObjectActivity {
 
 
     // Remote Object listeners
+
+    private final ObjComm.RemoteObjectConnListener listenerComm = new ObjComm.RemoteObjectConnListener() {
+        @Override
+        public void onLocalConnected(JSLRemoteObject obj, JSLLocalClient localClient) {
+            setRemoteObjectUIEnable(getRemoteObject().getComm().isConnected());
+        }
+
+        @Override
+        public void onLocalDisconnected(JSLRemoteObject obj, JSLLocalClient localClient) {
+            setRemoteObjectUIEnable(getRemoteObject().getComm().isConnected());
+        }
+
+        @Override
+        public void onCloudConnected(JSLRemoteObject obj) {
+            setRemoteObjectUIEnable(getRemoteObject().getComm().isConnected());
+        }
+
+        @Override
+        public void onCloudDisconnected(JSLRemoteObject obj) {
+            setRemoteObjectUIEnable(getRemoteObject().getComm().isConnected());
+        }
+    };
 
     private final JSLRangeState.RangeStateListener listenerComps = new JSLRangeState.RangeStateListener() {
 
@@ -214,6 +240,16 @@ public class SVEnergyActivity extends BaseRemoteObjectActivity {
 
 
     // UI widgets
+
+    private void setRemoteObjectUIEnable(boolean enable) {
+        boolean connected = getRemoteObject().getComm().isConnected();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                binding.viewChart.setEnabled(enable);
+            }
+        });
+    }
 
     private void updateRemoteObjectUI() {
         updateRemoteObject();
