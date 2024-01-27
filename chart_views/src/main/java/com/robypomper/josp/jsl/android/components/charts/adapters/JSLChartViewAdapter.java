@@ -105,11 +105,14 @@ public class JSLChartViewAdapter extends ChartViewAdapterAbs {
                     );
                     Log.d("JSLChartViewAdapter", "DataSet '" + dataSetName + "': doFetch-TX from " + ChartLineView.LOG_SDF.format(historyLimits.getFromDate()) + " to " + ChartLineView.LOG_SDF.format(historyLimits.getToDate()));
                 } catch (JSLRemoteObject.ObjectNotConnected e) {
-                    Log.w("JSLChartViewAdapter", "Can't fetch data set '" + dataSetName + "' because the object '" + dataSetComp.getRemoteObject().getName() + "' is not connected.");
-                    // let timeout the fetch process, it can be improved
+                    String errorStr = "Can't fetch data set '" + dataSetName + "' because the object '" + dataSetComp.getRemoteObject().getName() + "' is not connected.";
+                    Log.w("JSLChartViewAdapter", errorStr);
+                    notifyDataSetError(dataSetName, timeRangeLimits, errorStr, e);
+
                 } catch (JSLRemoteObject.MissingPermission e) {
-                    Log.w("JSLChartViewAdapter", "Can't fetch data set '" + dataSetName + "' because missing required permission on the object '" + dataSetComp.getRemoteObject().getName() + "' is not connected.");
-                    // let timeout the fetch process, it can be improved
+                    String errorStr = "Can't fetch data set '" + dataSetName + "' because missing required permission on the object '" + dataSetComp.getRemoteObject().getName() + "' is not connected.";
+                    Log.w("JSLChartViewAdapter", errorStr);
+                    notifyDataSetError(dataSetName, timeRangeLimits, errorStr, e);
                 }
             }
         });

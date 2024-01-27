@@ -57,6 +57,10 @@ import java.util.TimerTask;
  * -> registerFetchTimeout()
  * -> registerFetchDataSet()
  * <p>
+ * fetchError
+ * -> registerFetchError()
+ * -> registerFetchDataSet()
+ * <p>
  * TODO: chart predefined settings from menu
  * TODO: chart settings zoomer (+ and - buttons for Unit and Qty)
  * @noinspection unused
@@ -943,6 +947,17 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
         registerFetchCompletion(dataSetName, limits, dataSet);
     }
 
+    @Override
+    public void processErrorDataSet(String dataSetName, TimeRangeLimits timeRangeLimits, String errorMsg, Throwable error) {
+        if (!isFetching(dataSetName))
+            return; // fetch deleted or timeout
+
+        Log.w("ChartBaseView", String.format("Error fetching the data set '%s': %s", dataSetName, errorMsg), error);
+        displayToastMessage(String.format("Error fetching the data set '%s'", dataSetName));
+
+        registerFetchError(dataSetName, timeRangeLimits, errorMsg);
+    }
+
     private void registerFetchReceived(String dataSetName, TimeRangeLimits limits, DataSet<?> dataSet) {
         Log.v("ChartBaseView", String.format("DataSet '%s': register data received %s - %s range (%d)", dataSetName, LOG_SDF.format(limits.getFromDate()), LOG_SDF.format(limits.getToDate()), dataSet != null ? dataSet.getEntryCount() : -1));
 
@@ -973,7 +988,25 @@ public abstract class ChartBaseView extends ConstraintLayout implements ChartAda
         }
         registerFetchDataSet(dataSetName, dataSet, limits);
 
-        if (isFetching()) showUIFetchingMessage();
+        if (isFetching()) showUIFetchingMessage();  // TODO check if it's needed
+    }
+
+    private void registerFetchError(String dataSetName, TimeRangeLimits limits, String errorStr) {
+        Log.v("ChartBaseView", String.format("DataSet '%s': register error %s - %s range: %s", dataSetName, LOG_SDF.format(limits.getFromDate()), LOG_SDF.format(limits.getToDate()), errorStr));
+
+        // Timeout time task
+        fetchTimeouts.remove(dataSetName);
+
+        // Fetching data sets list
+        fetchingDataSet.remove(dataSetName);
+        if (!isFetching()) hideUIMessage();
+
+        // Update chart
+        DataSet<?> dataSet = generateZeroDataSet(dataSetName, limits);
+        dataSet.setLabel(getAdapter().getDataSetLabel(dataSetName) + " - ERROR");
+        registerFetchDataSet(dataSetName, dataSet, limits);
+        //invalidateChart(true);
+        //updateTimeRangeToChart(limits);
     }
 
     protected void registerFetchTimeout(String dataSetName, TimeRangeLimits limits) {

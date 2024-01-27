@@ -297,6 +297,14 @@ public abstract class ChartViewAdapterAbs implements ChartViewAdapter {
         chartObserver.processFetchedDataSet(dataSetName, dataSet, timeRangeLimits);
     }
 
+    protected void notifyDataSetError(String dataSetName, TimeRangeLimits timeRangeLimits, String errorMsg) {
+        notifyDataSetError(dataSetName, timeRangeLimits, errorMsg, null);
+    }
+
+    protected void notifyDataSetError(String dataSetName, TimeRangeLimits timeRangeLimits, String errorMsg, Throwable error) {
+        chartObserver.processErrorDataSet(dataSetName, timeRangeLimits, errorMsg, error);
+    }
+
     protected void notifyDataSetRemoved(String dataSetName) {
         chartObserver.removeDataSetFromChart(dataSetName, true);
     }
