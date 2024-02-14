@@ -213,12 +213,7 @@ public class ChartBarView extends ChartBaseView {
     }
 
     @Override
-    protected void doInvalidateChart(boolean animate) {
-        if (!animate) {
-            chart.invalidate();
-            return;
-        }
-
+    protected void doInvalidateChart() {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {

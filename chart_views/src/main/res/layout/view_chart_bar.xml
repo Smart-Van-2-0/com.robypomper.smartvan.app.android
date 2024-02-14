@@ -71,11 +71,13 @@
     </LinearLayout>
 
     <include
-        android:visibility="gone"
         android:id="@+id/layOverlay"
         layout="@layout/view_chart_overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="4dp" />
+        android:layout_margin="4dp"
+        android:visibility="gone"
+        tools:layout_editor_absoluteX="4dp"
+        tools:layout_editor_absoluteY="4dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
