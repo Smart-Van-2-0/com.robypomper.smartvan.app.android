@@ -103,6 +103,12 @@ public class ChartBarView extends ChartBaseView {
         return BarEntry.class;
     }
 
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        chart.setEnabled(enabled);
+    }
+
 
     @Override
     protected void doInit() {
@@ -196,7 +202,10 @@ public class ChartBarView extends ChartBaseView {
     protected void doRemoveDataSetFromChart(String dataSetName) {
         synchronized (chart) {
             BarData chartData = chart.getData();
-            IBarDataSet oldDataSet = chartData.getDataSetByLabel(getAdapter().getDataSetLabel(dataSetName), false);
+            IBarDataSet oldDataSet = null;
+            try {
+                oldDataSet = chartData.getDataSetByLabel(getAdapter().getDataSetLabel(dataSetName), false);
+            } catch (IllegalArgumentException ignore) { }
             if (oldDataSet == null) return;
 
             chartData.removeDataSet(oldDataSet);
@@ -204,12 +213,7 @@ public class ChartBarView extends ChartBaseView {
     }
 
     @Override
-    protected void doInvalidateChart(boolean animate) {
-        if (!animate) {
-            chart.invalidate();
-            return;
-        }
-
+    protected void doInvalidateChart() {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {

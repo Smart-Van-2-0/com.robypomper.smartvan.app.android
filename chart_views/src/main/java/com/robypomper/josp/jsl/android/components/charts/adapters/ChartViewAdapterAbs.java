@@ -67,11 +67,11 @@ public abstract class ChartViewAdapterAbs implements ChartViewAdapter {
     }
 
     public void removeDataSet(String dataSetName) {
+        notifyDataSetRemoved(dataSetName);
         dataSetNames.remove(dataSetName);
         dataSetLabels.remove(dataSetName);
         dataSetColors.remove(dataSetName);
         dataSetYAxisDeps.remove(dataSetName);
-        notifyDataSetRemoved(dataSetName);
     }
 
     @Override
@@ -295,6 +295,14 @@ public abstract class ChartViewAdapterAbs implements ChartViewAdapter {
 
     protected void notifyDataSetFetched(String dataSetName, DataSet<?> dataSet, TimeRangeLimits timeRangeLimits) {
         chartObserver.processFetchedDataSet(dataSetName, dataSet, timeRangeLimits);
+    }
+
+    protected void notifyDataSetError(String dataSetName, TimeRangeLimits timeRangeLimits, String errorMsg) {
+        notifyDataSetError(dataSetName, timeRangeLimits, errorMsg, null);
+    }
+
+    protected void notifyDataSetError(String dataSetName, TimeRangeLimits timeRangeLimits, String errorMsg, Throwable error) {
+        chartObserver.processErrorDataSet(dataSetName, timeRangeLimits, errorMsg, error);
     }
 
     protected void notifyDataSetRemoved(String dataSetName) {

@@ -110,6 +110,12 @@ public class ChartLineView extends ChartBaseView {
         return Entry.class;
     }
 
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        chart.setEnabled(enabled);
+    }
+
 
     @Override
     protected void doInit() {
@@ -172,12 +178,7 @@ public class ChartLineView extends ChartBaseView {
     }
 
     @Override
-    protected void doInvalidateChart(boolean animate) {
-        if (!animate) {
-            chart.invalidate();
-            return;
-        }
-
+    protected void doInvalidateChart() {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {

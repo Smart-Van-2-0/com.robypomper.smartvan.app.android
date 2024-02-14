@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import androidx.annotation.StyleRes;
 
+import com.robypomper.java.JavaDate;
 import com.robypomper.josp.jsl.android.charts.R;
 import com.robypomper.josp.jsl.android.components.charts.utils.TimeRangeLimits;
 
@@ -49,7 +50,7 @@ public class TimeNavigatorView extends LinearLayout {
 
     // Internal vars
 
-    private Date referenceDate = new Date();
+    private Date referenceDate = null;
     private int rangeUnit = Calendar.HOUR_OF_DAY;
     private int rangeQty = 1;
     private int rangeOffset = 0;
@@ -120,6 +121,8 @@ public class TimeNavigatorView extends LinearLayout {
     // Getters/Setters
 
     public Date getReferenceDate() {
+        if (referenceDate == null)
+            return JavaDate.getNowDate();
         return referenceDate;
     }
 
@@ -177,13 +180,24 @@ public class TimeNavigatorView extends LinearLayout {
         updateTxtTextAppearance();
     }
 
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        btnTimeRangeNavPrev.setEnabled(enabled);
+        btnTimeRangeNavNext.setEnabled(enabled);
+        txtTimeRangeStart.setEnabled(enabled);
+        txtTimeRangeEnd.setEnabled(enabled);
+        txtTimeRangeSeparator.setEnabled(enabled);
+    }
+
 
     // UI
 
     private void updateUI() {
-        TimeRangeLimits hl = TimeRangeLimits.calculateTimeRangeLimits(referenceDate, rangeUnit, rangeOffset, rangeQty);
+        TimeRangeLimits hl = TimeRangeLimits.calculateTimeRangeLimits(getReferenceDate(), rangeUnit, rangeOffset, rangeQty);
         txtTimeRangeStart.setText(dateFormatter.format(hl.getFromDate()));
         txtTimeRangeEnd.setText(dateFormatter.format(hl.getToDate()));
+        btnTimeRangeNavNext.setEnabled(rangeOffset < 0);
     }
 
     private void updateBtnTextAppearance() {
