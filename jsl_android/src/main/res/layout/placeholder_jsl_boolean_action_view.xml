@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/btnJSLCompSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/placeholder_jsl_boolean_action_view_switch" />
+
+    <Button
+        android:id="@+id/btnJSLCompSwitchTrue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/placeholder_jsl_boolean_action_view_switch_true" />
+
+    <Button
+        android:id="@+id/btnJSLCompSwitchFalse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/placeholder_jsl_boolean_action_view_switch_false" />
+
+    <ToggleButton
+        android:id="@+id/btnJSLCompToggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/placeholder_jsl_boolean_action_view_action_toggle" />
+
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/btnJSLCompToggleSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/placeholder_jsl_boolean_action_view_action_switch" />
+
+</LinearLayout>

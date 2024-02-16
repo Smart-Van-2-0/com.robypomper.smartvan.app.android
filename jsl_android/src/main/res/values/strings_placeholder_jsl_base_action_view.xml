@@ -1,0 +1,10 @@
+<resources>
+    <string name="placeholder_jsl_base_action_view_last_change">{txtJSLCompLastChange}</string>
+    <string name="placeholder_jsl_base_action_view_action_waiting">{txtJSLCompAction}</string>
+    <string name="placeholder_jsl_base_action_view_action_timeout">{txtJSLCompActionTimeout}</string>
+    <string name="placeholder_jsl_base_action_view_action_timeout_ms">{txtJSLCompActionTimeoutMs}</string>
+    <string name="placeholder_jsl_base_action_view_action_timeout_sec">{txtJSLCompActionTimeoutSec}</string>
+    <string name="placeholder_jsl_base_action_view_action_last_sent">{txtJSLCompActionLastSent}</string>
+    <string name="placeholder_jsl_base_action_view_action_last_feedback">{txtJSLCompActionLastFeedback}</string>
+    <string name="placeholder_jsl_base_action_view_action_last_timeout">{txtJSLCompActionLastTimeout}</string>
+</resources>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <SeekBar
+        android:id="@+id/sbJSLCompAction"
+        android:layout_width="wrap_content"
+        android:layout_height="64dp" />
+
+    <Button
+        android:id="@+id/btnJSLCompActionDecrease"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/placeholder_jsl_range_action_view_action_decrease" />
+
+    <Button
+        android:id="@+id/btnJSLCompActionIncrease"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/placeholder_jsl_range_action_view_action_increase" />
+
+    <Button
+        android:id="@+id/btnJSLCompActionSetMin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/placeholder_jsl_range_action_view_action_set_min" />
+
+    <Button
+        android:id="@+id/btnJSLCompActionSetMax"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/placeholder_jsl_range_action_view_action_set_max" />
+
+</LinearLayout>
