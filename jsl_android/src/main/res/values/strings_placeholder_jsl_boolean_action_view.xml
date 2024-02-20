@@ -1,0 +1,7 @@
+<resources>
+    <string name="placeholder_jsl_boolean_action_view_switch">{btnJSLCompSwitch}</string>
+    <string name="placeholder_jsl_boolean_action_view_switch_true">{btnJSLCompSwitchTrue}</string>
+    <string name="placeholder_jsl_boolean_action_view_switch_false">{btnJSLCompSwitch}</string>
+    <string name="placeholder_jsl_boolean_action_view_action_switch">{btnJSLCompToggleSwitch}</string>
+    <string name="placeholder_jsl_boolean_action_view_action_toggle">{btnJSLCompToggle}</string>
+</resources>
