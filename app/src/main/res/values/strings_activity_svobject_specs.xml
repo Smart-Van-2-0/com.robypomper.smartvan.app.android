@@ -1,5 +1,4 @@
 <resources>
-    <string name="activity_svobject_specs_txt_title_name_placeholder">{MyVan}</string>
     <string name="activity_svobject_specs_txt_title_post">SV Specifications</string>
     <string name="activity_svobject_specs_txt_content">Below, listed hierarchically, are all the specifications of the Smart Van project. For each one it is shown whether or not it is provided by the currently connected Smart Van Box.</string>
     <string name="activity_svobject_specs__title">SVBox Specifications</string>

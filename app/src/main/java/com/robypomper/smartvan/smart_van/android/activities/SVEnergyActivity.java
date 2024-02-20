@@ -130,13 +130,13 @@ public class SVEnergyActivity extends BaseRemoteObjectActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-                if (getParentActivityIntent() == null) {
-                    Log.w("SVEnergy", "You have forgotten to specify the parentActivityName in the AndroidManifest!");
-                    //onBackPressed();
-                    getOnBackPressedDispatcher().onBackPressed();
-                } else
-                    NavUtils.navigateUpFromSameTask(this);
-                return true;
+            if (getParentActivityIntent() == null) {
+                Log.w("SVEnergy", "You have forgotten to specify the parentActivityName in the AndroidManifest!");
+                //onBackPressed();
+                getOnBackPressedDispatcher().onBackPressed();
+            } else
+                NavUtils.navigateUpFromSameTask(this);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -244,7 +244,6 @@ public class SVEnergyActivity extends BaseRemoteObjectActivity {
     // UI widgets
 
     private void setRemoteObjectUIEnable(boolean enable) {
-        boolean connected = getRemoteObject().getComm().isConnected();
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -281,8 +280,10 @@ public class SVEnergyActivity extends BaseRemoteObjectActivity {
     private void updateStorageComp() {
         if (binding == null) return;
 
-        if (storageComp == null) Log.i("SVEnergy", "updateStorageComp() for unregistered storage component");
-        else Log.d("SVEnergy", String.format("updateStorageComp(%s) => %f", storageComp.getState(), storageComp.getState() / 1000));
+        if (storageComp == null)
+            Log.i("SVEnergy", "updateStorageComp() for unregistered storage component");
+        else
+            Log.d("SVEnergy", String.format("updateStorageComp(%s) => %f", storageComp.getState(), storageComp.getState() / 1000));
 
         runOnUiThread(new Runnable() {
             @SuppressLint("DefaultLocale")
@@ -296,8 +297,10 @@ public class SVEnergyActivity extends BaseRemoteObjectActivity {
     private void updateGenerationComp() {
         if (binding == null) return;
 
-        if (generationComp == null) Log.i("SVEnergy", "updateGenerationComp() for unregistered storage component");
-        else Log.d("SVEnergy", String.format("updateGenerationComp(%s) => %f", generationComp.getState(), generationComp.getState() / 1000));
+        if (generationComp == null)
+            Log.i("SVEnergy", "updateGenerationComp() for unregistered storage component");
+        else
+            Log.d("SVEnergy", String.format("updateGenerationComp(%s) => %f", generationComp.getState(), generationComp.getState() / 1000));
 
         runOnUiThread(new Runnable() {
             @SuppressLint("DefaultLocale")
@@ -311,8 +314,10 @@ public class SVEnergyActivity extends BaseRemoteObjectActivity {
     private void updateConsumptionComp() {
         if (binding == null) return;
 
-        if (consumptionComp == null) Log.i("SVEnergy", "updateGenerationComp() for unregistered storage component");
-        else Log.d("SVEnergy", String.format("updateConsumptionComp(%s) => %f", consumptionComp.getState(), consumptionComp.getState() / 1000));
+        if (consumptionComp == null)
+            Log.i("SVEnergy", "updateGenerationComp() for unregistered storage component");
+        else
+            Log.d("SVEnergy", String.format("updateConsumptionComp(%s) => %f", consumptionComp.getState(), consumptionComp.getState() / 1000));
 
         runOnUiThread(new Runnable() {
             @SuppressLint("DefaultLocale")
