@@ -3,11 +3,15 @@ package com.robypomper.smartvan.smart_van.android.storage.local;
 import android.content.Context;
 
 import com.robypomper.smartvan.smart_van.android.storage.SVPreferences;
+import com.robypomper.smartvan.smart_van.android.storage.SVPreferencesServices;
 import com.robypomper.smartvan.smart_van.android.storage.SVStorage;
 import com.robypomper.smartvan.smart_van.android.storage.SVStorageBaseDataStore;
 import com.robypomper.smartvan.smart_van.android.storage.SVStorageSingleton;
 
 import java.util.HashMap;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -31,6 +35,10 @@ public class SVLocalStorage extends SVStorageBaseDataStore implements SVStorage 
      * The application's generic preferences object.
      */
     private final SVPreferences preferencesApp;
+    /**
+     * SV Services preferences for each known object id.
+     */
+    private final Map<String, SVPreferencesServices> preferencesServices;
 
 
     // Constructor
@@ -44,6 +52,7 @@ public class SVLocalStorage extends SVStorageBaseDataStore implements SVStorage 
         super(ctx);
         this.ctx = ctx;
         this.preferencesApp = new LocalPreferences(ctx);
+        this.preferencesServices = new HashMap<>();
 
         SVStorageSingleton.setInstance(this);
     }
@@ -63,10 +72,9 @@ public class SVLocalStorage extends SVStorageBaseDataStore implements SVStorage 
      */
     @Override
     public void generateStorage(String objectId) {
-        // TODO uncomment when the preferences services are implemented
-        // SVPreferencesServices locPreferencesServices = new LocalPreferencesServices(ctx);
-        // locPreferencesServices.generateStorage(objectId);
-        // preferencesServices.put(objectId, locPreferencesServices);
+        SVPreferencesServices locPreferencesServices = new LocalPreferencesServices(ctx);
+        locPreferencesServices.generateStorage(objectId);
+        preferencesServices.put(objectId, locPreferencesServices);
 
         // TODO uncomment when the history is implemented
         // SVHistory locHistory = new LocalHistory();
@@ -89,9 +97,8 @@ public class SVLocalStorage extends SVStorageBaseDataStore implements SVStorage 
      */
     @Override
     public void clearStorage(String objectId) {
-        // TODO uncomment when the preferences services are implemented
-        // SVPreferencesServices locPreferencesServices = preferencesServices.remove(objectId);
-        // if (locPreferencesServices != null) locPreferencesServices.clearStorage(objectId);
+        SVPreferencesServices locPreferencesServices = preferencesServices.remove(objectId);
+        if (locPreferencesServices != null) locPreferencesServices.clearStorage(objectId);
 
         // TODO uncomment when the history is implemented
         // SVHistory locHistory = history.remove(objectId);
@@ -115,6 +122,17 @@ public class SVLocalStorage extends SVStorageBaseDataStore implements SVStorage 
     @Override
     public SVPreferences getAppPreferences() {
         return preferencesApp;
+    }
+
+    /**
+     * Get the preferences services for the given object id.
+     *
+     * @param objectId the id of the object for which to get the preferences services.
+     * @return the preferences services for the given object id.
+     */
+    @Override
+    public SVPreferencesServices getPreferencesServices(String objectId) {
+        return preferencesServices.get(objectId);
     }
 
 }

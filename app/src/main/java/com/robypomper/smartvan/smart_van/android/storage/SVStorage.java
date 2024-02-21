@@ -141,4 +141,12 @@ public interface SVStorage {
      */
     SVPreferences getAppPreferences();
 
+    /**
+     * Get the preferences services for the given object id.
+     *
+     * @param objectId the id of the object for which to get the preferences services.
+     * @return the preferences services for the given object id.
+     */
+    SVPreferencesServices getPreferencesServices(String objectId);
+
 }
