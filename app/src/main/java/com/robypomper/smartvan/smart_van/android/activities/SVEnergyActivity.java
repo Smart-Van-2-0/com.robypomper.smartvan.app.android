@@ -123,7 +123,8 @@ public class SVEnergyActivity extends BaseRemoteObjectActivity {
         super.onPause();
 
         // Deregister, update UI and remove component from chart
-        deregisterRemoteObject();
+        if (getRemoteObject() != null)
+            deregisterRemoteObject();
     }
 
     @Override
@@ -150,7 +151,8 @@ public class SVEnergyActivity extends BaseRemoteObjectActivity {
 
     @Override
     protected void onRemoteObjectNotReady() {
-        deregisterRemoteObject();
+        if (getRemoteObject() != null)
+            deregisterRemoteObject();
     }
 
 

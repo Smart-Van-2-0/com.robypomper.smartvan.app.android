@@ -95,7 +95,8 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
         super.onPause();
 
         // Deregister and update UI
-        deregisterRemoteObject();
+        if (getRemoteObject() != null)
+            deregisterRemoteObject();
     }
 
 
@@ -108,7 +109,8 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
 
     @Override
     protected void onRemoteObjectNotReady() {
-        deregisterRemoteObject();
+        if (getRemoteObject() != null)
+            deregisterRemoteObject();
     }
 
 
