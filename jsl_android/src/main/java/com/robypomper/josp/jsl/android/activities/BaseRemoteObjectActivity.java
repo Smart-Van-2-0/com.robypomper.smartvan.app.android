@@ -96,6 +96,7 @@ public class BaseRemoteObjectActivity extends BaseJSLActivity {
 
         // Register remote object (by obj's id)
         getJSLListeners().addObjsMngrListenersByID(objId, remObjByIdListener);
+        getJSLListeners().addObjsMngr_StructListeners(remObjStructListener);
     }
 
     @Override
@@ -104,6 +105,7 @@ public class BaseRemoteObjectActivity extends BaseJSLActivity {
 
         // Deregister remote object (by obj's id)
         getJSLListeners().removeObjsMngrListenersByID(objId, remObjByIdListener);
+        getJSLListeners().removeObjsMngr_StructListeners(remObjStructListener);
     }
 
 
@@ -168,9 +170,9 @@ public class BaseRemoteObjectActivity extends BaseJSLActivity {
         assert obj != null : "can't emit onRemoteObjectReady with null obj";
         assert remObj == null;
 
-        remObj = obj;
-        if (remObj.getStruct() != null
-                && remObj.getStruct().getStructure() != null) {
+        if (obj.getStruct() != null
+                && obj.getStruct().getStructure() != null) {
+            remObj = obj;
             onRemoteObjectReady();
         }
     }
