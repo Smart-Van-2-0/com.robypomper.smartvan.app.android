@@ -21,6 +21,7 @@ import com.robypomper.smartvan.smart_van.android.commons.SVDefinitions;
 import com.robypomper.smartvan.smart_van.android.commons.SVSpec;
 import com.robypomper.smartvan.smart_van.android.commons.SVSpecs;
 import com.robypomper.smartvan.smart_van.android.databinding.ActivitySvenergyBinding;
+import com.robypomper.smartvan.smart_van.android.storage.SVStorageSingleton;
 
 
 public class SVEnergyActivity extends BaseRemoteObjectActivity {
@@ -99,6 +100,7 @@ public class SVEnergyActivity extends BaseRemoteObjectActivity {
                 ChartDateTimeFormatter.X_FORMATTER_MINUTES(), ChartUnitFormatter.Y_FORMATTER_UNIT_0001(), ChartUnitFormatter.Y_FORMATTER_UNIT_0001());
         binding.viewChart.setAdapter(chartAdapter);
         binding.viewChart.setActivity(this);
+        binding.viewChart.setFetchTimeoutMs((long) SVStorageSingleton.getInstance().getAppPreferences().getChartTimeoutSeconds() * 1000);
 
         // set up action bar
         if (getActionBar() != null)
