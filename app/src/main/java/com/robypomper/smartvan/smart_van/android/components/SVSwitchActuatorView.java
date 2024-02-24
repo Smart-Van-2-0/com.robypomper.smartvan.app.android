@@ -69,7 +69,12 @@ public class SVSwitchActuatorView
         super(context, attrs, defStyleAttr, svService, layout);
         iconHandler = new SVServiceIconViewHandler(context, this, svService);
         cardHeaderHandler = new SVServiceCardHeaderViewHandler(this, svService, getStateHandler(), getIconHandler());
-
+        getStateHandler().setValTrueTxt("On");
+        getStateHandler().setValFalseTxt("Off");
+        getActionHandler().setValTrueTxt("On");
+        getActionHandler().setValFalseTxt("Off");
+        getActionHandler().setCmdSwitchTrueTxt("Switch On");
+        getActionHandler().setCmdSwitchFalseTxt("Switch Off");
     }
 
 
