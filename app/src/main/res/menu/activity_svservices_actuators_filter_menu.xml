@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/filterOnlySwitches"
+        android:title="@string/activity_svservices_txt_filter_switches" />
+
+    <item
+        android:id="@+id/filterOnlyDimmers"
+        android:title="@string/activity_svservices_txt_filter_dimmers" />
+
+    <item
+        android:id="@+id/filterOnlyHigh"
+        android:title="@string/activity_svservices_txt_filter_high" />
+
+    <item
+        android:id="@+id/filterOnlyLow"
+        android:title="@string/activity_svservices_txt_filter_low" />
+
+    <item
+        android:id="@+id/filterReset"
+        android:title="@string/activity_svservices_txt_filter_reset" />
+
+</menu>

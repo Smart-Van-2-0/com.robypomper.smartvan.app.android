@@ -57,6 +57,11 @@
             android:theme="@style/Theme.SmartVan"
             android:label="@string/activity_svenergy__title" />
         <activity
+            android:name=".activities.SVServicesActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SmartVan"
+            android:label="@string/activity_svservices__title" />
+        <activity
             android:name=".activities.SVObjectDetailsActivity"
             android:exported="false"
             android:theme="@style/Theme.SmartVan"
