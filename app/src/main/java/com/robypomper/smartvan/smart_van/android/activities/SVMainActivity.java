@@ -77,6 +77,7 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
 
         // register ui listeners and callbacks
         binding.layPower.setOnClickListener((onClickMainLayoutsListener));
+        binding.layServices.setOnClickListener((onClickMainLayoutsListener));
         binding.laySpecs.setOnClickListener((onClickMainLayoutsListener));
         binding.txtTitleName.setOnClickListener((onClickMainLayoutsListener));
     }
@@ -330,9 +331,9 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
             //} else if (v == binding.layPanels) {
             //    intent = new Intent(SVMainActivity.this, SVXYActivity.class);
             //    intent.putExtra(SVXYActivity.PARAM_OBJ_ID, obj.getId());
-            //} else if (v == binding.layServices) {
-            //    intent = new Intent(SVMainActivity.this, SVXYActivity.class);
-            //    intent.putExtra(SVXYActivity.PARAM_OBJ_ID, obj.getId());
+            } else if (v == binding.layServices) {
+                intent = new Intent(SVMainActivity.this, SVServicesActivity.class);
+                intent.putExtra(SVServicesActivity.PARAM_OBJ_ID, obj.getId());
             } else if (v == binding.laySpecs) {
                 intent = new Intent(SVMainActivity.this, SVObjectSpecsActivity.class);
                 intent.putExtra(SVObjectSpecsActivity.PARAM_OBJ_ID, obj.getId());
