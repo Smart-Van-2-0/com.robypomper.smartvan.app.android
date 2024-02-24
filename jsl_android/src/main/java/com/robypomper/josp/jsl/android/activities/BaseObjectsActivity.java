@@ -66,15 +66,9 @@ public class BaseObjectsActivity extends BaseJSLActivity {
      */
     public BaseObjectsActivity(List<String> reqModels, List<String> reqBrands, List<String> reqCompPaths) {
         super();
-        this.reqModels = reqModels;
-        if (reqModels == null)
-            this.reqModels = new ArrayList<>();
-        this.reqBrands = reqBrands;
-        if (reqBrands == null)
-            this.reqBrands = new ArrayList<>();
-        this.reqPillars = reqCompPaths;
-        if (reqCompPaths == null)
-            this.reqPillars = new ArrayList<>();
+        this.reqModels = reqModels != null ? reqModels : new ArrayList<>();
+        this.reqBrands = reqBrands != null ? reqBrands : new ArrayList<>();
+        this.reqPillars = reqCompPaths != null ? reqCompPaths : new ArrayList<>();
     }
 
     // Android
@@ -136,38 +130,23 @@ public class BaseObjectsActivity extends BaseJSLActivity {
 
     private void lookForObjsFilters(Bundle savedInstanceState) {
         // get models list
-        reqModels = null;
-        if (getIntent().getExtras() != null)
+        if (getIntent().getExtras() != null && getIntent().getExtras().getStringArrayList(PARAM_OBJS_MODELS) != null)
             reqModels = getIntent().getExtras().getStringArrayList(PARAM_OBJS_MODELS);
-        if (reqModels == null && savedInstanceState != null)
+        else if (savedInstanceState != null && savedInstanceState.getStringArrayList(PARAM_OBJS_MODELS) != null)
             reqModels = savedInstanceState.getStringArrayList(PARAM_OBJS_MODELS);
-        // TODO implement required models storage into shared preferences
-        //if (reqModels == null)
-        // look into shared preferences
-        if (reqModels == null)
-            reqModels = new ArrayList<>();
 
         // get brands list
-        reqBrands = null;
-        if (getIntent().getExtras() != null)
+        if (getIntent().getExtras() != null && getIntent().getExtras().getStringArrayList(PARAM_OBJS_BRANDS) != null)
             reqBrands = getIntent().getExtras().getStringArrayList(PARAM_OBJS_BRANDS);
-        if (reqBrands == null && savedInstanceState != null)
+        if (savedInstanceState != null && savedInstanceState.getStringArrayList(PARAM_OBJS_BRANDS) != null)
             reqBrands = savedInstanceState.getStringArrayList(PARAM_OBJS_BRANDS);
-        // TODO implement required brands storage into shared preferences
-        //if (reqBrands == null)
-        // look into shared preferences
-        if (reqBrands == null)
-            reqBrands = new ArrayList<>();
 
         // get pillars list
-        reqPillars = null;
-        if (getIntent().getExtras() != null)
+        if (getIntent().getExtras() != null && getIntent().getExtras().getStringArrayList(PARAM_OBJS_PILLARS) != null)
             reqPillars = getIntent().getExtras().getStringArrayList(PARAM_OBJS_PILLARS);
-        if (reqPillars == null && savedInstanceState != null)
+        if (savedInstanceState != null && savedInstanceState.getStringArrayList(PARAM_OBJS_PILLARS) != null)
             reqPillars = savedInstanceState.getStringArrayList(PARAM_OBJS_PILLARS);
-        // TODO implement required pillars storage into shared preferences
-        //if (reqPillars == null)
-        // look into shared preferences
+
         if (reqPillars == null)
             reqPillars = new ArrayList<>();
     }
