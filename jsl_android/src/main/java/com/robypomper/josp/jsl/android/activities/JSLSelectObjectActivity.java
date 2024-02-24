@@ -39,7 +39,6 @@ public abstract class JSLSelectObjectActivity extends BaseObjectsActivity {
     private final String modelName;
     private final Class<? extends Activity> nextActivityClass;
     private ActivityJslWaitObjectBinding binding;
-    protected boolean auto_propose = false;
 
 
     private class ViewHolderImpl extends RemoteObjectAdapter.ViewHolder {

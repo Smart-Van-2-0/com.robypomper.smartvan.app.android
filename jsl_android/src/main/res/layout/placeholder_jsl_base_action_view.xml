@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/txtJSLCompLastChange"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/placeholder_jsl_base_action_view_last_change" />
+
+    <TextView
+        android:id="@+id/txtJSLCompAction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/placeholder_jsl_base_action_view_action_waiting" />
+
+    <TextView
+        android:id="@+id/txtJSLCompActionTimeout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/placeholder_jsl_base_action_view_action_timeout" />
+
+    <TextView
+        android:id="@+id/txtJSLCompActionTimeoutMs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/placeholder_jsl_base_action_view_action_timeout_ms" />
+
+    <TextView
+        android:id="@+id/txtJSLCompActionTimeoutSec"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/placeholder_jsl_base_action_view_action_timeout_sec" />
+
+    <TextView
+        android:id="@+id/txtJSLCompActionLastSent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/placeholder_jsl_base_action_view_action_last_sent" />
+    
+    <TextView
+        android:id="@+id/txtJSLCompActionLastFeedback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/placeholder_jsl_base_action_view_action_last_feedback" />
+
+    <TextView
+        android:id="@+id/txtJSLCompActionLastTimeout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/placeholder_jsl_base_action_view_action_last_timeout" />
+
+    <ImageView
+        android:id="@+id/icoJSLCompActionWaiting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:drawable/stat_notify_sync"/>
+
+</LinearLayout>

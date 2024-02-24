@@ -177,7 +177,8 @@ public abstract class JSLObjectDetailsActivity extends BaseRemoteObjectActivity 
         super.onPause();
 
         // Deregister and update UI
-        deregisterRemoteObject();
+        if (getRemoteObject() != null)
+            deregisterRemoteObject();
     }
 
 
@@ -190,7 +191,8 @@ public abstract class JSLObjectDetailsActivity extends BaseRemoteObjectActivity 
 
     @Override
     protected void onRemoteObjectNotReady() {
-        deregisterRemoteObject();
+        if (getRemoteObject() != null)
+            deregisterRemoteObject();
     }
 
 
