@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 
+import androidx.annotation.DrawableRes;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.NavUtils;
 import androidx.fragment.app.FragmentActivity;
@@ -26,6 +27,7 @@ import com.robypomper.josp.jsl.objs.structure.pillars.JSLRangeAction;
 import com.robypomper.josp.jsl.objs.structure.pillars.JSLRangeState;
 import com.robypomper.smartvan.smart_van.android.R;
 import com.robypomper.smartvan.smart_van.android.commons.SVDefinitions;
+import com.robypomper.smartvan.smart_van.android.commons.SVServiceIcons;
 import com.robypomper.smartvan.smart_van.android.commons.SVSpec;
 import com.robypomper.smartvan.smart_van.android.commons.SVSpecs;
 import com.robypomper.smartvan.smart_van.android.components.SVBaseActuatorServiceView;
@@ -36,8 +38,9 @@ import com.robypomper.smartvan.smart_van.android.components.SVPercentControllerV
 import com.robypomper.smartvan.smart_van.android.components.SVServiceBottomSheet;
 import com.robypomper.smartvan.smart_van.android.components.SVSwitchActuatorView;
 import com.robypomper.smartvan.smart_van.android.databinding.ActivitySvservicesBinding;
-import com.robypomper.smartvan.smart_van.android.handlers.SVServiceCardHeaderViewHandler;
 import com.robypomper.smartvan.smart_van.android.handlers.SVServiceViewsListHandler;
+import com.robypomper.smartvan.smart_van.android.storage.SVPreferencesServices;
+import com.robypomper.smartvan.smart_van.android.storage.SVStorageSingleton;
 
 
 public class SVServicesActivity
@@ -604,7 +607,7 @@ public class SVServicesActivity
         // setup card header + icon, from activity to bottom sheet
         // copy card header + icon, from activity to bottom sheet
         fragmentCompView.getCardHeaderHandler().setSVName(getServiceNameFromPrefs(originComp));
-        fragmentCompView.getCardHeaderHandler().setSVType(getServiceTypeFromPrefs(originComp));
+        fragmentCompView.getCardHeaderHandler().setSVType(component2ServiceType(originComp));
         fragmentCompView.getCardHeaderHandler().setHighVoltage(activityCompView.getCardHeaderHandler().isHighVoltage());
         fragmentCompView.getIconHandler().setIcon(getServiceIconFromPrefs(originComp));
 
@@ -675,7 +678,7 @@ public class SVServicesActivity
     private SVBinaryControllerView createBinaryControlView(JSLBooleanState c) {
         SVBinaryControllerView view = new SVBinaryControllerView(this, c, LAY_BIN_CTRL_CARD);
         view.getCardHeaderHandler().setSVName(getServiceNameFromPrefs(c));
-        view.getCardHeaderHandler().setSVType(getServiceTypeFromPrefs(c));
+        view.getCardHeaderHandler().setSVType(component2ServiceType(c));
         view.getIconHandler().setIcon(getServiceIconFromPrefs(c));
         return view;
     }
@@ -683,7 +686,7 @@ public class SVServicesActivity
     private SVPercentControllerView createPercentControlView(JSLRangeState c) {
         SVPercentControllerView view = new SVPercentControllerView(this, c, LAY_PERC_CTRL_CARD);
         view.getCardHeaderHandler().setSVName(getServiceNameFromPrefs(c));
-        view.getCardHeaderHandler().setSVType(getServiceTypeFromPrefs(c));
+        view.getCardHeaderHandler().setSVType(component2ServiceType(c));
         view.getIconHandler().setIcon(getServiceIconFromPrefs(c));
         return view;
     }
@@ -692,7 +695,7 @@ public class SVServicesActivity
         SVSwitchActuatorView view = new SVSwitchActuatorView(this, c, LAY_SWITCH_ACT_CARD);
         view.getCardHeaderHandler().setHighVoltage(isHighVoltage);
         view.getCardHeaderHandler().setSVName(getServiceNameFromPrefs(c));
-        view.getCardHeaderHandler().setSVType(getServiceTypeFromPrefs(c));
+        view.getCardHeaderHandler().setSVType(component2ServiceType(c));
         view.getIconHandler().setIcon(getServiceIconFromPrefs(c));
         return view;
     }
@@ -701,7 +704,7 @@ public class SVServicesActivity
         SVDimmerActuatorView view = new SVDimmerActuatorView(this, c, LAY_DIMMER_ACT_CARD);
         view.getCardHeaderHandler().setHighVoltage(isHighVoltage);
         view.getCardHeaderHandler().setSVName(getServiceNameFromPrefs(c));
-        view.getCardHeaderHandler().setSVType(getServiceTypeFromPrefs(c));
+        view.getCardHeaderHandler().setSVType(component2ServiceType(c));
         view.getIconHandler().setIcon(getServiceIconFromPrefs(c));
         return view;
     }
@@ -737,15 +740,41 @@ public class SVServicesActivity
     // Overridden service's info
 
     private String getServiceNameFromPrefs(JSLComponent comp) {
-        return "[" + comp.getName() + "]";  // TODO get name from class constant
+        String currObjId = SVStorageSingleton.getInstance().getCurrentObjectId();
+        return getServiceNameFromPrefs(SVStorageSingleton.getInstance().getPreferencesServices(currObjId), comp);
     }
 
-    private int getServiceIconFromPrefs(JSLComponent comp) {
-        return R.drawable.ic_srv_light;            // TODO get icon from app preferences
+    private @DrawableRes int getServiceIconFromPrefs(JSLComponent comp) {
+        String currObjId = SVStorageSingleton.getInstance().getCurrentObjectId();
+        return getServiceIconFromPrefs(SVStorageSingleton.getInstance().getPreferencesServices(currObjId), comp);
     }
 
-    private String getServiceTypeFromPrefs(JSLComponent comp) {
-        return "[" + comp.getType() + "]";  // TODO get type from class constant
+    public static String component2ServiceType(JSLComponent comp) {
+        String compPath = comp.getPath().getString();
+        compPath = compPath.replace(SVSpecs.SEPARATOR, SVSpecs.SEPARATOR_FORMATTED);
+        if (compPath.contains(CONT_CONT_BIN.getPath()))
+            return "Binary Controller";
+        if (compPath.contains(CONT_CONT_PERC.getPath()))
+            return "Percent Controller";
+        if (compPath.contains(CONT_ACT_SWITCH_LOW.getPath())
+                || compPath.contains(CONT_ACT_SWITCH_HIGH.getPath()))
+            return "Switch Actuator";
+        if (compPath.contains(CONT_ACT_DIMM_LOW.getPath())
+                || compPath.contains(CONT_ACT_DIMM_HIGH.getPath()))
+            return "Dimmer Actuator";
+        return "Unknown";
+    }
+
+    public static String getServiceNameFromPrefs(SVPreferencesServices preferencesServices, JSLComponent comp) {
+        String compPath = comp.getPath().getString();
+        String savedName = preferencesServices.getName(compPath);
+        return savedName != null ? savedName : comp.getName();
+    }
+
+    public static @DrawableRes int getServiceIconFromPrefs(SVPreferencesServices preferencesServices, JSLComponent comp) {
+        String compPath = comp.getPath().getString();
+        String iconName = preferencesServices.getIconName(compPath);
+        return SVServiceIcons.iconString2Res(iconName);
     }
 
 
