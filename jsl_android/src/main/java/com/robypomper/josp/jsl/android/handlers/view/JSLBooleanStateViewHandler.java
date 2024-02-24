@@ -109,7 +109,7 @@ public class JSLBooleanStateViewHandler
      */
     @Override
     protected String convertState(Object state) {
-        return String.format("%b", state);
+        return (Boolean)state ? getValTrueTxt() : getValFalseTxt();
     }
 
 
