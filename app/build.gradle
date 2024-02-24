@@ -44,6 +44,7 @@ dependencies {
     implementation project(path: ':ChartViews')
 
     implementation 'app.futured.donut:donut:2.2.3'
+    implementation "androidx.datastore:datastore-preferences-rxjava3:1.0.0"
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
