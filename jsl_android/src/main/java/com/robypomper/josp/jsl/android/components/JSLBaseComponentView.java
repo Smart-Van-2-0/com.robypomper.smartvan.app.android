@@ -80,6 +80,17 @@ public abstract class JSLBaseComponentView
      */
     protected abstract void updateHandlers(JSLComponent newComp, JSLComponent oldComp);
 
+    /**
+     * Refresh the view.
+     * <p>
+     * This method is used to update the view when the component's state is changed.
+     * <p>
+     * It, like his super-implementations, calls the local handler to update the UI.
+     */
+    protected void refresh() {
+        remObjCommHandler.updateUI();
+    }
+
 
     // Getters and Setters
 

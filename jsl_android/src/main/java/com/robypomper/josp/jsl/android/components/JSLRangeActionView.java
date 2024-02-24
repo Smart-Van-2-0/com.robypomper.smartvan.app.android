@@ -120,6 +120,19 @@ public class JSLRangeActionView
         actionHandler = new JSLRangeActionViewHandler(getContext(), this, getComponent());
     }
 
+    /**
+     * Refresh the view.
+     * <p>
+     * This method is used to update the view when the component's state is changed.
+     * <p>
+     * It, like his super-implementations, calls the local handler to update the UI.
+     */
+    protected void refresh() {
+        super.refresh();
+        getStateHandler().updateUI();
+        getActionHandler().updateUI();
+    }
+
 
     // Subclass implementation
 
