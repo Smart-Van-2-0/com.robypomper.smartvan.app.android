@@ -4,15 +4,26 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 
 import com.robypomper.josp.jsl.android.activities.JSLSelectObjectActivity;
 import com.robypomper.josp.jsl.objs.JSLRemoteObject;
+import com.robypomper.smartvan.smart_van.android.R;
 import com.robypomper.smartvan.smart_van.android.commons.SVDefinitions;
 import com.robypomper.smartvan.smart_van.android.storage.SVStorage;
 import com.robypomper.smartvan.smart_van.android.storage.SVStorageSingleton;
 
 import java.util.List;
 
+
+/**
+ * This activity is used to select the SmartVan object to use.
+ * <p>
+ * It waits for the SmartVan object and when the user choose one, it starts the
+ * {@link SVMainActivity} activity.
+ */
 public class SVSelectObjectActivity extends JSLSelectObjectActivity {
 
     // Constants
@@ -59,6 +70,7 @@ public class SVSelectObjectActivity extends JSLSelectObjectActivity {
     protected void proposeFoundedSmartVan(List<JSLRemoteObject> objs) {
         assert objs.size() == 1;
         String remObjId = objs.get(0).getId();
+        String remObjName = objs.get(0).getName();
 
         if (svStorage.getFavouriteObjectId() == null
                 && !svStorage.getAppPreferences().askForSetFavouriteObjectId()) {
@@ -85,8 +97,9 @@ public class SVSelectObjectActivity extends JSLSelectObjectActivity {
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Would you use selected SV Box as default one?")
-                .setPositiveButton("Yes, set as favourite SV Box", dialogClickListener)
+        String title = getResources().getString(R.string.activity_svselect_object_sv_box_selected);
+        builder.setMessage(String.format(title, remObjName))
+                .setPositiveButton("Yes", dialogClickListener)
                 .setNegativeButton("No", dialogClickListener)
                 .show();
     }
@@ -121,10 +134,27 @@ public class SVSelectObjectActivity extends JSLSelectObjectActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                CheckBox checkBox = new CheckBox(SVSelectObjectActivity.this);
+                checkBox.setText(R.string.activity_svselect_object_do_not_ask_me_again);
+
+                LinearLayout layout = new LinearLayout(SVSelectObjectActivity.this);
+                layout.setPadding(48, 16, 48, 16);   // TODO convert dp to px
+                layout.setOrientation(LinearLayout.VERTICAL);
+                layout.addView(checkBox);
+
+                checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        svStorage.getAppPreferences().setAskForUseFavouriteObjectId(!isChecked);
+                    }
+                });
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(SVSelectObjectActivity.this);
-                builder.setMessage("Favourite SV Box found, would you proceed with it?")
+                String title = getResources().getString(R.string.activity_svselect_object_favourite_sv_box_found);
+                builder.setMessage(String.format(title, remObj.getName()))
+                        .setView(layout)
                         .setPositiveButton("Yes", dialogClickListener)
-                        .setNegativeButton("Back to SV Boxes List", dialogClickListener)
+                        .setNegativeButton("No", dialogClickListener)
                         .show();
             }
         });
