@@ -11,6 +11,23 @@
         &lt;a href=\"https://smartvan.johnosproject.org\"&gt;smartvan.johnosproject.org&lt;/a&gt;
     </string>
 
+    <string name="activity_svmain_navigation_drawer_title_placeholder">{SVBox Name}</string>
+    <string name="activity_svmain_navigation_drawer_id_placeholder">{00000–00000-00000}</string>
+    <string name="activity_svmain_navigation_drawer_model_label">&lt;b&gt;Model:&lt;/b&gt; %s</string>
+    <string name="activity_svmain_navigation_drawer_svspecs_label">&lt;b&gt;Specs Groups:&lt;/b&gt; %d/%d</string>
+    <string name="activity_svmain_navigation_drawer_version_label">&lt;b&gt;App:&lt;/b&gt; %s</string>
+
+    <string name="activity_svmain_navigation_drawer_main_features_title">Features</string>
+    <string name="activity_svmain_navigation_drawer_energy_monitor_title">Energy monitor</string>
+    <string name="activity_svmain_navigation_drawer_services_control_title">Services control</string>
+    <string name="activity_svmain_navigation_drawer_main_mngm_title">Management</string>
+    <string name="activity_svmain_navigation_drawer_sv_box_title">My SV Box</string>
+    <string name="activity_svmain_navigation_drawer_sv_specs_title">Smart Van Specs</string>
+    <string name="activity_svmain_navigation_drawer_configs_title">Configs</string>
+    <string name="activity_svmain_navigation_drawer_feedback_title">Feedback</string>
+    <string name="activity_svmain_navigation_drawer_about_title">About</string>
+
+
     <string name="activity_svmain_txt_energy_label">Energy status</string>
     <string name="activity_svmain_txt_energy_power_label">Battery</string>
     <string name="activity_svmain_txt_energy_power_value_placeholder">{VAL}</string>

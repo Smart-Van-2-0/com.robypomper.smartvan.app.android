@@ -7,10 +7,14 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
 
+import com.google.android.material.navigation.NavigationView;
 import com.robypomper.josp.jsl.android.activities.BaseRemoteObjectActivity;
 import com.robypomper.josp.jsl.comm.JSLLocalClient;
 import com.robypomper.josp.jsl.objs.JSLRemoteObject;
@@ -22,6 +26,7 @@ import com.robypomper.smartvan.smart_van.android.R;
 import com.robypomper.smartvan.smart_van.android.commons.SVDefinitions;
 import com.robypomper.smartvan.smart_van.android.commons.SVSpec;
 import com.robypomper.smartvan.smart_van.android.commons.SVSpecs;
+import com.robypomper.smartvan.smart_van.android.components.SVBoxIconView;
 import com.robypomper.smartvan.smart_van.android.databinding.ActivitySvmainBinding;
 
 import java.util.ArrayList;
@@ -116,6 +121,8 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
         } catch (PackageManager.NameNotFoundException e) {
             version = "N/A";
         }
+        binding.navigationView.setNavigationItemSelectedListener(onNavDrawerClickListener);
+        binding.txtSVVersion.setText(Html.fromHtml(getResources().getString(R.string.activity_svmain_navigation_drawer_version_label, version)));
 
         // setup views
         // binding.imgSVIcon.setIconBackgroundColor(???); // TODO add SV Box's color to SVStorage::SVObjectPreferences
@@ -126,6 +133,8 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
         binding.layEnergy.setOnClickListener((onClickMainLayoutsListener));
         binding.layServices.setOnClickListener((onClickMainLayoutsListener));
         binding.laySpecs.setOnClickListener((onClickMainLayoutsListener));
+        View navDrawerHeader = binding.navigationView.getHeaderView(0);
+        navDrawerHeader.findViewById(R.id.imgSVIcon).setOnClickListener(onClickMainLayoutsListener);
     }
 
     @Override
@@ -135,6 +144,9 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
         // method. So, the registerRemoteObject() method is called by the
         // super.onResume() method, only if required.
         super.onResume();
+
+        // Always close the nav drawer on reopen the activity
+        binding.baseLayout.close();
     }
 
     @Override
@@ -331,6 +343,16 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
                 if (obj != null) text = obj.getName();
                 text = getResources().getString(R.string.activity_svmain_txt_content, "<b>" + text + "</b>");
                 binding.txtContent.setText(Html.fromHtml(text));
+
+                // Update navigation drawer
+                View navDrawerHeader = binding.navigationView.getHeaderView(0);
+                ((SVBoxIconView) navDrawerHeader.findViewById(R.id.imgSVIcon)).setSVBox(getRemoteObject());
+                ((TextView) navDrawerHeader.findViewById(R.id.txtSVName)).setText(getRemoteObject() != null ? getRemoteObject().getName() : "N/A");
+                ((TextView) navDrawerHeader.findViewById(R.id.txtSVId)).setText(getRemoteObject() != null ? getRemoteObject().getId() : getResources().getString(R.string.activity_svmain_navigation_drawer_id_placeholder));
+                binding.txtSVBoxModel.setText(Html.fromHtml(getResources().getString(R.string.activity_svmain_navigation_drawer_model_label, getRemoteObject() != null ? getRemoteObject().getInfo().getModel() : "N/A")));
+                int totalSpecs = SVSpecs.SVBox.asListOnlyGroups().size();
+                int providedSpecs = SVSpecs.SVBox.asProvidedListOnlyGroups(getRemoteObject()).size();
+                binding.txtSVBoxSpecs.setText(Html.fromHtml(getResources().getString(R.string.activity_svmain_navigation_drawer_svspecs_label, providedSpecs, totalSpecs)));
             }
         });
     }
@@ -461,6 +483,8 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
             JSLRemoteObject obj = getRemoteObject();
             if (obj == null) return;
 
+            View navDrawerHeader = binding.navigationView.getHeaderView(0);
+
             Intent intent;
             if (v == binding.layEnergy) {
                 intent = new Intent(SVMainActivity.this, SVEnergyActivity.class);
@@ -474,12 +498,54 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
             } else if (v == binding.laySpecs) {
                 intent = new Intent(SVMainActivity.this, SVObjectSpecsActivity.class);
                 intent.putExtra(SVObjectSpecsActivity.PARAM_OBJ_ID, obj.getId());
+            } else if (v == binding.imgSVIcon) {
+                binding.baseLayout.open();
+                return;
+            } else if (v == navDrawerHeader.findViewById(R.id.imgSVIcon)) {
+                intent = new Intent(SVMainActivity.this, SVSelectObjectActivity.class);
+                intent.putExtra(SVSelectObjectActivity.PARAM_AVOID_FAVOURITE, true);
             } else
                 return;
 
             startActivity(intent);
         }
 
+    };
+
+    private final NavigationView.OnNavigationItemSelectedListener onNavDrawerClickListener = new NavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            JSLRemoteObject obj = getRemoteObject();
+            if (obj == null) return false;
+
+            Intent intent;
+            if (item.getItemId() == R.id.itemEnergyMonitor) {
+                intent = new Intent(SVMainActivity.this, SVEnergyActivity.class);
+                intent.putExtra(SVEnergyActivity.PARAM_OBJ_ID, obj.getId());
+            } else if (item.getItemId() == R.id.itemServicesControl) {
+                intent = new Intent(SVMainActivity.this, SVServicesActivity.class);
+                intent.putExtra(SVEnergyActivity.PARAM_OBJ_ID, obj.getId());
+            } else if (item.getItemId() == R.id.itemSVBox) {
+                intent = new Intent(SVMainActivity.this, SVObjectDetailsActivity.class);
+                intent.putExtra(SVEnergyActivity.PARAM_OBJ_ID, obj.getId());
+            } else if (item.getItemId() == R.id.itemSVSpecs) {
+                intent = new Intent(SVMainActivity.this, SVObjectSpecsActivity.class);
+                intent.putExtra(SVEnergyActivity.PARAM_OBJ_ID, obj.getId());
+                //} else if (item.getItemId() == R.id.itemConfigs) {
+                //    intent = new Intent(SVMainActivity.this, SVConfigsActivity.class);
+                //    intent.putExtra(SVEnergyActivity.PARAM_OBJ_ID, obj.getId());
+                //} else if (item.getItemId() == R.id.itemFeedback) {
+                //    intent = new Intent(SVMainActivity.this, SVFeedbackActivity.class);
+                //    intent.putExtra(SVEnergyActivity.PARAM_OBJ_ID, obj.getId());
+                //} else if (item.getItemId() == R.id.itemAbout) {
+                //    intent = new Intent(SVMainActivity.this, SVAboutActivity.class);
+                //    intent.putExtra(SVEnergyActivity.PARAM_OBJ_ID, obj.getId());
+            } else
+                return false;
+
+            startActivity(intent);
+            return true;
+        }
     };
 
 }
