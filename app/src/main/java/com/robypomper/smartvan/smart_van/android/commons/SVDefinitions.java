@@ -2,6 +2,7 @@ package com.robypomper.smartvan.smart_van.android.commons;
 
 import android.app.Activity;
 
+import com.robypomper.josp.jsl.android.JSLAndroid;
 import com.robypomper.smartvan.smart_van.android.activities.SVMainActivity;
 import com.robypomper.smartvan.smart_van.android.activities.SVSelectObjectActivity;
 
@@ -27,7 +28,8 @@ public class SVDefinitions {
 
     // Parameters' definitions
 
-    public static final String PARAM_ACTIVITY_SVMAIN_OBJID = "obj_id";
+    public static final String PARAM_ACTIVITY_SVMAIN_OBJID = JSLAndroid.Params.OBJID;
+    public static final String PARAM_ACTIVITY_SVSELECTOBJECT_AVOID_FAVOURITE = "avoid_favourite";
     public static final String PARAM_ACTIVITY_SVOBJECT_SPECS_SPECS_GROUP_PATH = "specs_group_path";
 
 }
