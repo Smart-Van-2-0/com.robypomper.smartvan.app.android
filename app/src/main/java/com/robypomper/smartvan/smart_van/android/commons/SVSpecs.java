@@ -1,6 +1,12 @@
 package com.robypomper.smartvan.smart_van.android.commons;
 
 
+import com.robypomper.josp.jsl.objs.JSLRemoteObject;
+import com.robypomper.josp.jsl.objs.remote.ObjStruct;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /** @noinspection unused*/
 public class SVSpecs extends SVSpecGroup {
 
@@ -336,6 +342,126 @@ public class SVSpecs extends SVSpecGroup {
             super("Monitor", parent);
         }
         // public final Spec XXX = new Spec("XXX", this);
+    }
+
+
+    // As list methods
+
+    /**
+     * Returns a list of all the specs in the hierarchy, including the groups.
+     *
+     * @return a list including all specs and groups.
+     */
+    public List<SVSpec> asList() {
+        return asList(this, true);
+    }
+
+    /**
+     * Returns a list of all the specs in the hierarchy, including the groups.
+     *
+     * @param recursive if true, the method will include the specs of the subgroups.
+     * @return a list including all specs and groups.
+     */
+    public static List<SVSpec> asList(SVSpec spec, boolean recursive) {
+        assert spec != null;
+
+        List<SVSpec> list = new ArrayList<>();
+        list.add(spec);
+        if (spec instanceof SVSpecGroup && recursive) {
+            SVSpecGroup group = (SVSpecGroup) spec;
+            for (SVSpec s: group.getSpecs())
+                list.addAll(asList(s, true));
+        }
+
+        return list;
+    }
+
+    /**
+     * Returns a list of all the groups in the hierarchy.
+     *
+     * @return a list including all groups.
+     */
+    public List<SVSpec> asListOnlyGroups() {
+        List<SVSpec> list = asList();
+        List<SVSpec> onlyGroups = new ArrayList<>();
+        for (SVSpec s: list)
+            if (s instanceof SVSpecGroup)
+                onlyGroups.add(s);
+        return onlyGroups;
+    }
+
+
+    /**
+     * Returns a list of all the specs in the hierarchy.
+     *
+     * @return a list including all specs.
+     */
+    public List<SVSpec> asListOnlySpecs() {
+        List<SVSpec> list = asList();
+        List<SVSpec> onlyGroups = new ArrayList<>();
+        for (SVSpec s: list)
+            if (!(s instanceof SVSpecGroup))
+                onlyGroups.add(s);
+        return onlyGroups;
+    }
+
+    /**
+     * Returns a list of all the specs in the hierarchy that are provided by the remote object.
+     *
+     * @param remObj the remote object to check.
+     * @return a list including all provided specs.
+     */
+    public List<SVSpec> asProvidedList(JSLRemoteObject remObj) {
+        return asProvidedList(this, remObj);
+    }
+
+    /**
+     * Returns a list of all the specs in the hierarchy that are provided by the remote object.
+     *
+     * @param spec the root of the hierarchy to check.
+     * @param remObj the remote object to check.
+     * @return a list including all provided specs.
+     */
+    public static List<SVSpec> asProvidedList(SVSpec spec, JSLRemoteObject remObj) {
+        assert spec != null;
+
+        List<SVSpec> allSpecs =  asList(spec, true);
+        List<SVSpec> providedSpecs = new ArrayList<>();
+        ObjStruct objStruct = remObj.getStruct();
+        for (SVSpec s: allSpecs)
+            if (objStruct.getComponent(s.getPath()) != null)
+                providedSpecs.add(s);
+        return providedSpecs;
+    }
+
+    /**
+     * Returns a list of all the groups in the hierarchy that are provided by the remote object.
+     *
+     * @param remObj the remote object to check.
+     * @return a list including all provided groups.
+     */
+    public List<SVSpec> asProvidedListOnlyGroups(JSLRemoteObject remObj) {
+        List<SVSpec> list = asProvidedList(remObj);
+        List<SVSpec> onlyGroups = new ArrayList<>();
+        for (SVSpec s: list)
+            if (s instanceof SVSpecGroup)
+                onlyGroups.add(s);
+        return onlyGroups;
+    }
+
+    /**
+     * Returns a list of all the specs in the hierarchy that are provided by the remote object.
+     *
+     * @param remObj the remote object to check.
+     * @return a list including all provided specs.
+     */
+    public List<SVSpec> asProvidedListOnlySpecs(JSLRemoteObject remObj) {
+        List<SVSpec> list = asProvidedList(remObj);
+        List<SVSpec> onlyGroups = new ArrayList<>();
+        for (SVSpec s: list)
+            if (!(s instanceof SVSpecGroup))
+                onlyGroups.add(s);
+        return onlyGroups;
     }
 
 }
