@@ -2,7 +2,10 @@ package com.robypomper.smartvan.smart_van.android.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 
@@ -12,12 +15,17 @@ import com.robypomper.josp.jsl.android.activities.BaseRemoteObjectActivity;
 import com.robypomper.josp.jsl.comm.JSLLocalClient;
 import com.robypomper.josp.jsl.objs.JSLRemoteObject;
 import com.robypomper.josp.jsl.objs.remote.ObjComm;
+import com.robypomper.josp.jsl.objs.structure.JSLComponent;
+import com.robypomper.josp.jsl.objs.structure.pillars.JSLBooleanState;
 import com.robypomper.josp.jsl.objs.structure.pillars.JSLRangeState;
 import com.robypomper.smartvan.smart_van.android.R;
 import com.robypomper.smartvan.smart_van.android.commons.SVDefinitions;
 import com.robypomper.smartvan.smart_van.android.commons.SVSpec;
 import com.robypomper.smartvan.smart_van.android.commons.SVSpecs;
 import com.robypomper.smartvan.smart_van.android.databinding.ActivitySvmainBinding;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -51,6 +59,30 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
      * - FW Victron:    com.victron.SmartSolarMPPT.load_power
      */
     public final static SVSpec COMP_SERVICES_PATH = SVSpecs.SVBox.Energy.Consumption.Power;
+    /**
+     * TODO document component origins
+     */
+    public final static SVSpec COMPS_BINARY_CONTROLLERS = SVSpecs.SVBox.Services.Controllers.Binary;
+    /**
+     * TODO document component origins
+     */
+    public final static SVSpec COMPS_PERCENT_CONTROLLERS = SVSpecs.SVBox.Services.Controllers.Percentage;
+    /**
+     * TODO document component origins
+     */
+    public final static SVSpec COMPS_SWITCH_ACTUATORS_LOW = SVSpecs.SVBox.Services.Actuators.SwitchLow;
+    /**
+     * TODO document component origins
+     */
+    public final static SVSpec COMPS_SWITCH_ACTUATORS_HIGH = SVSpecs.SVBox.Services.Actuators.SwitchHigh;
+    /**
+     * TODO document component origins
+     */
+    public final static SVSpec COMPS_DIMMER_ACTUATORS_HIGH = SVSpecs.SVBox.Services.Actuators.DimmerHigh;
+    /**
+     * TODO document component origins
+     */
+    public final static SVSpec COMPS_DIMMER_ACTUATORS_LOW = SVSpecs.SVBox.Services.Actuators.DimmerLow;
 
 
     // Internal variables
@@ -58,6 +90,7 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
     private JSLRangeState powerComp;
     private JSLRangeState panelsComp;
     private JSLRangeState serviceComp;
+    private final List<JSLComponent> serviceComps = new ArrayList<>();
 
 
     // UI widgets
@@ -75,11 +108,24 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
         binding = ActivitySvmainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        // setup navigation drawer
+        String version;
+        try {
+            PackageInfo pInfo = getApplicationContext().getPackageManager().getPackageInfo(getApplicationContext().getPackageName(), 0);
+            version = pInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            version = "N/A";
+        }
+
+        // setup views
+        // binding.imgSVIcon.setIconBackgroundColor(???); // TODO add SV Box's color to SVStorage::SVObjectPreferences
+        binding.imgSVIcon.setOnClickListener(onClickMainLayoutsListener);
+        binding.txtWebsite.setText(Html.fromHtml(getResources().getString(R.string.activity_svmain_txt_website)));
+
         // register ui listeners and callbacks
-        binding.layPower.setOnClickListener((onClickMainLayoutsListener));
+        binding.layEnergy.setOnClickListener((onClickMainLayoutsListener));
         binding.layServices.setOnClickListener((onClickMainLayoutsListener));
         binding.laySpecs.setOnClickListener((onClickMainLayoutsListener));
-        binding.txtTitleName.setOnClickListener((onClickMainLayoutsListener));
     }
 
     @Override
@@ -105,11 +151,13 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
 
     @Override
     protected void onRemoteObjectReady() {
+        // Register object and components listeners
         registerRemoteObject();
     }
 
     @Override
     protected void onRemoteObjectNotReady() {
+        // Deregister object and components listeners
         if (getRemoteObject() != null)
             deregisterRemoteObject();
     }
@@ -118,12 +166,25 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
     // Remote object management
 
     private void registerRemoteObject() {
+        // Look for components
         powerComp = findRangeStateComponent(COMP_POWER_PATH.getPath());
         if (powerComp == null) throw new RuntimeException("Power component not found");
         panelsComp = findRangeStateComponent(COMP_PANELS_PATH.getPath());
         if (panelsComp == null) throw new RuntimeException("Panels component not found");
         serviceComp = findRangeStateComponent(COMP_SERVICES_PATH.getPath());
         if (serviceComp == null) throw new RuntimeException("Consumption component not found");
+        if (findContainerComponent(COMPS_BINARY_CONTROLLERS.getPath()) != null)
+            serviceComps.addAll(findContainerComponent(COMPS_BINARY_CONTROLLERS.getPath()).getComponents());
+        if (findContainerComponent(COMPS_PERCENT_CONTROLLERS.getPath()) != null)
+            serviceComps.addAll(findContainerComponent(COMPS_PERCENT_CONTROLLERS.getPath()).getComponents());
+        if (findContainerComponent(COMPS_SWITCH_ACTUATORS_LOW.getPath()) != null)
+            serviceComps.addAll(findContainerComponent(COMPS_SWITCH_ACTUATORS_LOW.getPath()).getComponents());
+        if (findContainerComponent(COMPS_SWITCH_ACTUATORS_HIGH.getPath()) != null)
+            serviceComps.addAll(findContainerComponent(COMPS_SWITCH_ACTUATORS_HIGH.getPath()).getComponents());
+        if (findContainerComponent(COMPS_DIMMER_ACTUATORS_LOW.getPath()) != null)
+            serviceComps.addAll(findContainerComponent(COMPS_DIMMER_ACTUATORS_LOW.getPath()).getComponents());
+        if (findContainerComponent(COMPS_DIMMER_ACTUATORS_HIGH.getPath()) != null)
+            serviceComps.addAll(findContainerComponent(COMPS_DIMMER_ACTUATORS_HIGH.getPath()).getComponents());
 
         registerRemoteObjectListeners();
         updateRemoteObjectUI();
@@ -133,23 +194,40 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
         deregisterRemoteObjectListeners();
         updateRemoteObjectUI();
 
+        // Clear components
         powerComp = null;
         panelsComp = null;
         serviceComp = null;
+        serviceComps.clear();
     }
 
     private void registerRemoteObjectListeners() {
         getRemoteObject().getComm().addListener(listenerComm);
+
         powerComp.addListener(listenerComps);
         panelsComp.addListener(listenerComps);
         serviceComp.addListener(listenerComps);
+
+        for (JSLComponent c : serviceComps)
+            if (c instanceof JSLBooleanState)
+                ((JSLBooleanState) c).addListener(listenerServiceBooleanComps);
+            else if (c instanceof JSLRangeState)
+                ((JSLRangeState) c).addListener(listenerServiceRangeComps);
+
     }
 
     private void deregisterRemoteObjectListeners() {
         getRemoteObject().getComm().removeListener(listenerComm);
+
         powerComp.removeListener(listenerComps);
         panelsComp.removeListener(listenerComps);
         serviceComp.removeListener(listenerComps);
+
+        for (JSLComponent c : serviceComps)
+            if (c instanceof JSLBooleanState)
+                ((JSLBooleanState) c).removeListener(listenerServiceBooleanComps);
+            else if (c instanceof JSLRangeState)
+                ((JSLRangeState) c).removeListener(listenerServiceRangeComps);
     }
 
 
@@ -199,6 +277,32 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
 
     };
 
+    private final JSLBooleanState.BooleanStateListener listenerServiceBooleanComps = new JSLBooleanState.BooleanStateListener() {
+
+        @Override
+        public void onStateChanged(JSLBooleanState component, boolean newState, boolean oldState) {
+            updateServicesCount();
+        }
+
+    };
+
+    private final JSLRangeState.RangeStateListener listenerServiceRangeComps = new JSLRangeState.RangeStateListener() {
+
+        @Override
+        public void onStateChanged(JSLRangeState component, double newState, double oldState) {
+            updateServicesCount();
+        }
+
+        @Override
+        public void onMinReached(JSLRangeState component, double state, double min) {
+        }
+
+        @Override
+        public void onMaxReached(JSLRangeState component, double state, double max) {
+        }
+
+    };
+
 
     // UI widgets
 
@@ -208,6 +312,7 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
         updatePowerComp();
         updatePanelsComp();
         updateServicesComp();
+        updateServicesCount();
     }
 
     private void updateRemoteObject() {
@@ -219,11 +324,13 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                binding.imgSVIcon.setSVBox(getRemoteObject());
+
                 String text = getObjId();   // fallback to objId
                 JSLRemoteObject obj = getRemoteObject();
                 if (obj != null) text = obj.getName();
-
-                binding.txtTitleName.setText(text);
+                text = getResources().getString(R.string.activity_svmain_txt_content, "<b>" + text + "</b>");
+                binding.txtContent.setText(Html.fromHtml(text));
             }
         });
     }
@@ -264,8 +371,10 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
     private void updatePowerComp() {
         if (binding == null) return;
 
-        if (powerComp == null) Log.i("SVMain", "updateConnectionWidgets() for unregistered power component");
-        else Log.d("SVMain", String.format("updateConnectionWidgets(%s) => %f", powerComp.getState(), powerComp.getState() / 1000));
+        if (powerComp == null)
+            Log.i("SVMain", "updateConnectionWidgets() for unregistered power component");
+        else
+            Log.d("SVMain", String.format("updateConnectionWidgets(%s) => %f", powerComp.getState(), powerComp.getState() / 1000));
 
         runOnUiThread(new Runnable() {
             @SuppressLint("DefaultLocale")
@@ -282,8 +391,10 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
     private void updatePanelsComp() {
         if (binding == null) return;
 
-        if (panelsComp == null) Log.i("SVMain", "updatePanelsComp() for unregistered panels component");
-        else Log.d("SVMain", String.format("updatePanelsComp(%s) => %f", panelsComp.getState(), panelsComp.getState() / 1000));
+        if (panelsComp == null)
+            Log.i("SVMain", "updatePanelsComp() for unregistered panels component");
+        else
+            Log.d("SVMain", String.format("updatePanelsComp(%s) => %f", panelsComp.getState(), panelsComp.getState() / 1000));
 
         runOnUiThread(new Runnable() {
             @SuppressLint("DefaultLocale")
@@ -300,8 +411,10 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
     private void updateServicesComp() {
         if (binding == null) return;
 
-        if (serviceComp == null) Log.i("SVMain", "updateServicesComp() for unregistered services component");
-        else Log.d("SVMain", String.format("updateServicesComp(%s) => %f", serviceComp.getState(), serviceComp.getState() / 1000));
+        if (serviceComp == null)
+            Log.i("SVMain", "updateServicesComp() for unregistered services component");
+        else
+            Log.d("SVMain", String.format("updateServicesComp(%s) => %f", serviceComp.getState(), serviceComp.getState() / 1000));
 
         runOnUiThread(new Runnable() {
             @SuppressLint("DefaultLocale")
@@ -310,7 +423,31 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
                 String text = "N/A";
                 if (serviceComp != null)
                     text = String.format("%.2f", serviceComp.getState() / 1000); // mW to W
-                binding.txtServicesValue.setText(text);
+                binding.txtConsumptionValue.setText(text);
+            }
+        });
+    }
+
+    private void updateServicesCount() {
+        if (binding == null) return;
+
+        int countComponents = serviceComps.size();
+        int isUseComponents = 0;
+        for (JSLComponent c : serviceComps) {
+            if (c instanceof JSLBooleanState) {
+                if (((JSLBooleanState) c).getState()) isUseComponents++;
+            } else if (c instanceof JSLRangeState) {
+                if (((JSLRangeState) c).getState() > 0) isUseComponents++;
+            }
+        }
+        final int finalInUseComponents = isUseComponents;
+
+        runOnUiThread(new Runnable() {
+            @SuppressLint("DefaultLocale")
+            @Override
+            public void run() {
+                binding.txtServicesInUse.setText(String.valueOf(finalInUseComponents));
+                binding.txtServicesCount.setText(Html.fromHtml(getResources().getString(R.string.activity_svmain_txt_services_footer, countComponents)));
             }
         });
     }
@@ -325,26 +462,24 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
             if (obj == null) return;
 
             Intent intent;
-            if (v == binding.layPower) {
+            if (v == binding.layEnergy) {
                 intent = new Intent(SVMainActivity.this, SVEnergyActivity.class);
                 intent.putExtra(SVEnergyActivity.PARAM_OBJ_ID, obj.getId());
-            //} else if (v == binding.layPanels) {
-            //    intent = new Intent(SVMainActivity.this, SVXYActivity.class);
-            //    intent.putExtra(SVXYActivity.PARAM_OBJ_ID, obj.getId());
+                //} else if (v == binding.layPanels) {
+                //    intent = new Intent(SVMainActivity.this, SVXYActivity.class);
+                //    intent.putExtra(SVXYActivity.PARAM_OBJ_ID, obj.getId());
             } else if (v == binding.layServices) {
                 intent = new Intent(SVMainActivity.this, SVServicesActivity.class);
                 intent.putExtra(SVServicesActivity.PARAM_OBJ_ID, obj.getId());
             } else if (v == binding.laySpecs) {
                 intent = new Intent(SVMainActivity.this, SVObjectSpecsActivity.class);
                 intent.putExtra(SVObjectSpecsActivity.PARAM_OBJ_ID, obj.getId());
-            } else if (v == binding.txtTitleName) {
-                intent = new Intent(SVMainActivity.this, SVObjectDetailsActivity.class);
-                intent.putExtra(SVObjectDetailsActivity.PARAM_OBJ_ID, obj.getId());
             } else
                 return;
 
             startActivity(intent);
         }
+
     };
 
 }
