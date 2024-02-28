@@ -198,6 +198,7 @@ public abstract class SVStorageBaseDataStore implements SVStorage {
             return;
         knownIds = new HashSet<>(knownIdsList);
         DataStoreUtils.setToDataStore(dataStore, OBJ_ID_KNOWN, knownIds);
+        clearStorage(objectId);
     }
 
 }

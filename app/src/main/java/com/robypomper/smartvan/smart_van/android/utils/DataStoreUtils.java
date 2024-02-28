@@ -27,7 +27,7 @@ public class DataStoreUtils {
      * <p>
      * This method is used to initialize the DataStore for the SmartVan storage.
      *
-     * @param ctx the context used to initialize the DataStore.
+     * @param ctx           the context used to initialize the DataStore.
      * @param dataStoreName the name of the DataStore to initialize.
      * @return the initialized DataStore.
      */
@@ -48,6 +48,7 @@ public class DataStoreUtils {
             public Single<Preferences> apply(Preferences preferences) {
                 MutablePreferences mutablePreferences = preferences.toMutablePreferences();
                 mutablePreferences.clear();
+                dataStore.dispose();
                 return Single.just(mutablePreferences);
             }
         }).subscribe();
@@ -58,10 +59,10 @@ public class DataStoreUtils {
      * <p>
      * This method is used to get a value from the DataStore.
      *
-     * @param dataStore the DataStore to get the value from.
+     * @param dataStore  the DataStore to get the value from.
      * @param preference the preference key to get the value for.
-     * @param defValue the default value to return if the preference is not set.
-     * @param <T> the type of the value to get.
+     * @param defValue   the default value to return if the preference is not set.
+     * @param <T>        the type of the value to get.
      * @return the value from the DataStore, or the default value if the preference is not set.
      */
     public static <T> T getFromDataStore(RxDataStore<Preferences> dataStore, Preferences.Key<T> preference, T defValue) {
@@ -78,10 +79,10 @@ public class DataStoreUtils {
      * <p>
      * This method is used to set a value to the DataStore.
      *
-     * @param dataStore the DataStore to set the value to.
+     * @param dataStore  the DataStore to set the value to.
      * @param preference the preference key to set the value for.
-     * @param value the value to set.
-     * @param <T> the type of the value to set.
+     * @param value      the value to set.
+     * @param <T>        the type of the value to set.
      */
     public static <T> void setToDataStore(RxDataStore<Preferences> dataStore, Preferences.Key<T> preference, T value) {
         dataStore.updateDataAsync(new Function<Preferences, Single<Preferences>>() {
