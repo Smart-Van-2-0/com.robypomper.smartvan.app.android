@@ -54,6 +54,18 @@ public abstract class SVStorageBaseDataStore implements SVStorage {
     }
 
 
+    // Getters
+
+    /**
+     * Get the AndroidX DataStore used by this class.
+     *
+     * @return the AndroidX DataStore used by this class.
+     */
+    public RxDataStore<Preferences> getDataStore() {
+        return dataStore;
+    }
+
+
     // Current object's id
 
     /**

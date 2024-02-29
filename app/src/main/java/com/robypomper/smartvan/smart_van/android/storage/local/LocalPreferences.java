@@ -70,6 +70,17 @@ public class LocalPreferences extends SVAbsSubStorage implements SVPreferences {
     }
 
 
+    // Getters
+
+    /**
+     * Get the AndroidX DataStore used by this class.
+     *
+     * @return the AndroidX DataStore used by this class.
+     */
+    public RxDataStore<Preferences> getDataStore() {
+        return dataStore;
+    }
+
     // SVPreferences
 
     /**
