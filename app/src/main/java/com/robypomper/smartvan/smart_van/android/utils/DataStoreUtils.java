@@ -4,8 +4,11 @@ import android.content.Context;
 
 import androidx.datastore.preferences.core.MutablePreferences;
 import androidx.datastore.preferences.core.Preferences;
+import androidx.datastore.preferences.core.PreferencesKeys;
 import androidx.datastore.preferences.rxjava3.RxPreferenceDataStoreBuilder;
 import androidx.datastore.rxjava3.RxDataStore;
+
+import java.util.Set;
 
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Single;
@@ -95,4 +98,55 @@ public class DataStoreUtils {
         }).subscribe();
     }
 
+
+    // Preference key generators
+
+    public static Preferences.Key<Boolean> booleanKey(Context ctx, int propKeyAsRes) {
+        return booleanKey(ctx.getString(propKeyAsRes));
+    }
+    public static Preferences.Key<Boolean> booleanKey(String propKey) {
+        return PreferencesKeys.booleanKey(propKey);
+    }
+
+    public static Preferences.Key<Integer> intKey(Context ctx, int propKeyAsRes) {
+        return intKey(ctx.getString(propKeyAsRes));
+    }
+    public static Preferences.Key<Integer> intKey(String propKey) {
+        return PreferencesKeys.intKey(propKey);
+    }
+
+    public static Preferences.Key<Long> longKey(Context ctx, int propKeyAsRes) {
+        return longKey(ctx.getString(propKeyAsRes));
+    }
+    public static Preferences.Key<Long> longKey(String propKey) {
+        return PreferencesKeys.longKey(propKey);
+    }
+
+    public static Preferences.Key<Float> floatKey(Context ctx, int propKeyAsRes) {
+        return floatKey(ctx.getString(propKeyAsRes));
+    }
+    public static Preferences.Key<Float> floatKey(String propKey) {
+        return PreferencesKeys.floatKey(propKey);
+    }
+
+    public static Preferences.Key<Double> doubleKey(Context ctx, int propKeyAsRes) {
+        return doubleKey(ctx.getString(propKeyAsRes));
+    }
+    public static Preferences.Key<Double> doubleKey(String propKey) {
+        return PreferencesKeys.doubleKey(propKey);
+    }
+
+    public static Preferences.Key<String> stringKey(Context ctx, int propKeyAsRes) {
+        return stringKey(ctx.getString(propKeyAsRes));
+    }
+    public static Preferences.Key<String> stringKey(String propKey) {
+        return PreferencesKeys.stringKey(propKey);
+    }
+
+    public static Preferences.Key<Set<String>> stringSetKey(Context ctx, int propKeyAsRes) {
+        return stringSetKey(ctx.getString(propKeyAsRes));
+    }
+    public static Preferences.Key<Set<String>> stringSetKey(String propKey) {
+        return PreferencesKeys.stringSetKey(propKey);
+    }
 }
