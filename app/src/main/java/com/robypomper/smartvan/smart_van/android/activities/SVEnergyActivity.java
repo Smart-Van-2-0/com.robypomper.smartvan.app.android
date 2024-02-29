@@ -100,7 +100,7 @@ public class SVEnergyActivity extends BaseRemoteObjectActivity {
                 ChartDateTimeFormatter.X_FORMATTER_MINUTES(), ChartUnitFormatter.Y_FORMATTER_UNIT_0001(), ChartUnitFormatter.Y_FORMATTER_UNIT_0001());
         binding.viewChart.setAdapter(chartAdapter);
         binding.viewChart.setActivity(this);
-        binding.viewChart.setFetchTimeoutMs((long) SVStorageSingleton.getInstance().getAppPreferences().getChartTimeoutSeconds() * 1000);
+        binding.viewChart.setFetchTimeoutMs((long) SVStorageSingleton.getInstance().getCurrentPreferencesApp().getChartTimeoutSeconds() * 1000);
 
         // set up action bar
         if (getActionBar() != null)

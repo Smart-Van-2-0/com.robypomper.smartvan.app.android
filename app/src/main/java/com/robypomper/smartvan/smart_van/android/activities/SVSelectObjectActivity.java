@@ -35,6 +35,7 @@ public class SVSelectObjectActivity extends JSLSelectObjectActivity {
     public static final String MODEL_NAME = SVDefinitions.MODEL_NAME;
     public static final Class<? extends Activity> NEXT_ACTIVITY = SVDefinitions.NEXT_ACTIVITY_SELECTOBJECT;
 
+
     // Internal vars
 
     private SVStorage svStorage;
@@ -81,8 +82,9 @@ public class SVSelectObjectActivity extends JSLSelectObjectActivity {
         String remObjId = objs.get(0).getId();
         String remObjName = objs.get(0).getName();
 
-        if (svStorage.getFavouriteObjectId() != null
-                && svStorage.getFavouriteObjectId().compareTo(remObjId) == 0) {
+        if ((svStorage.getFavouriteObjectId() != null
+                && svStorage.getFavouriteObjectId().compareTo(remObjId) == 0)
+                || !svStorage.askForUseFavouriteObjectId()) {
             doGoToNextActivity(remObjId);
             return;
         }
@@ -121,7 +123,7 @@ public class SVSelectObjectActivity extends JSLSelectObjectActivity {
 
         if (!remObj.getId().equals(favouriteObjId)) return;
 
-        if (!svStorage.getAppPreferences().askForUseFavouriteObjectId()) {
+        if (!svStorage.askForUseFavouriteObjectId()) {
             doGoToNextActivity(remObj.getId());
             return;
         }
@@ -157,7 +159,7 @@ public class SVSelectObjectActivity extends JSLSelectObjectActivity {
                 checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        svStorage.getAppPreferences().setAskForUseFavouriteObjectId(!isChecked);
+                        svStorage.setAskForUseFavouriteObjectId(!isChecked);
                     }
                 });
 

@@ -28,6 +28,7 @@ import com.robypomper.smartvan.smart_van.android.commons.SVSpec;
 import com.robypomper.smartvan.smart_van.android.commons.SVSpecs;
 import com.robypomper.smartvan.smart_van.android.components.SVBoxIconView;
 import com.robypomper.smartvan.smart_van.android.databinding.ActivitySvmainBinding;
+import com.robypomper.smartvan.smart_van.android.storage.SVStorageSingleton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -125,7 +126,6 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
         binding.txtSVVersion.setText(Html.fromHtml(getResources().getString(R.string.activity_svmain_navigation_drawer_version_label, version)));
 
         // setup views
-        // binding.imgSVIcon.setIconBackgroundColor(???); // TODO add SV Box's color to SVStorage::SVObjectPreferences
         binding.imgSVIcon.setOnClickListener(onClickMainLayoutsListener);
         binding.txtWebsite.setText(Html.fromHtml(getResources().getString(R.string.activity_svmain_txt_website)));
 
@@ -338,15 +338,19 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
             public void run() {
                 binding.imgSVIcon.setSVBox(getRemoteObject());
 
-                String text = getObjId();   // fallback to objId
+                String strObjId = getObjId();   // fallback to objId
+                int objColor = SVStorageSingleton.getInstance().getCurrentPreferencesApp().getSVBoxColor();
+
                 JSLRemoteObject obj = getRemoteObject();
-                if (obj != null) text = obj.getName();
-                text = getResources().getString(R.string.activity_svmain_txt_content, "<b>" + text + "</b>");
-                binding.txtContent.setText(Html.fromHtml(text));
+                if (obj != null) strObjId = obj.getName();
+                strObjId = getResources().getString(R.string.activity_svmain_txt_content, "<b>" + strObjId + "</b>");
+                binding.txtContent.setText(Html.fromHtml(strObjId));
+                binding.imgSVIcon.setIconBackgroundColor(objColor);
 
                 // Update navigation drawer
                 View navDrawerHeader = binding.navigationView.getHeaderView(0);
                 ((SVBoxIconView) navDrawerHeader.findViewById(R.id.imgSVIcon)).setSVBox(getRemoteObject());
+                ((SVBoxIconView) navDrawerHeader.findViewById(R.id.imgSVIcon)).setIconBackgroundColor(objColor);
                 ((TextView) navDrawerHeader.findViewById(R.id.txtSVName)).setText(getRemoteObject() != null ? getRemoteObject().getName() : "N/A");
                 ((TextView) navDrawerHeader.findViewById(R.id.txtSVId)).setText(getRemoteObject() != null ? getRemoteObject().getId() : getResources().getString(R.string.activity_svmain_navigation_drawer_id_placeholder));
                 binding.txtSVBoxModel.setText(Html.fromHtml(getResources().getString(R.string.activity_svmain_navigation_drawer_model_label, getRemoteObject() != null ? getRemoteObject().getInfo().getModel() : "N/A")));

@@ -740,13 +740,11 @@ public class SVServicesActivity
     // Overridden service's info
 
     private String getServiceNameFromPrefs(JSLComponent comp) {
-        String currObjId = SVStorageSingleton.getInstance().getCurrentObjectId();
-        return getServiceNameFromPrefs(SVStorageSingleton.getInstance().getPreferencesServices(currObjId), comp);
+        return getServiceNameFromPrefs(SVStorageSingleton.getInstance().getCurrentPreferencesServices(), comp);
     }
 
     private @DrawableRes int getServiceIconFromPrefs(JSLComponent comp) {
-        String currObjId = SVStorageSingleton.getInstance().getCurrentObjectId();
-        return getServiceIconFromPrefs(SVStorageSingleton.getInstance().getPreferencesServices(currObjId), comp);
+        return getServiceIconFromPrefs(SVStorageSingleton.getInstance().getCurrentPreferencesServices(), comp);
     }
 
     public static String component2ServiceType(JSLComponent comp) {

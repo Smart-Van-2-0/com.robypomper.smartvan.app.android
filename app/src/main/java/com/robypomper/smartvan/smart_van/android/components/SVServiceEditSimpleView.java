@@ -32,9 +32,6 @@ public class SVServiceEditSimpleView extends LinearLayout {
     private final static int LAYOUT = R.layout.view_sv_service_edit_simple;
 
 
-    //private String name;
-    //private String iconName;
-
     private TextInputEditText txtName;
     //private AutoCompleteTextView txtIcon;
     private Spinner txtIcon;
@@ -45,12 +42,11 @@ public class SVServiceEditSimpleView extends LinearLayout {
 
     public static void show(Context ctx, JSLComponent service, OnServiceEditedListener observer) {
         SVStorage storage = SVStorageSingleton.getInstance();
-        String remObjId = storage.getCurrentObjectId();
 
         String srvPath = service.getPath().getString();
-        String srvName = storage.getPreferencesServices(remObjId).getName(srvPath);
+        String srvName = storage.getCurrentPreferencesServices().getName(srvPath);
         if (srvName == null) srvName = service.getName();
-        String srvIconName = storage.getPreferencesServices(remObjId).getIconName(srvPath);
+        String srvIconName = storage.getCurrentPreferencesServices().getIconName(srvPath);
         if (srvIconName == null) srvIconName = SVServiceIcons.DEF_ICON_TXT;
 
         SVServiceEditSimpleView editView = new SVServiceEditSimpleView(ctx);   // TODO inflate layout with Dialog theme @see AlertDialog.Builder::setView
@@ -67,8 +63,8 @@ public class SVServiceEditSimpleView extends LinearLayout {
                         //Yes button clicked
                         String newName = editView.getName();
                         String newIcon = editView.getIconName();
-                        storage.getPreferencesServices(remObjId).setName(srvPath, newName);
-                        storage.getPreferencesServices(remObjId).setIconName(srvPath, newIcon);
+                        storage.getCurrentPreferencesServices().setName(srvPath, newName);
+                        storage.getCurrentPreferencesServices().setIconName(srvPath, newIcon);
                         observer.onServiceEdited(editView, service, newName, newIcon);
                         break;
 
