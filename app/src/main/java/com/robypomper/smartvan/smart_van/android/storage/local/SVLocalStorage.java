@@ -9,8 +9,6 @@ import com.robypomper.smartvan.smart_van.android.storage.SVStorageBaseDataStore;
 import com.robypomper.smartvan.smart_van.android.storage.SVStorageSingleton;
 
 import java.util.HashMap;
-
-import java.util.HashMap;
 import java.util.Map;
 
 
@@ -34,7 +32,7 @@ public class SVLocalStorage extends SVStorageBaseDataStore implements SVStorage 
     /**
      * The application's generic preferences object.
      */
-    private final SVPreferences preferencesApp;
+    private final Map<String, SVPreferences> preferencesApp;
     /**
      * SV Services preferences for each known object id.
      */
@@ -51,77 +49,75 @@ public class SVLocalStorage extends SVStorageBaseDataStore implements SVStorage 
     public SVLocalStorage(Context ctx) {
         super(ctx);
         this.ctx = ctx;
-        this.preferencesApp = new LocalPreferences(ctx);
+        this.preferencesApp = new HashMap<>();
         this.preferencesServices = new HashMap<>();
 
         SVStorageSingleton.setInstance(this);
     }
 
 
-    // Object's id management
+    // Storage mngm implementation
 
+    protected void generatePreferenceApp(String objectId) {
+        SVPreferences locPreferences = new LocalPreferences(ctx);
+        locPreferences.generateStorage(objectId);
+        preferencesApp.put(objectId, locPreferences);
+    }
 
-    /**
-     * Generate the storage for the given object id.
-     * <p>
-     * This method is called when the user selects a new object from the
-     * {@link com.robypomper.smartvan.smart_van.android.activities.SVSelectObjectActivity}
-     * activity.
-     *
-     * @param objectId the id of the object for which to generate the storage.
-     */
-    @Override
-    public void generateStorage(String objectId) {
+    protected void generatePreferenceServices(String objectId) {
         SVPreferencesServices locPreferencesServices = new LocalPreferencesServices(ctx);
         locPreferencesServices.generateStorage(objectId);
         preferencesServices.put(objectId, locPreferencesServices);
-
-        // TODO uncomment when the history is implemented
-        // SVHistory locHistory = new LocalHistory();
-        // locHistory.generateStorage(objectId);
-        // history.put(objectId, locHistory);
-
-        // TODO uncomment when the automations are implemented
-        // SVAutomations locAutomations = new LocalAutomations();
-        // locAutomations.generateStorage(objectId);
-        // automations.put(objectId, locAutomations);
     }
 
-    /**
-     * Clear the storage for the given object id.
-     * <p>
-     * This method is called when the user requires to delete all the data
-     * for a specific object.
-     *
-     * @param objectId the id of the object for which to clear the storage.
-     */
-    @Override
-    public void clearStorage(String objectId) {
+    // TODO uncomment when the history is implemented
+    //protected void generateHistory(String objectId) {
+    // SVHistory locHistory = new LocalHistory();
+    // locHistory.generateStorage(objectId);
+    // history.put(objectId, locHistory);
+    //}
+
+    // TODO uncomment when the automations are implemented
+    //protected void generateAutomations(String objectId) {
+    // SVAutomations locAutomations = new LocalAutomations();
+    // locAutomations.generateStorage(objectId);
+    // automations.put(objectId, locAutomations);
+    //}
+
+    protected void clearPreferenceApp(String objectId) {
+        SVPreferences locPreferences = preferencesApp.remove(objectId);
+        if (locPreferences != null) locPreferences.clearStorage(objectId);
+    }
+
+    protected void clearPreferenceServices(String objectId) {
         SVPreferencesServices locPreferencesServices = preferencesServices.remove(objectId);
         if (locPreferencesServices != null) locPreferencesServices.clearStorage(objectId);
-
-        // TODO uncomment when the history is implemented
-        // SVHistory locHistory = history.remove(objectId);
-        // if (locHistory != null) locHistory.clearStorage(objectId);
-
-        // TODO uncomment when the automations are implemented
-        // SVAutomations locAutomations = automations.remove(objectId);
-        // if (locAutomations != null) locAutomations.clearStorage(objectId);
     }
+
+    // TODO uncomment when the history is implemented
+    //protected void clearHistory(String objectId) {
+    // SVHistory locHistory = history.remove(objectId);
+    // if (locHistory != null) locHistory.clearStorage(objectId);
+    //}
+
+    // TODO uncomment when the automations are implemented
+    //protected void clearAutomations(String objectId) {
+    // SVAutomations locAutomations = automations.remove(objectId);
+    // if (locAutomations != null) locAutomations.clearStorage(objectId);
+    //}
 
 
     // Getters for storage sub-components
 
     /**
-     * Get the generic application preferences.
-     * <p>
-     * NB: this sub-component is generic and NOT related to a specific object.
+     * Get the generic application preferences for the given object id.
      *
+     * @param objectId the id of the object for which to get the application preferences.
      * @return the preferences for the given object id.
      */
     @Override
-    public SVPreferences getAppPreferences() {
-        return preferencesApp;
+    public SVPreferences getPreferencesApp(String objectId) {
+        return preferencesApp.get(objectId);
     }
 
     /**

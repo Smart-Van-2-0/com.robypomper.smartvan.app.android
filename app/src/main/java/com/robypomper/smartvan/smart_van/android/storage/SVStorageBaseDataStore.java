@@ -3,13 +3,13 @@ package com.robypomper.smartvan.smart_van.android.storage;
 import android.content.Context;
 
 import androidx.datastore.preferences.core.Preferences;
-import androidx.datastore.preferences.core.PreferencesKeys;
 import androidx.datastore.rxjava3.RxDataStore;
 
+import com.robypomper.smartvan.smart_van.android.storage.local.LocalPreferences;
+import com.robypomper.smartvan.smart_van.android.storage.local.LocalPreferencesServices;
 import com.robypomper.smartvan.smart_van.android.utils.DataStoreUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -31,40 +31,12 @@ import java.util.Set;
  */
 public abstract class SVStorageBaseDataStore implements SVStorage {
 
-    // Constants
-
-    /**
-     * The name of the data store used by this class.
-     */
-    private static final String DATA_STORE_NAME = "smart_van_storage";
-    /**
-     * The key for the current object id.
-     */
-    private static final Preferences.Key<String> OBJ_ID_CURRENT = PreferencesKeys.stringKey("OBJ_ID_CURRENT");
-    /**
-     * The default value for the current object id.
-     */
-    private static final String DEF_OBJ_ID_CURRENT = null;
-    /**
-     * The key for the favourite object id.
-     */
-    private static final Preferences.Key<String> OBJ_ID_FAVOURITE = PreferencesKeys.stringKey("OBJ_ID_FAVOURITE");
-    /**
-     * The default value for the favourite object id.
-     */
-    private static final String DEF_OBJ_ID_FAVOURITE = null;
-    /**
-     * The key for the list of known object ids.
-     */
-    private static final Preferences.Key<Set<String>> OBJ_ID_KNOWN = PreferencesKeys.stringSetKey("OBJ_ID_KNOWN");
-    /**
-     * The default value for the list of known object ids.
-     */
-    private static final Set<String> DEF_OBJ_ID_KNOWN = Collections.emptySet();
-
-
     // Internal vars
 
+    /**
+     * The application's context.
+     */
+    private final Context ctx;
     /**
      * The AndroidX DataStore used by this class.
      */
@@ -79,11 +51,24 @@ public abstract class SVStorageBaseDataStore implements SVStorage {
      * @param ctx the application's context.
      */
     public SVStorageBaseDataStore(Context ctx) {
-        dataStore = DataStoreUtils.initDataStore(ctx, DATA_STORE_NAME);
+        this.ctx = ctx;
+        dataStore = DataStoreUtils.initDataStore(ctx, ctx.getString(DATA_STORE_NAME));
     }
 
 
-    // Object's id management
+    // Getters
+
+    /**
+     * Get the AndroidX DataStore used by this class.
+     *
+     * @return the AndroidX DataStore used by this class.
+     */
+    public RxDataStore<Preferences> getDataStore() {
+        return dataStore;
+    }
+
+
+    // Current object's id
 
     /**
      * Get the id of the current object.
@@ -95,7 +80,7 @@ public abstract class SVStorageBaseDataStore implements SVStorage {
      */
     @Override
     public String getCurrentObjectId() {
-        return DataStoreUtils.getFromDataStore(dataStore, OBJ_ID_CURRENT, DEF_OBJ_ID_CURRENT);
+        return DataStoreUtils.getFromDataStore(dataStore, DataStoreUtils.stringKey(ctx, CURR_OBJ_ID), DEF_CURR_OBJ_ID);
     }
 
     /**
@@ -109,11 +94,14 @@ public abstract class SVStorageBaseDataStore implements SVStorage {
      */
     @Override
     public void setCurrentObjectId(String objectId) {
-        DataStoreUtils.setToDataStore(dataStore, OBJ_ID_CURRENT, objectId);
+        DataStoreUtils.setToDataStore(dataStore, DataStoreUtils.stringKey(ctx, CURR_OBJ_ID), objectId);
 
         if (objectId != null && !getKnownObjectIds().contains(objectId))
             addKnownObjectId(objectId);
     }
+
+
+    // Favourite object's id
 
     /**
      * Get user favourite object id.
@@ -131,7 +119,7 @@ public abstract class SVStorageBaseDataStore implements SVStorage {
      */
     @Override
     public String getFavouriteObjectId() {
-        return DataStoreUtils.getFromDataStore(dataStore, OBJ_ID_FAVOURITE, DEF_OBJ_ID_FAVOURITE);
+        return DataStoreUtils.getFromDataStore(dataStore, DataStoreUtils.stringKey(ctx, FAV_OBJ_ID), DEF_FAV_OBJ_ID);
     }
 
     /**
@@ -145,8 +133,77 @@ public abstract class SVStorageBaseDataStore implements SVStorage {
      */
     @Override
     public void setFavouriteObjectId(String objectId) {
-        DataStoreUtils.setToDataStore(dataStore, OBJ_ID_FAVOURITE, objectId);
+        DataStoreUtils.setToDataStore(dataStore, DataStoreUtils.stringKey(ctx, FAV_OBJ_ID), objectId);
     }
+
+    /**
+     * During application startup, when the favourite object id is set and
+     * corresponding object is available, ask the user if he wants to use the
+     * favourite object id.
+     * <p>
+     * Default value is true.
+     * <p>
+     *
+     * @return true if it must ask the user if he wants to use the favourite
+     * object, false otherwise.
+     */
+    @Override
+    public boolean askForUseFavouriteObjectId() {
+        return DataStoreUtils.getFromDataStore(dataStore, DataStoreUtils.booleanKey(ctx, ASK_USE_FAV_OBJ_ID), DEF_ASK_USE_FAV_OBJ_ID);
+    }
+
+    /**
+     * Set the ask for use favourite object id.
+     * <p>
+     * During application startup, when the favourite object id is set and
+     * corresponding object is available, ask the user if he wants to use the
+     * favourite object id.
+     * <p>
+     *
+     * @param askForUseFavouriteObjectId true if it must ask the user if he wants
+     *                                   to use the favourite object, false otherwise.
+     */
+    @Override
+    public void setAskForUseFavouriteObjectId(boolean askForUseFavouriteObjectId) {
+        DataStoreUtils.setToDataStore(dataStore, DataStoreUtils.booleanKey(ctx, ASK_USE_FAV_OBJ_ID), askForUseFavouriteObjectId);
+    }
+
+    /**
+     * During application startup, when the user selected an object from the
+     * {@link com.robypomper.smartvan.smart_van.android.activities.SVSelectObjectActivity}
+     * activity and the favourite object id is not set, ask the user if he
+     * wants to set the selected object as favourite.
+     * <p>
+     * Default value is true.
+     * <p>
+     *
+     * @return true if it must ask the user to set the favourite object id, false
+     * otherwise.
+     */
+    @Override
+    public boolean askForSetFavouriteObjectId() {
+        return DataStoreUtils.getFromDataStore(dataStore, DataStoreUtils.booleanKey(ctx, ASK_SET_FAV_OBJ_ID), DEF_ASK_SET_FAV_OBJ_ID);
+    }
+
+    /**
+     * Set the ask for set favourite object id.
+     * <p>
+     * During application startup, when the user selected an object from the
+     * {@link com.robypomper.smartvan.smart_van.android.activities.SVSelectObjectActivity}
+     * activity and the favourite object id is not set, ask the user if he
+     * wants to set the selected object as favourite.
+     * <p>
+     *
+     * @param askForSetFavouriteObjectId true if it must ask the user to set the
+     *                                   favourite object id, false otherwise.
+     */
+    @Override
+    public void setAskForSetFavouriteObjectId(boolean askForSetFavouriteObjectId) {
+        DataStoreUtils.setToDataStore(dataStore, DataStoreUtils.booleanKey(ctx, ASK_SET_FAV_OBJ_ID), askForSetFavouriteObjectId);
+    }
+
+
+    // Known object ids
 
     /**
      * Get the list of known object ids.
@@ -158,7 +215,7 @@ public abstract class SVStorageBaseDataStore implements SVStorage {
      */
     @Override
     public List<String> getKnownObjectIds() {
-        Set<String> knownIds = DataStoreUtils.getFromDataStore(dataStore, OBJ_ID_KNOWN, DEF_OBJ_ID_KNOWN);
+        Set<String> knownIds = DataStoreUtils.getFromDataStore(dataStore, DataStoreUtils.stringSetKey(ctx, OBJ_ID_KNOWN), DEF_OBJ_ID_KNOWN);
         return new ArrayList<>(knownIds);
     }
 
@@ -173,12 +230,12 @@ public abstract class SVStorageBaseDataStore implements SVStorage {
      */
     @Override
     public void addKnownObjectId(String objectId) {
-        Set<String> knownIds = DataStoreUtils.getFromDataStore(dataStore, OBJ_ID_KNOWN, DEF_OBJ_ID_KNOWN);
+        Set<String> knownIds = DataStoreUtils.getFromDataStore(dataStore, DataStoreUtils.stringSetKey(ctx, OBJ_ID_KNOWN), DEF_OBJ_ID_KNOWN);
         List<String> knownIdsList = new ArrayList<>(knownIds);
         if (!knownIdsList.add(objectId))
             return;
         knownIds = new HashSet<>(knownIdsList);
-        DataStoreUtils.setToDataStore(dataStore, OBJ_ID_KNOWN, knownIds);
+        DataStoreUtils.setToDataStore(dataStore, DataStoreUtils.stringSetKey(ctx, OBJ_ID_KNOWN), knownIds);
         generateStorage(objectId);
     }
 
@@ -192,12 +249,122 @@ public abstract class SVStorageBaseDataStore implements SVStorage {
      */
     @Override
     public void removeKnownObjectId(String objectId) {
-        Set<String> knownIds = DataStoreUtils.getFromDataStore(dataStore, OBJ_ID_KNOWN, DEF_OBJ_ID_KNOWN);
+        Set<String> knownIds = DataStoreUtils.getFromDataStore(dataStore, DataStoreUtils.stringSetKey(ctx, OBJ_ID_KNOWN), DEF_OBJ_ID_KNOWN);
         List<String> knownIdsList = new ArrayList<>(knownIds);
         if (!knownIdsList.remove(objectId))
             return;
         knownIds = new HashSet<>(knownIdsList);
-        DataStoreUtils.setToDataStore(dataStore, OBJ_ID_KNOWN, knownIds);
+        DataStoreUtils.setToDataStore(dataStore, DataStoreUtils.stringSetKey(ctx, OBJ_ID_KNOWN), knownIds);
+        clearStorage(objectId);
+    }
+
+
+    /**
+     * Generate the storage for the given object id.
+     * <p>
+     * This method is called when the user selects a new object from the
+     * {@link com.robypomper.smartvan.smart_van.android.activities.SVSelectObjectActivity}
+     * activity.
+     *
+     * @param objectId the id of the object for which to generate the storage.
+     */
+    @Override
+    public void generateStorage(String objectId) {
+        generatePreferenceApp(objectId);
+        generatePreferenceServices(objectId);
+        // TODO uncomment when the history is implemented
+        // generateHistory(objectId);
+        // TODO uncomment when the automations are implemented
+        // generateAutomations(objectId);
+    }
+
+    /**
+     * Clear the storage for the given object id.
+     * <p>
+     * This method is called when the user requires to delete all the data
+     * for a specific object.
+     *
+     * @param objectId the id of the object for which to clear the storage.
+     */
+    @Override
+    public void clearStorage(String objectId) {
+        clearPreferenceApp(objectId);
+        clearPreferenceServices(objectId);
+        // TODO uncomment when the history is implemented
+        // clearHistory(objectId);
+        // TODO uncomment when the automations are implemented
+        // clearAutomations(objectId);
+    }
+
+
+    // Storage mngm implementation
+
+    protected abstract void generatePreferenceApp(String objectId);
+
+    protected abstract void generatePreferenceServices(String objectId);
+
+    //protected abstract void generateHistory(String objectId);
+
+    //protected abstract void generateAutomations(String objectId);
+
+    protected abstract void clearPreferenceApp(String objectId);
+
+    protected abstract void clearPreferenceServices(String objectId);
+
+    //protected abstract void clearHistory(String objectId);
+
+    //protected abstract void clearAutomations(String objectId);
+
+
+    // Getters for object related storage sub-components
+
+    /**
+     * Get the application preferences for the current object id.
+     *
+     * @return the application preferences for the current object id.
+     * @throws IllegalStateException if no current object is set.
+     */
+    @Override
+    public SVPreferences getCurrentPreferencesApp() {
+        if (getCurrentObjectId() == null)
+            throw new IllegalStateException("No current object is set");
+        return getPreferencesApp(getCurrentObjectId());
+    }
+
+
+    /**
+     * Get the preferences services for the current object id.
+     *
+     * @return the preferences services for the current object id.
+     * @throws IllegalStateException if no current object is set.
+     */
+    @Override
+    public SVPreferencesServices getCurrentPreferencesServices() {
+        if (getCurrentObjectId() == null)
+            throw new IllegalStateException("No current object is set");
+        return getPreferencesServices(getCurrentObjectId());
+    }
+
+    /**
+     * Reset the generic application preferences for the given object id.
+     *
+     * @param objId the id of the object for which to reset the application preferences.
+     */
+    @Override
+    public void resetPreferencesApp(String objId) {
+        clearPreferenceApp(objId);
+        generatePreferenceApp(objId);
+    }
+
+    /**
+     * Reset the preferences services for the given object id.
+     *
+     * @param objId the id of the object for which to reset the preferences services.
+     */
+    @Override
+    public void resetPreferencesServices(String objId) {
+        clearPreferenceServices(objId);
+        generatePreferenceServices(objId);
     }
 
 }
