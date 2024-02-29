@@ -1,60 +1,56 @@
 package com.robypomper.smartvan.smart_van.android.storage;
 
 
+import androidx.annotation.ColorInt;
+
+import com.robypomper.smartvan.smart_van.android.R;
+
 /**
  * This interface is used to define the generic preferences of the SmartVan.
  */
-public interface SVPreferences {
+public interface SVPreferences extends SVSubStorage {
+
+    // Constants
 
     /**
-     * During application startup, when the favourite object id is set and
-     * corresponding object is available, ask the user if he wants to use the
-     * favourite object id.
-     * <p>
-     * Default value is true.
-     * <p>
-     * @return true if it must ask the user if he wants to use the favourite
-     * object, false otherwise.
+     * The name of the data store used by this class.
      */
-    boolean askForUseFavouriteObjectId();
+    int DATA_STORE_NAME_PREFIX = R.string.pref_group__pref_prefix; // + ObjectId
+    /**
+     * The key for the SV box color.
+     */
+    int SVBOX_COLOR = R.string.pref__pref__svbox_color;
+    /**
+     * The default value for the SV box color.
+     */
+    @ColorInt int DEF_SVBOX_COLOR = 0xFF0BB2B2; // R.color.smartvan_origin, can't access to getResources()
+    /**
+     * The key for the timeout in seconds for the chart.
+     */
+    int CHARTS_TIMEOUT = R.string.pref__pref__charts_timeout;
+    /**
+     * The default value for the timeout in seconds for the chart.
+     */
+    int DEF_CHARTS_TIMEOUT = 15;
+
+
+    // SVPreferences
 
     /**
-     * Set the ask for use favourite object id.
+     * Get the SV box color.
      * <p>
-     * During application startup, when the favourite object id is set and
-     * corresponding object is available, ask the user if he wants to use the
-     * favourite object id.
+     * Default value is `R.color.smartvan_origin`.
      * <p>
-     * @param askForUseFavouriteObjectId true if it must ask the user if he wants
-     * to use the favourite object, false otherwise.
+     * @return the SV box color.
      */
-    void setAskForUseFavouriteObjectId(boolean askForUseFavouriteObjectId);
+    @ColorInt int getSVBoxColor();
 
     /**
-     * During application startup, when the user selected an object from the
-     * {@link com.robypomper.smartvan.smart_van.android.activities.SVSelectObjectActivity}
-     * activity and the favourite object id is not set, ask the user if he
-     * wants to set the selected object as favourite.
+     * Set the SV box color.
      * <p>
-     * Default value is true.
-     * <p>
-     * @return true if it must ask the user to set the favourite object id, false
-     * otherwise.
+     * @param color the SV box color.
      */
-    boolean askForSetFavouriteObjectId();
-
-    /**
-     * Set the ask for set favourite object id.
-     * <p>
-     * During application startup, when the user selected an object from the
-     * {@link com.robypomper.smartvan.smart_van.android.activities.SVSelectObjectActivity}
-     * activity and the favourite object id is not set, ask the user if he
-     * wants to set the selected object as favourite.
-     * <p>
-     * @param askForSetFavouriteObjectId true if it must ask the user to set the
-     * favourite object id, false otherwise.
-     */
-    void setAskForSetFavouriteObjectId(boolean askForSetFavouriteObjectId);
+    void setSVBoxColor(@ColorInt int color);
 
     /**
      * Get the timeout in seconds for the chart.

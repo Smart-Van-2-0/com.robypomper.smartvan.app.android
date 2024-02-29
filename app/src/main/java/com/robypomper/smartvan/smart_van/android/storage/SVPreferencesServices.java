@@ -1,6 +1,8 @@
 package com.robypomper.smartvan.smart_van.android.storage;
 
 
+import com.robypomper.smartvan.smart_van.android.R;
+
 /**
  * Interface for SV Services' preferences.
  * <p>
@@ -9,6 +11,17 @@ package com.robypomper.smartvan.smart_van.android.storage;
  * set a custom name and icon.
  */
 public interface SVPreferencesServices extends SVSubStorage {
+
+    // Constants
+
+    int DATA_STORE_NAME_PREFIX = R.string.pref_group__services_prefix; // + ObjectId
+    int NAME_PROP_PREFIX = R.string.pref__services__name_prefix; // + ComponentPath
+    String DEF_NAME = null;
+    int ICON_PROP_PREFIX = R.string.pref__services__icon_prefix; // + ComponentPath
+    String DEF_ICON_NAME = null;
+
+
+    // SVPreferencesServices
 
     /**
      * Set the name of the specified SV Service.

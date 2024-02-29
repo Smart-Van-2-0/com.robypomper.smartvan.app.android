@@ -1,6 +1,10 @@
 package com.robypomper.smartvan.smart_van.android.storage;
 
+import com.robypomper.smartvan.smart_van.android.R;
+
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -15,7 +19,55 @@ import java.util.List;
  */
 public interface SVStorage {
 
-    // Object's id management
+    // Constants
+
+    /**
+     * The name of the data store used by this class.
+     */
+    int DATA_STORE_NAME = R.string.pref_group__storage;
+    /**
+     * The key for the current object id.
+     */
+    int CURR_OBJ_ID = R.string.pref__storage__curr_obj_id;
+    /**
+     * The default value for the current object id.
+     */
+    String DEF_CURR_OBJ_ID = null;
+    /**
+     * The key for the favourite object id.
+     */
+    int FAV_OBJ_ID = R.string.pref__storage__fav_obj_id;
+    /**
+     * The default value for the favourite object id.
+     */
+    String DEF_FAV_OBJ_ID = null;
+    /**
+     * The key for the ask for use favourite object id preference.
+     */
+    int ASK_USE_FAV_OBJ_ID = R.string.pref__storage__ask_use_fav_obj;
+    /**
+     * The default value for the ask for use favourite object id preference.
+     */
+    boolean DEF_ASK_USE_FAV_OBJ_ID = true;
+    /**
+     * The key for the ask for set favourite object id preference.
+     */
+    int ASK_SET_FAV_OBJ_ID = R.string.pref__storage__ask_set_fav_obj;
+    /**
+     * The default value for the ask for set favourite object id preference.
+     */
+    boolean DEF_ASK_SET_FAV_OBJ_ID = true;
+    /**
+     * The key for the list of known object ids.
+     */
+    int OBJ_ID_KNOWN = R.string.pref__storage__known_obj_id;
+    /**
+     * The default value for the list of known object ids.
+     */
+    Set<String> DEF_OBJ_ID_KNOWN = Collections.emptySet();
+
+
+    // Current object's id
 
     /**
      * Get the id of the current object.
@@ -37,6 +89,9 @@ public interface SVStorage {
      * @param objectId the id of the object to set as current.
      */
     void setCurrentObjectId(String objectId);
+
+
+    // Favourite object's id
 
     /**
      * Get user favourite object id.
@@ -64,6 +119,63 @@ public interface SVStorage {
      * @param objectId the id of the object to set as favourite.
      */
     void setFavouriteObjectId(String objectId);
+
+    /**
+     * During application startup, when the favourite object id is set and
+     * corresponding object is available, ask the user if he wants to use the
+     * favourite object id.
+     * <p>
+     * Default value is true.
+     * <p>
+     *
+     * @return true if it must ask the user if he wants to use the favourite
+     * object, false otherwise.
+     */
+    boolean askForUseFavouriteObjectId();
+
+    /**
+     * Set the ask for use favourite object id.
+     * <p>
+     * During application startup, when the favourite object id is set and
+     * corresponding object is available, ask the user if he wants to use the
+     * favourite object id.
+     * <p>
+     *
+     * @param askForUseFavouriteObjectId true if it must ask the user if he wants
+     *                                   to use the favourite object, false otherwise.
+     */
+    void setAskForUseFavouriteObjectId(boolean askForUseFavouriteObjectId);
+
+    /**
+     * During application startup, when the user selected an object from the
+     * {@link com.robypomper.smartvan.smart_van.android.activities.SVSelectObjectActivity}
+     * activity and the favourite object id is not set, ask the user if he
+     * wants to set the selected object as favourite.
+     * <p>
+     * Default value is true.
+     * <p>
+     *
+     * @return true if it must ask the user to set the favourite object id, false
+     * otherwise.
+     */
+    boolean askForSetFavouriteObjectId();
+
+    /**
+     * Set the ask for set favourite object id.
+     * <p>
+     * During application startup, when the user selected an object from the
+     * {@link com.robypomper.smartvan.smart_van.android.activities.SVSelectObjectActivity}
+     * activity and the favourite object id is not set, ask the user if he
+     * wants to set the selected object as favourite.
+     * <p>
+     *
+     * @param askForSetFavouriteObjectId true if it must ask the user to set the
+     *                                   favourite object id, false otherwise.
+     */
+    void setAskForSetFavouriteObjectId(boolean askForSetFavouriteObjectId);
+
+
+    // Known object ids
 
     /**
      * Get the list of known object ids.
@@ -130,16 +242,31 @@ public interface SVStorage {
     void clearStorage(String objectId);
 
 
-    // Getters for storage sub-components
+    // Getters for object related storage sub-components
 
     /**
-     * Get the generic application preferences.
-     * <p>
-     * NB: this sub-component is generic and NOT related to a specific object.
+     * Get the application preferences for the current object id.
      *
+     * @return the application preferences for the current object id.
+     * @throws IllegalStateException if no current object is set.
+     */
+    SVPreferences getCurrentPreferencesApp();
+
+    /**
+     * Get the preferences services for the current object id.
+     *
+     * @return the preferences services for the current object id.
+     * @throws IllegalStateException if no current object is set.
+     */
+    SVPreferencesServices getCurrentPreferencesServices();
+
+    /**
+     * Get the generic application preferences for the given object id.
+     *
+     * @param objectId the id of the object for which to get the application preferences.
      * @return the preferences for the given object id.
      */
-    SVPreferences getAppPreferences();
+    SVPreferences getPreferencesApp(String objectId);
 
     /**
      * Get the preferences services for the given object id.

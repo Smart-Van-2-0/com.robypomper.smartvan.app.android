@@ -9,8 +9,6 @@ import com.robypomper.smartvan.smart_van.android.storage.SVStorageBaseDataStore;
 import com.robypomper.smartvan.smart_van.android.storage.SVStorageSingleton;
 
 import java.util.HashMap;
-
-import java.util.HashMap;
 import java.util.Map;
 
 
@@ -34,7 +32,7 @@ public class SVLocalStorage extends SVStorageBaseDataStore implements SVStorage 
     /**
      * The application's generic preferences object.
      */
-    private final SVPreferences preferencesApp;
+    private final Map<String, SVPreferences> preferencesApp;
     /**
      * SV Services preferences for each known object id.
      */
@@ -51,7 +49,7 @@ public class SVLocalStorage extends SVStorageBaseDataStore implements SVStorage 
     public SVLocalStorage(Context ctx) {
         super(ctx);
         this.ctx = ctx;
-        this.preferencesApp = new LocalPreferences(ctx);
+        this.preferencesApp = new HashMap<>();
         this.preferencesServices = new HashMap<>();
 
         SVStorageSingleton.setInstance(this);
@@ -72,6 +70,10 @@ public class SVLocalStorage extends SVStorageBaseDataStore implements SVStorage 
      */
     @Override
     public void generateStorage(String objectId) {
+        SVPreferences locPreferences = new LocalPreferences(ctx);
+        locPreferences.generateStorage(objectId);
+        preferencesApp.put(objectId, locPreferences);
+
         SVPreferencesServices locPreferencesServices = new LocalPreferencesServices(ctx);
         locPreferencesServices.generateStorage(objectId);
         preferencesServices.put(objectId, locPreferencesServices);
@@ -97,6 +99,9 @@ public class SVLocalStorage extends SVStorageBaseDataStore implements SVStorage 
      */
     @Override
     public void clearStorage(String objectId) {
+        SVPreferences locPreferences = preferencesApp.remove(objectId);
+        if (locPreferences != null) locPreferences.clearStorage(objectId);
+
         SVPreferencesServices locPreferencesServices = preferencesServices.remove(objectId);
         if (locPreferencesServices != null) locPreferencesServices.clearStorage(objectId);
 
@@ -113,15 +118,14 @@ public class SVLocalStorage extends SVStorageBaseDataStore implements SVStorage 
     // Getters for storage sub-components
 
     /**
-     * Get the generic application preferences.
-     * <p>
-     * NB: this sub-component is generic and NOT related to a specific object.
+     * Get the generic application preferences for the given object id.
      *
+     * @param objectId the id of the object for which to get the application preferences.
      * @return the preferences for the given object id.
      */
     @Override
-    public SVPreferences getAppPreferences() {
-        return preferencesApp;
+    public SVPreferences getPreferencesApp(String objectId) {
+        return preferencesApp.get(objectId);
     }
 
     /**
