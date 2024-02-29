@@ -5,6 +5,8 @@ import android.content.Context;
 import androidx.datastore.preferences.core.Preferences;
 import androidx.datastore.rxjava3.RxDataStore;
 
+import com.robypomper.smartvan.smart_van.android.storage.local.LocalPreferences;
+import com.robypomper.smartvan.smart_van.android.storage.local.LocalPreferencesServices;
 import com.robypomper.smartvan.smart_van.android.utils.DataStoreUtils;
 
 import java.util.ArrayList;
@@ -257,6 +259,63 @@ public abstract class SVStorageBaseDataStore implements SVStorage {
     }
 
 
+    /**
+     * Generate the storage for the given object id.
+     * <p>
+     * This method is called when the user selects a new object from the
+     * {@link com.robypomper.smartvan.smart_van.android.activities.SVSelectObjectActivity}
+     * activity.
+     *
+     * @param objectId the id of the object for which to generate the storage.
+     */
+    @Override
+    public void generateStorage(String objectId) {
+        generatePreferenceApp(objectId);
+        generatePreferenceServices(objectId);
+        // TODO uncomment when the history is implemented
+        // generateHistory(objectId);
+        // TODO uncomment when the automations are implemented
+        // generateAutomations(objectId);
+    }
+
+    /**
+     * Clear the storage for the given object id.
+     * <p>
+     * This method is called when the user requires to delete all the data
+     * for a specific object.
+     *
+     * @param objectId the id of the object for which to clear the storage.
+     */
+    @Override
+    public void clearStorage(String objectId) {
+        clearPreferenceApp(objectId);
+        clearPreferenceServices(objectId);
+        // TODO uncomment when the history is implemented
+        // clearHistory(objectId);
+        // TODO uncomment when the automations are implemented
+        // clearAutomations(objectId);
+    }
+
+
+    // Storage mngm implementation
+
+    protected abstract void generatePreferenceApp(String objectId);
+
+    protected abstract void generatePreferenceServices(String objectId);
+
+    //protected abstract void generateHistory(String objectId);
+
+    //protected abstract void generateAutomations(String objectId);
+
+    protected abstract void clearPreferenceApp(String objectId);
+
+    protected abstract void clearPreferenceServices(String objectId);
+
+    //protected abstract void clearHistory(String objectId);
+
+    //protected abstract void clearAutomations(String objectId);
+
+
     // Getters for object related storage sub-components
 
     /**
@@ -284,6 +343,28 @@ public abstract class SVStorageBaseDataStore implements SVStorage {
         if (getCurrentObjectId() == null)
             throw new IllegalStateException("No current object is set");
         return getPreferencesServices(getCurrentObjectId());
+    }
+
+    /**
+     * Reset the generic application preferences for the given object id.
+     *
+     * @param objId the id of the object for which to reset the application preferences.
+     */
+    @Override
+    public void resetPreferencesApp(String objId) {
+        clearPreferenceApp(objId);
+        generatePreferenceApp(objId);
+    }
+
+    /**
+     * Reset the preferences services for the given object id.
+     *
+     * @param objId the id of the object for which to reset the preferences services.
+     */
+    @Override
+    public void resetPreferencesServices(String objId) {
+        clearPreferenceServices(objId);
+        generatePreferenceServices(objId);
     }
 
 }

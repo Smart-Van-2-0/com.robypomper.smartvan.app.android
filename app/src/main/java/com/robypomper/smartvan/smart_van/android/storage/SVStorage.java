@@ -269,11 +269,25 @@ public interface SVStorage {
     SVPreferences getPreferencesApp(String objectId);
 
     /**
+     * Reset the generic application preferences for the given object id.
+     *
+     * @param objId the id of the object for which to reset the application preferences.
+     */
+    void resetPreferencesApp(String objId);
+
+    /**
      * Get the preferences services for the given object id.
      *
      * @param objectId the id of the object for which to get the preferences services.
      * @return the preferences services for the given object id.
      */
     SVPreferencesServices getPreferencesServices(String objectId);
+
+    /**
+     * Reset the preferences services for the given object id.
+     *
+     * @param objId the id of the object for which to reset the preferences services.
+     */
+    void resetPreferencesServices(String objId);
 
 }
