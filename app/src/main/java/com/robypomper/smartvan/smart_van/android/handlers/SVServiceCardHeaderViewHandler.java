@@ -7,6 +7,8 @@ import com.robypomper.josp.jsl.android.handlers.view.JSLBaseStateViewHandler;
 import com.robypomper.josp.jsl.android.handlers.view.JSLBaseViewHandler;
 import com.robypomper.josp.jsl.objs.structure.JSLComponent;
 import com.robypomper.smartvan.smart_van.android.R;
+import com.robypomper.smartvan.smart_van.android.commons.SVServiceIcons;
+import com.robypomper.smartvan.smart_van.android.components.SVServiceEditSimpleView;
 
 
 /**
@@ -37,6 +39,10 @@ public class SVServiceCardHeaderViewHandler {
      */
     public final static int UI_SV_SERVICE_MENU = R.id.btnSVServiceMenu;
     /**
+     * The ID of the `btnSVServiceEdit` field.
+     */
+    public final static int UI_SV_SERVICE_EDIT = R.id.btnSVServiceEdit;
+    /**
      * The ID of the `icoSVServiceHighVoltage` field.
      */
     public final static int UI_SV_SERVICE_HIGH_VOLTAGE = R.id.icoSVServiceHighVoltage;
@@ -56,7 +62,6 @@ public class SVServiceCardHeaderViewHandler {
 
     // Internal vars
 
-
     /**
      * The ViewGroup to use to look for handler's Views.
      */
@@ -69,10 +74,18 @@ public class SVServiceCardHeaderViewHandler {
      * The handler for the component's state, in this case the handler is NOT
      * managed by this view handler.
      * <p>
-     * This reference to the state handler is used only to get the service name
-     * and type (SVName and SVType) and keep them synchronized.
+     * This reference to the state handler is used only to get the original
+     * service name and type.
      */
     private final JSLBaseStateViewHandler stateHandler;
+    /**
+     * The handler for the service's icon, in this case the handler is NOT
+     * managed by this view handler.
+     * <p>
+     * This reference to the icon handler is used only to update the service
+     * icon when edited by the user.
+     */
+    private final SVServiceIconViewHandler iconHandler;
     /**
      * The value of the `isHighVoltage` field.
      */
@@ -136,17 +149,32 @@ public class SVServiceCardHeaderViewHandler {
 
     /**
      * Create a new `SVServiceCardHeaderViewHandler` instance.<br/>
-     * The `stateHandler` is used only to get the service name and type (SVName
-     * and SVType) and keep them synchronized.
+     * The `stateHandler` is used only to get the original service name and
+     * type. Also the `iconHandler` is used only to update the service icon
+     * when edited by the user.
      *
      * @param mainView     the ViewGroup to use to look for handler's Views
      * @param component    the component to show
      * @param stateHandler the handler for the component's state
+     * @param iconHandler  the handler for the service's icon
      */
-    public SVServiceCardHeaderViewHandler(ViewGroup mainView, JSLComponent component, JSLBaseStateViewHandler stateHandler) {
+    public SVServiceCardHeaderViewHandler(ViewGroup mainView, JSLComponent component, JSLBaseStateViewHandler stateHandler, SVServiceIconViewHandler iconHandler) {
         this.mainView = mainView;
         this.component = component;
         this.stateHandler = stateHandler;
+        this.iconHandler = iconHandler;
+        JSLBaseViewHandler.trySetOnClickListener(getMainView(), UI_SV_SERVICE_EDIT, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SVServiceEditSimpleView.show(mainView.getContext(), getComponent(), new SVServiceEditSimpleView.OnServiceEditedListener() {
+                    @Override
+                    public void onServiceEdited(SVServiceEditSimpleView view, JSLComponent service, String name, String iconName) {
+                        setSVName(name);
+                        iconHandler.setIcon(SVServiceIcons.iconString2Res(iconName));
+                    }
+                });
+            }
+        });
         JSLBaseViewHandler.trySetOnClickListener(getMainView(), UI_SV_SERVICE_MENU, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -180,7 +208,6 @@ public class SVServiceCardHeaderViewHandler {
     public void setComponent(JSLComponent newComp) {
         if (getComponent() == newComp) return;
 
-        JSLComponent oldComp = getComponent();
         component = newComp;
 
         updateUI();

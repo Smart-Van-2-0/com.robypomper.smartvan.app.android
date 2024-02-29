@@ -1,0 +1,50 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="16dp" >
+
+        <com.robypomper.smartvan.smart_van.android.components.SVBoxIconView
+            android:id="@+id/imgSVIcon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:textAppearance="?attr/textAppearanceHeadline4" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="8dp" />
+
+        <TextView
+            android:id="@+id/txtSVName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:text="@string/activity_svmain_navigation_drawer_title_placeholder"
+            android:textAppearance="?attr/textAppearanceHeadline6" />
+
+        <TextView
+            android:id="@+id/txtSVId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/activity_svmain_navigation_drawer_id_placeholder"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            android:textStyle="italic"
+            android:textColor="@color/gray_500"/>
+7
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="16dp"
+        android:background="?android:attr/listDivider" />
+
+</LinearLayout>

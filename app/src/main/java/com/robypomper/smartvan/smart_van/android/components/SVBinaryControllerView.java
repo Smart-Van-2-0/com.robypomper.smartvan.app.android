@@ -69,6 +69,8 @@ public class SVBinaryControllerView
         super(context, attrs, defStyleAttr, svService, layout);
         iconHandler = new SVServiceIconViewHandler(context, this, svService);
         cardHeaderHandler = new SVServiceCardHeaderViewHandler(this, svService, getStateHandler(), getIconHandler());
+        getStateHandler().setValTrueTxt("On");
+        getStateHandler().setValFalseTxt("Off");
     }
 
 
