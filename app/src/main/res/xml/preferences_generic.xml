@@ -1,0 +1,52 @@
+<PreferenceScreen
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Preference
+        app:key="@string/activity_svsettings_txt_show_current_obj_configs_key"
+        app:title="@string/activity_svsettings_txt_show_current_obj_configs_title"
+        app:summary="@string/activity_svsettings_txt_show_current_obj_configs_summary_placeholder"
+        app:fragment="com.robypomper.smartvan.smart_van.android.components.SVSettingsObjectFragment"/>
+
+    <PreferenceCategory
+        app:key="@string/activity_svsettings_txt_cat_generic_favourite_key"
+        app:title="@string/activity_svsettings_txt_cat_generic_favourite_title">
+
+        <SwitchPreference
+            app:key="@string/pref__storage__ask_set_fav_obj"
+            app:title="@string/activity_svsettings_txt_ask_set_fav_obj_id_title"
+            app:summaryOn="@string/activity_svsettings_txt_ask_set_fav_obj_id_summary_on"
+            app:summaryOff="@string/activity_svsettings_txt_ask_set_fav_obj_id_summary_off"
+            app:defaultValue="true" />
+
+        <Preference
+            app:key="@string/activity_svsettings_txt_reset_favourite_obj_id_key"
+            app:title="@string/activity_svsettings_txt_reset_favourite_obj_id_title"
+            app:summary="@string/activity_svsettings_txt_reset_favourite_obj_id_summary_placeholder" />
+
+        <SwitchPreference
+            app:key="@string/pref__storage__ask_use_fav_obj"
+            app:title="@string/activity_svsettings_txt_ask_use_fav_obj_id_title"
+            app:summaryOn="@string/activity_svsettings_txt_ask_use_fav_obj_id_summary_on"
+            app:summaryOff="@string/activity_svsettings_txt_ask_use_fav_obj_id_summary_off"
+            app:defaultValue="true" />
+
+    </PreferenceCategory>
+
+
+    <PreferenceCategory
+        app:key="@string/activity_svsettings_txt_cat_generic_known_obj_id_key"
+        app:title="@string/activity_svsettings_txt_cat_generic_known_obj_id_title">
+
+        <Preference
+            app:key="show_known_obj_id"
+            app:title="@string/activity_svsettings_txt_show_known_obj_id_title"
+            app:summary="@string/activity_svsettings_txt_show_known_obj_id_summary_placeholder" />
+
+        <Preference
+            app:key="@string/activity_svsettings_txt_clean_known_obj_id_storage_key"
+            app:title="@string/activity_svsettings_txt_clean_known_obj_id_storage_title"
+            app:summary="@string/activity_svsettings_txt_clean_known_obj_id_storage_summary" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
