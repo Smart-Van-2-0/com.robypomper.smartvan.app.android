@@ -5,11 +5,12 @@
         app:key="cat_object_settings"
         app:title="Settings">
 
-        <EditTextPreference
-            app:key="@string/activity_svsettings_txt_svbox_color_key"
+
+        <com.kizitonwose.colorpreferencecompat.ColorPreferenceCompat
+            android:key="@string/activity_svsettings_txt_svbox_color_key"
             app:title="@string/activity_svsettings_txt_svbox_color_title"
             app:summary="@string/activity_svsettings_txt_svbox_color_summary"
-            android:inputType="number" />
+            android:defaultValue="@color/smartvan_origin" />
 
         <EditTextPreference
             app:key="@string/activity_svsettings_txt_charts_timeout_key"

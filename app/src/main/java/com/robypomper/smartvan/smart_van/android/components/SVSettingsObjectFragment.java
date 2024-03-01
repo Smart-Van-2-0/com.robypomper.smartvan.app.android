@@ -13,6 +13,7 @@ import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
+import com.kizitonwose.colorpreferencecompat.ColorPreferenceCompat;
 import com.robypomper.smartvan.smart_van.android.R;
 import com.robypomper.smartvan.smart_van.android.activities.SVSettingsActivity;
 import com.robypomper.smartvan.smart_van.android.storage.SVStorageSingleton;
@@ -41,10 +42,17 @@ public class SVSettingsObjectFragment extends PreferenceFragmentCompat {
     }
 
     private void setupViews() {
-        EditTextPreference prefSVBoxColor = findPreference(getString(R.string.activity_svsettings_txt_svbox_color_key));
+        // EditTextPreference version for the activity_svsettings_txt_svbox_color_key preference
+        /*EditTextPreference prefSVBoxColor = findPreference(getString(R.string.activity_svsettings_txt_svbox_color_key));
         assert prefSVBoxColor != null;
         prefSVBoxColor.setDefaultValue(SVStorageSingleton.getInstance().getCurrentPreferencesApp().getSVBoxColor());
         prefSVBoxColor.setOnBindEditTextListener(prefSVBoxColorBindListener);
+        prefSVBoxColor.setOnPreferenceChangeListener(prefSVBoxColorChangeListener);*/
+
+        // ColorPreferenceCompat version for the activity_svsettings_txt_svbox_color_key preference
+        ColorPreferenceCompat prefSVBoxColor = findPreference(getString(R.string.activity_svsettings_txt_svbox_color_key));
+        assert prefSVBoxColor != null;
+        prefSVBoxColor.setDefaultValue(SVStorageSingleton.getInstance().getCurrentPreferencesApp().getSVBoxColor());
         prefSVBoxColor.setOnPreferenceChangeListener(prefSVBoxColorChangeListener);
 
         EditTextPreference prefChartsTimeout = findPreference(getString(R.string.activity_svsettings_txt_charts_timeout_key));
@@ -68,6 +76,7 @@ public class SVSettingsObjectFragment extends PreferenceFragmentCompat {
     private final Preference.OnPreferenceChangeListener prefSVBoxColorChangeListener = new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(@NonNull Preference preference, Object newValue) {
+            // parse string values from EditTextPreference
             if (newValue instanceof String) {
                 String value = (String) newValue;
                 // if empty string, reset to default
@@ -91,6 +100,14 @@ public class SVSettingsObjectFragment extends PreferenceFragmentCompat {
                 } catch (NumberFormatException ignore) {
                 }
             }
+
+            // parse int values from ColorPreferenceCompat
+            if (newValue instanceof Integer) {
+                int value = (int) newValue;
+                SVStorageSingleton.getInstance().getCurrentPreferencesApp().setSVBoxColor(value);
+                return true;
+            }
+
             Toast.makeText(preference.getContext(), R.string.activity_svsettings_txt_svbox_color_set_invalid, Toast.LENGTH_SHORT).show();
             return false;
         }
