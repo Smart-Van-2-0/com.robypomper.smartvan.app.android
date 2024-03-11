@@ -76,6 +76,11 @@
             android:exported="false"
             android:theme="@style/Theme.SmartVan"
             android:label="@string/activity_svsettings__title" />
+        <activity
+            android:name=".activities.SVAboutActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SmartVan"
+            android:label="@string/activity_svabout__title" />
     </application>
 
 </manifest>

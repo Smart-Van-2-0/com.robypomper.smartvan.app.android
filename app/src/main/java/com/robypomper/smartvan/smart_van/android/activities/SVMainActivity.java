@@ -540,9 +540,9 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
             //} else if (item.getItemId() == R.id.itemFeedback) {
             //    intent = new Intent(SVMainActivity.this, SVFeedbackActivity.class);
             //    intent.putExtra(SVEnergyActivity.PARAM_OBJ_ID, obj.getId());
-            //} else if (item.getItemId() == R.id.itemAbout) {
-            //    intent = new Intent(SVMainActivity.this, SVAboutActivity.class);
-            //    intent.putExtra(SVEnergyActivity.PARAM_OBJ_ID, obj.getId());
+            } else if (item.getItemId() == R.id.itemAbout) {
+                intent = new Intent(SVMainActivity.this, SVAboutActivity.class);
+                intent.putExtra(SVEnergyActivity.PARAM_OBJ_ID, obj.getId());
             } else
                 return false;
 

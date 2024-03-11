@@ -1,0 +1,14 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="activity_svabout__title">About</string>
+    <string name="activity_svabout_txt_header">Smart Van\n4 Android</string>
+    <string name="activity_svabout_txt_version_placeholder">Version %s</string>
+    <string name="activity_svabout_txt_description">The Smart Van 4 Android application is part of the SmartVan project. This application is the main user interface to monitor and control a SmartVan Box.</string>
+    <string name="activity_svabout_txt_open_source">The Smart Van project, like the Smart Van 4 Android application are released with ❤️️ as Open Source.</string>
+    <string name="activity_svabout_txt_sv_website"><a href="https://smartvan.johnosproject.org">SmartVan official WebSite</a></string>
+    <string name="activity_svabout_txt_app_website"><a href="https://smartvan.johnosproject.org/docs/software/sv_mobile_app/android">Application WebPage</a></string>
+    <string name="activity_svabout_txt_git_organization" tools:ignore="TypographyDashes"><a href="https://github.com/Smart-Van-2-0">Source Code Repos</a></string>
+    <string name="activity_svabout_txt_app_licence" tools:ignore="TypographyDashes"><a href="https://raw.githubusercontent.com/Smart-Van-2-0/com.robypomper.smartvan.app.android/main/LICENCE.md">Application Licence</a></string>
+    <string name="activity_svabout_txt_os_dependencies" tools:ignore="TypographyDashes"><a href="https://raw.githubusercontent.com/Smart-Van-2-0/com.robypomper.smartvan.app.android/main/LICENCE_OTHERS.md">Open Source Dependencies</a></string>
+    <string name="activity_svabout_txt_copyright">© RobyPomper &amp; JohnOSProject 2024</string>
+    <string name="activity_svabout_txt_email"><a href="mailto:robypomper@johnosproject.org">robypomper@johnosproject.org</a></string>
+</resources>
