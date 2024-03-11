@@ -81,6 +81,11 @@
             android:exported="false"
             android:theme="@style/Theme.SmartVan"
             android:label="@string/activity_svabout__title" />
+        <activity
+            android:name=".activities.SVFeedbackActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SmartVan"
+            android:label="@string/activity_svfeedback__title" />
     </application>
 
 </manifest>

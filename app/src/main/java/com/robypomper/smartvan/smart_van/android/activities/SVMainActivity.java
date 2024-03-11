@@ -537,9 +537,9 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
                 intent.putExtra(SVEnergyActivity.PARAM_OBJ_ID, obj.getId());
             } else if (item.getItemId() == R.id.itemConfigs) {
                 intent = new Intent(SVMainActivity.this, SVSettingsActivity.class);
-            //} else if (item.getItemId() == R.id.itemFeedback) {
-            //    intent = new Intent(SVMainActivity.this, SVFeedbackActivity.class);
-            //    intent.putExtra(SVEnergyActivity.PARAM_OBJ_ID, obj.getId());
+            } else if (item.getItemId() == R.id.itemFeedback) {
+                intent = new Intent(SVMainActivity.this, SVFeedbackActivity.class);
+                intent.putExtra(SVEnergyActivity.PARAM_OBJ_ID, obj.getId());
             } else if (item.getItemId() == R.id.itemAbout) {
                 intent = new Intent(SVMainActivity.this, SVAboutActivity.class);
                 intent.putExtra(SVEnergyActivity.PARAM_OBJ_ID, obj.getId());
