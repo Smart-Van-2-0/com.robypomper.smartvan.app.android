@@ -38,6 +38,8 @@ public class SVSettingsActivity extends AppCompatActivity implements
 
     // Constants
 
+    private static final String LOG_TAG = "JSLA.Actvt.Settings";
+
 
     // Internal vars
 
@@ -78,14 +80,14 @@ public class SVSettingsActivity extends AppCompatActivity implements
         else if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         else
-            Log.w("SVEnergy", "No ActionBar available for this activity");
+            Log.w(LOG_TAG, "No ActionBar available for this activity");
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             if (getParentActivityIntent() == null) {
-                Log.w("SVEnergy", "You have forgotten to specify the parentActivityName in the AndroidManifest!");
+                Log.w(LOG_TAG, "You have forgotten to specify the parentActivityName in the AndroidManifest!");
                 //onBackPressed();
                 getOnBackPressedDispatcher().onBackPressed();
             } else

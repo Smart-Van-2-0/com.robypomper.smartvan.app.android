@@ -49,6 +49,7 @@ public class SVServicesActivity
 
     // Constants
 
+    private static final String LOG_TAG = "JSLA.Actvt.Services";
     public final static String PARAM_OBJ_ID = SVDefinitions.PARAM_ACTIVITY_SVMAIN_OBJID;
     /**
      * TODO document component origins
@@ -131,7 +132,7 @@ public class SVServicesActivity
         else if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         else
-            Log.w("SVEnergy", "No ActionBar available for this activity");
+            Log.w(LOG_TAG, "No ActionBar available for this activity");
     }
 
     @Override
@@ -155,7 +156,7 @@ public class SVServicesActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             if (getParentActivityIntent() == null) {
-                Log.w("SVEnergy", "You have forgotten to specify the parentActivityName in the AndroidManifest!");
+                Log.w(LOG_TAG, "You have forgotten to specify the parentActivityName in the AndroidManifest!");
                 //onBackPressed();
                 getOnBackPressedDispatcher().onBackPressed();
             } else

@@ -10,6 +10,10 @@ import com.robypomper.josp.jsl.android.activities.JSLObjectDetailsActivity;
 
 public class SVObjectDetailsActivity extends JSLObjectDetailsActivity {
 
+    // Constants
+
+    private static final String LOG_TAG = "JSLA.Actvt.ObjDet";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,7 +28,7 @@ public class SVObjectDetailsActivity extends JSLObjectDetailsActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             if (getParentActivityIntent() == null) {
-                Log.w("SVEnergy", "You have forgotten to specify the parentActivityName in the AndroidManifest!");
+                Log.w(LOG_TAG, "You have forgotten to specify the parentActivityName in the AndroidManifest!");
                 //onBackPressed();
                 getOnBackPressedDispatcher().onBackPressed();
             } else

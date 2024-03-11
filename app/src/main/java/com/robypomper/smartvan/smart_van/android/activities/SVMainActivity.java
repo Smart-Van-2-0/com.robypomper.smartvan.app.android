@@ -43,6 +43,7 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
 
     // Constants
 
+    private static final String LOG_TAG = "JSLA.Actvt.Main";
     public final static String PARAM_OBJ_ID = SVDefinitions.PARAM_ACTIVITY_SVMAIN_OBJID;
     /**
      * COMP_POWER_PATH
@@ -331,7 +332,7 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
         if (binding == null) return;
 
         if (getRemoteObject() == null)
-            Log.i("SVMain", "updateRemoteObject() for unregistered remote object");
+            Log.i(LOG_TAG, "updateRemoteObject() for unregistered remote object");
 
         runOnUiThread(new Runnable() {
             @Override
@@ -398,9 +399,9 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
         if (binding == null) return;
 
         if (powerComp == null)
-            Log.i("SVMain", "updateConnectionWidgets() for unregistered power component");
+            Log.i(LOG_TAG, "updateConnectionWidgets() for unregistered power component");
         else
-            Log.d("SVMain", String.format("updateConnectionWidgets(%s) => %f", powerComp.getState(), powerComp.getState() / 1000));
+            Log.d(LOG_TAG, String.format("updateConnectionWidgets(%s) => %f", powerComp.getState(), powerComp.getState() / 1000));
 
         runOnUiThread(new Runnable() {
             @SuppressLint("DefaultLocale")
@@ -418,9 +419,9 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
         if (binding == null) return;
 
         if (panelsComp == null)
-            Log.i("SVMain", "updatePanelsComp() for unregistered panels component");
+            Log.i(LOG_TAG, "updatePanelsComp() for unregistered panels component");
         else
-            Log.d("SVMain", String.format("updatePanelsComp(%s) => %f", panelsComp.getState(), panelsComp.getState() / 1000));
+            Log.d(LOG_TAG, String.format("updatePanelsComp(%s) => %f", panelsComp.getState(), panelsComp.getState() / 1000));
 
         runOnUiThread(new Runnable() {
             @SuppressLint("DefaultLocale")
@@ -438,9 +439,9 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
         if (binding == null) return;
 
         if (serviceComp == null)
-            Log.i("SVMain", "updateServicesComp() for unregistered services component");
+            Log.i(LOG_TAG, "updateServicesComp() for unregistered services component");
         else
-            Log.d("SVMain", String.format("updateServicesComp(%s) => %f", serviceComp.getState(), serviceComp.getState() / 1000));
+            Log.d(LOG_TAG, String.format("updateServicesComp(%s) => %f", serviceComp.getState(), serviceComp.getState() / 1000));
 
         runOnUiThread(new Runnable() {
             @SuppressLint("DefaultLocale")
