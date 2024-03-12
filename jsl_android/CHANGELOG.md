@@ -2,7 +2,7 @@
 
 [README](README.md) | [SPECS](docs/specs.md) | [GUIDES](docs/guides.md) | [CHANGELOG](CHANGELOG.md) | [TODOs](TODOs.md) | [LICENCE](LICENCE.md)
 
-## 2.2.4-DEV
+## 2.2.4-DEV (release SV: 1.0.0)
 
 * Added JSL4Android module to SmartVan4Android project
 * Support for slf4j logging and Android multidex

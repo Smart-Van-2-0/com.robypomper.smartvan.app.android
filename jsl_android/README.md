@@ -8,7 +8,7 @@ library, and the Smart Van for Android Mobile App will use it as a dependency.
 
 **Artifact Name:** jospJSL4Android<br />
 **Artifact Group:** com.robypomper.josp<br />
-**Artifact Version:** 2.2.4-DEV
+**Artifact Version:** 2.2.4-DEV (release SV: 1.0.0)
 
 [README](README.md) | [SPECS](docs/specs.md) | [GUIDES](docs/guides.md) | [CHANGELOG](CHANGELOG.md) | [TODOs](TODOs.md) | [LICENCE](LICENCE.md)
 
