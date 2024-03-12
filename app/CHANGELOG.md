@@ -2,7 +2,7 @@
 
 [README](README.md) | [CHANGELOG](CHANGELOG.md) | [TODOs](TODOs.md) | [LICENCE](LICENCE.md)
 
-## 1.0.0-DEV
+## 1.0.0
 
 * SVApplication inherits from JSLApplication (and SVJSLClient from JSLClient)
 * SVService inherits from JSLService (and SVServiceAutoStart from JSLServiceAutoStart)
