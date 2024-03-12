@@ -8,6 +8,7 @@ package com.robypomper.smartvan.smart_van.android.storage;
  * related to a specific object. Then this interface is used to define the
  * common methods for all the sub-components to handle the object id and
  * his data.
+ * @noinspection unused
  */
 public interface SVSubStorage {
 

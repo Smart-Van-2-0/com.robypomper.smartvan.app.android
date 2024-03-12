@@ -17,8 +17,11 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_gravity="center"
-            android:layout_marginRight="8dp"
             android:src="@drawable/ic_srv_na" />
+
+        <Space
+            android:layout_width="8dp"
+            android:layout_height="wrap_content"/>
 
         <TextView
             android:id="@+id/txtJSLCompState"

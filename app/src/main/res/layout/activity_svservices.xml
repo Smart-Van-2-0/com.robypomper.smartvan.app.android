@@ -13,6 +13,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -52,9 +53,12 @@
                     android:id="@+id/btnControllersFilter"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:layout_marginRight="8dp"
                     android:src="@drawable/ic_filters"
                     android:background="?attr/selectableItemBackgroundBorderless" />
+
+                <Space
+                    android:layout_width="8dp"
+                    android:layout_height="wrap_content"/>
 
                 <ImageButton
                     android:id="@+id/btnControllersSort"
@@ -81,7 +85,7 @@
                     <androidx.cardview.widget.CardView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
+                        android:layout_marginStart="8dp"
                         app:contentPadding="16dp">
 
                         <com.robypomper.smartvan.smart_van.android.components.SVBinaryControllerView
@@ -93,7 +97,7 @@
                     <androidx.cardview.widget.CardView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
+                        android:layout_marginStart="8dp"
                         app:contentPadding="16dp">
 
                         <com.robypomper.smartvan.smart_van.android.components.SVPercentControllerView
@@ -122,7 +126,7 @@
                     <androidx.cardview.widget.CardView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
+                        android:layout_marginStart="8dp"
                         app:contentPadding="16dp">
 
                         <com.robypomper.smartvan.smart_van.android.components.SVPercentControllerView
@@ -134,7 +138,7 @@
                     <androidx.cardview.widget.CardView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
+                        android:layout_marginStart="8dp"
                         app:contentPadding="16dp">
 
                         <com.robypomper.smartvan.smart_van.android.components.SVPercentControllerView
@@ -171,9 +175,12 @@
                     android:id="@+id/btnActuatorsFilter"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:layout_marginRight="8dp"
                     android:src="@drawable/ic_filters"
                     android:background="?attr/selectableItemBackgroundBorderless" />
+
+                <Space
+                    android:layout_width="8dp"
+                    android:layout_height="wrap_content"/>
 
                 <ImageButton
                     android:id="@+id/btnActuatorsSort"
@@ -200,7 +207,7 @@
                     <androidx.cardview.widget.CardView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
+                        android:layout_marginStart="8dp"
                         app:contentPadding="16dp">
 
                         <com.robypomper.smartvan.smart_van.android.components.SVSwitchActuatorView
@@ -212,7 +219,7 @@
                     <androidx.cardview.widget.CardView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
+                        android:layout_marginStart="8dp"
                         app:contentPadding="16dp">
 
                         <com.robypomper.smartvan.smart_van.android.components.SVSwitchActuatorView
@@ -241,7 +248,7 @@
                     <androidx.cardview.widget.CardView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
+                        android:layout_marginStart="8dp"
                         app:contentPadding="16dp">
 
                         <com.robypomper.smartvan.smart_van.android.components.SVDimmerActuatorView
@@ -253,7 +260,7 @@
                     <androidx.cardview.widget.CardView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
+                        android:layout_marginStart="8dp"
                         app:contentPadding="16dp">
 
                         <com.robypomper.smartvan.smart_van.android.components.SVDimmerActuatorView
@@ -265,7 +272,7 @@
                     <androidx.cardview.widget.CardView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
+                        android:layout_marginStart="8dp"
                         app:contentPadding="16dp">
 
                         <com.robypomper.smartvan.smart_van.android.components.SVDimmerActuatorView

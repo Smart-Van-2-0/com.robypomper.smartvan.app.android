@@ -20,7 +20,7 @@
         android:id="@+id/txtJSLCompLastChange"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="right"
+        android:gravity="end"
         android:minWidth="135dp"
         android:maxWidth="135dp"
         android:text="@string/placeholder_jsl_base_action_view_last_change"

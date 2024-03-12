@@ -66,13 +66,6 @@ public class SVSettingsObjectFragment extends PreferenceFragmentCompat {
         prefResetObjectServices.setOnPreferenceClickListener(prefResetObjectServicesListener);
     }
 
-    private final EditTextPreference.OnBindEditTextListener prefSVBoxColorBindListener = new EditTextPreference.OnBindEditTextListener() {
-        @Override
-        public void onBindEditText(@NonNull EditText editText) {
-            editText.setInputType(InputType.TYPE_CLASS_NUMBER);
-        }
-    };
-
     private final Preference.OnPreferenceChangeListener prefSVBoxColorChangeListener = new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(@NonNull Preference preference, Object newValue) {

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="activity_svselect_object__title">Select SV Box</string>
     <string name="activity_svselect_object_do_not_ask_me_again">Do not ask me again</string>
     <string name="activity_svselect_object_sv_box_selected">Would you set \'%s\' SV Box as favourite one?</string>
     <string name="activity_svselect_object_favourite_sv_box_found">Favourite SV Box found \'%s\'\n would you proceed with it?</string>

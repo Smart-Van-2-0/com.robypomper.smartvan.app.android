@@ -30,7 +30,6 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-
         <activity
             android:name=".activities.SVStartupActivity"
             android:exported="true"
@@ -45,7 +44,7 @@
         <activity
             android:name=".activities.SVSelectObjectActivity"
             android:exported="false"
-            android:label="@string/activity_svmain__title"
+            android:label="@string/activity_svselect_object__title"
             android:noHistory="true" />
         <activity
             android:name=".activities.SVMainActivity"

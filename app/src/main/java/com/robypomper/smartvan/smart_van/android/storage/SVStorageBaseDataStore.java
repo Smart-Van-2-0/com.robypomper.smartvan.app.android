@@ -5,8 +5,6 @@ import android.content.Context;
 import androidx.datastore.preferences.core.Preferences;
 import androidx.datastore.rxjava3.RxDataStore;
 
-import com.robypomper.smartvan.smart_van.android.storage.local.LocalPreferences;
-import com.robypomper.smartvan.smart_van.android.storage.local.LocalPreferencesServices;
 import com.robypomper.smartvan.smart_van.android.utils.DataStoreUtils;
 
 import java.util.ArrayList;
@@ -230,7 +228,7 @@ public abstract class SVStorageBaseDataStore implements SVStorage {
      */
     @Override
     public void addKnownObjectId(String objectId) {
-        Set<String> knownIds = DataStoreUtils.getFromDataStore(dataStore, DataStoreUtils.stringSetKey(ctx, OBJ_ID_KNOWN), DEF_OBJ_ID_KNOWN);
+        Set<String> knownIds = new HashSet<>(DataStoreUtils.getFromDataStore(dataStore, DataStoreUtils.stringSetKey(ctx, OBJ_ID_KNOWN), DEF_OBJ_ID_KNOWN));
         if (!knownIds.contains(objectId)) {
             knownIds.add(objectId);
             DataStoreUtils.setToDataStore(dataStore, DataStoreUtils.stringSetKey(ctx, OBJ_ID_KNOWN), knownIds);

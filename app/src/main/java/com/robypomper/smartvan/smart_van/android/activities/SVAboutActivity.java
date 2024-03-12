@@ -3,7 +3,6 @@ package com.robypomper.smartvan.smart_van.android.activities;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.MenuItem;

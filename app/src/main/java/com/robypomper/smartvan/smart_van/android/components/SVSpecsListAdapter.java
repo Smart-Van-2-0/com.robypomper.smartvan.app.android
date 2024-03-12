@@ -20,6 +20,7 @@ import java.util.Collections;
  * {@link android.widget.ListView}. The adapter must be configured to use a specific
  * {@link JSLRemoteObject} to show his SV Specs, otherwise the specs values will be
  * shown as not provided.
+ * @noinspection unused
  */
 public class SVSpecsListAdapter extends BaseAdapter {
 
@@ -36,7 +37,7 @@ public class SVSpecsListAdapter extends BaseAdapter {
         super();
         this.mContext=context;
         this.specsList = specsList;
-        this.specsViews = new ArrayList<>(Collections.nCopies(specsList.size(), null));;
+        this.specsViews = new ArrayList<>(Collections.nCopies(specsList.size(), null));
         this.remoteObj = remoteObj;
     }
 

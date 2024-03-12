@@ -2,6 +2,7 @@ package com.robypomper.smartvan.smart_van.android.storage;
 
 /**
  * This class is used to define the abstract implementation of a sub storage.
+ * @noinspection unused
  */
 public abstract class SVAbsSubStorage implements SVSubStorage {
 

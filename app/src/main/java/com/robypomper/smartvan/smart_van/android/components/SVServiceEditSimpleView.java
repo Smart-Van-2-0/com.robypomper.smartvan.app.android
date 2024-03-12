@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.SimpleAdapter;
@@ -32,13 +31,16 @@ public class SVServiceEditSimpleView extends LinearLayout {
     private final static int LAYOUT = R.layout.view_sv_service_edit_simple;
 
 
+    // Internal vars
+
     private TextInputEditText txtName;
-    //private AutoCompleteTextView txtIcon;
     private Spinner txtIcon;
+
 
     public interface OnServiceEditedListener {
         void onServiceEdited(SVServiceEditSimpleView view, JSLComponent service, String name, String iconName);
     }
+
 
     public static void show(Context ctx, JSLComponent service, OnServiceEditedListener observer) {
         SVStorage storage = SVStorageSingleton.getInstance();
@@ -52,7 +54,6 @@ public class SVServiceEditSimpleView extends LinearLayout {
         SVServiceEditSimpleView editView = new SVServiceEditSimpleView(ctx);   // TODO inflate layout with Dialog theme @see AlertDialog.Builder::setView
         editView.setName(srvName);
         editView.setIconName(srvIconName);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
         // Store edited service name and icon
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
@@ -124,23 +125,10 @@ public class SVServiceEditSimpleView extends LinearLayout {
                 new String[]{"name", "icon"},
                 new int[]{R.id.txtSVServiceName, R.id.iconSVServiceIcon});
         txtIcon.setAdapter(adapter);
-        //txtIcon.setThreshold(0);
-        /*txtIcon.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                txtIcon.showDropDown();
-            }
-        });
-        txtIcon.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Map<String, String> item = (Map<String, String>) parent.getItemAtPosition(position);
-                setIconName(item.get("name"));
-            }
-        });*/
         txtIcon.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                //noinspection unchecked
                 Map<String, String> item = (Map<String, String>) parent.getItemAtPosition(position);
                 setIconName(item.get("name"));
             }
@@ -156,7 +144,7 @@ public class SVServiceEditSimpleView extends LinearLayout {
     // Getters and setters
 
     public String getName() {
-        return txtName.getText().toString();
+        return txtName.getText() != null ? txtName.getText().toString() : null;
     }
 
     public void setName(String name) {
@@ -167,16 +155,18 @@ public class SVServiceEditSimpleView extends LinearLayout {
         //return txtIcon.getText().toString();
         Object o = txtIcon.getSelectedItem();
         if (o == null) return null;
-        if (o instanceof Map) return ((Map<String, String>) o).get("name");
+        if (o instanceof Map)
+            //noinspection unchecked
+            return ((Map<String, String>) o).get("name");
         return o.toString();
     }
 
     public void setIconName(String iconName) {
-        //txtIcon.setText(iconName);
-        //txtIcon.setCompoundDrawablesWithIntrinsicBounds(0, 0, SVServiceIcons.iconString2Res(iconName), 0);
+        if (iconName == null) iconName = SVServiceIcons.DEF_ICON_TXT;
         for (int i = 0; i < txtIcon.getCount(); i++) {
+            //noinspection unchecked
             Map<String, String> item = (Map<String, String>) txtIcon.getItemAtPosition(i);
-            if (item.get("name").equals(iconName)) {
+            if (iconName.equals(item.get("name"))) {
                 txtIcon.setSelection(i);
                 break;
             }

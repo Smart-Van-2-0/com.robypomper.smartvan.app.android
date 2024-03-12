@@ -1,11 +1,10 @@
 <resources>
-    <string name="activity_svobject_specs_txt_title_post">SV Specifications</string>
+    <string name="activity_svobject_specs__title">Smart Van Specs</string>
     <string name="activity_svobject_specs_txt_content">Below, listed hierarchically, are all the specifications of the Smart Van project. For each one it is shown whether or not it is provided by the currently connected Smart Van Box.</string>
-    <string name="activity_svobject_specs__title">SVBox Specifications</string>
     <string name="activity_svobject_specs_title_path">Current Specification Path</string>
     <string name="activity_svobject_specs_title_sub_specs">Sub Specifications</string>
     <string name="activity_svobject_specs_root_placeholder">{Root}</string>
     <string name="activity_svobject_specs_separator_placeholder">&gt;</string>
-    <string name="activity_svobject_specs_2ndlevel_placeholder">{2nd Level}</string>
+    <string name="activity_svobject_specs_2ndLevel_placeholder">{2nd Level}</string>
     <string name="activity_svobject_specs_more_details">More details</string>
 </resources>

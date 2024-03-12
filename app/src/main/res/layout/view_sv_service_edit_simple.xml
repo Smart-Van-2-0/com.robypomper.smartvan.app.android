@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:inputType="text"
-        android:hint="Name" />
+        android:hint="@string/view_sv_service_edit_simple_txt_name_placeholder" />
 
     <Spinner
         android:background="?attr/editTextBackground"
@@ -24,6 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="0dp"
-        android:hint="Icon" />
+        android:hint="@string/view_sv_service_edit_simple_txt_icon"
+        tools:ignore="RtlHardcoded,RtlSymmetry" />
 
 </LinearLayout>

@@ -17,11 +17,14 @@
             android:textAppearance="?attr/textAppearanceSubtitle2"
             android:textColor="@color/gray_500" />
 
+        <Space
+            android:layout_width="4dp"
+            android:layout_height="wrap_content"/>
+
         <ImageView
             android:id="@+id/icoJSLCompActionWaiting"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="4dp"
             android:background="@drawable/ic_action_waiting"
             android:backgroundTint="?attr/colorPrimary"
             android:visibility="gone" />
@@ -54,11 +57,14 @@
             android:text="@string/lay_service_card_header_name_placeholder"
             android:textAppearance="?attr/textAppearanceHeadline6" />
 
+        <Space
+            android:layout_width="4dp"
+            android:layout_height="wrap_content"/>
+
         <ImageView
             android:id="@+id/icoSVServiceHighVoltage"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginRight="4dp"
             android:background="@drawable/ic_high_voltage"
             android:backgroundTint="?attr/colorPrimary"
             android:visibility="gone" />

@@ -43,6 +43,7 @@ import com.robypomper.smartvan.smart_van.android.storage.SVPreferencesServices;
 import com.robypomper.smartvan.smart_van.android.storage.SVStorageSingleton;
 
 
+/** @noinspection unused*/
 public class SVServicesActivity
         extends BaseRemoteObjectActivity
         implements SVServiceBottomSheet.OnDetachListener {

@@ -1,5 +1,4 @@
 <resources>
     <string name="app_name">Smart Van</string>
-    <string name="config_font">sans-serif</string>
     <string name="activity_svstartup__title">Smart Van Startup</string>
 </resources>

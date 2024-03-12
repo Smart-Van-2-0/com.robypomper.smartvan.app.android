@@ -26,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="16dp"
-        android:paddingLeft="16dp"
+        android:paddingHorizontal="16dp"
         android:textAppearance="?attr/textAppearanceHeadline6"
         android:text="@string/activity_svenergy_txt_sub_title_real_time" />
 
@@ -162,7 +162,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="16dp"
-        android:paddingLeft="16dp"
+        android:paddingHorizontal="16dp"
         android:textAppearance="?attr/textAppearanceHeadline6"
         android:text="@string/activity_svenergy_txt_sub_title_history" />
 

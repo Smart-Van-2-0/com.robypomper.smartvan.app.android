@@ -38,7 +38,7 @@
             android:textAppearance="?attr/textAppearanceSubtitle1"
             android:textStyle="italic"
             android:textColor="@color/gray_500"/>
-7
+
     </LinearLayout>
 
     <View

@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
@@ -14,20 +12,26 @@
         android:text="@string/lay_service_card_header_name_placeholder"
         android:textAppearance="?attr/textAppearanceSubtitle2" />
 
+    <Space
+        android:layout_width="4dp"
+        android:layout_height="wrap_content"/>
+
     <ImageView
         android:id="@+id/icoSVServiceHighVoltage"
         android:layout_width="24dp"
         android:layout_height="match_parent"
-        android:layout_marginLeft="4dp"
         android:background="@drawable/ic_high_voltage"
         android:backgroundTint="?attr/colorPrimary" />
+
+    <Space
+        android:layout_width="4dp"
+        android:layout_height="wrap_content"/>
 
     <ImageView
         android:visibility="gone"
         android:id="@+id/icoJSLCompActionWaiting"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginLeft="4dp"
         android:background="@drawable/ic_action_waiting"
         android:backgroundTint="?attr/colorPrimary"/>
 

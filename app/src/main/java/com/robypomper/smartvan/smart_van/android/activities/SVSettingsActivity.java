@@ -1,15 +1,11 @@
 package com.robypomper.smartvan.smart_van.android.activities;
 
 import android.os.Bundle;
-import android.text.InputType;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
 import androidx.datastore.preferences.core.Preferences;
@@ -17,20 +13,14 @@ import androidx.datastore.preferences.core.PreferencesKeys;
 import androidx.datastore.rxjava3.RxDataStore;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceDataStore;
 import androidx.preference.PreferenceFragmentCompat;
 
 import com.robypomper.smartvan.smart_van.android.R;
 import com.robypomper.smartvan.smart_van.android.components.SVSettingsMainFragment;
-import com.robypomper.smartvan.smart_van.android.components.SVSettingsObjectFragment;
-import com.robypomper.smartvan.smart_van.android.storage.SVStorageBaseDataStore;
-import com.robypomper.smartvan.smart_van.android.storage.SVStorageSingleton;
-import com.robypomper.smartvan.smart_van.android.storage.local.LocalPreferences;
 import com.robypomper.smartvan.smart_van.android.utils.DataStoreUtils;
 
-import java.util.List;
 import java.util.Set;
 
 public class SVSettingsActivity extends AppCompatActivity implements
@@ -101,9 +91,10 @@ public class SVSettingsActivity extends AppCompatActivity implements
     public boolean onPreferenceStartFragment(@NonNull PreferenceFragmentCompat caller, Preference pref) {
         // Instantiate the new Fragment
         final Bundle args = pref.getExtras();
+        assert pref.getFragment() != null;
         final Fragment fragment = getSupportFragmentManager().getFragmentFactory().instantiate(getClassLoader(), pref.getFragment());
         fragment.setArguments(args);
-        fragment.setTargetFragment(caller, 0);
+        getSupportFragmentManager().setFragmentResultListener("reqKey", caller.getViewLifecycleOwner(), (requestKey, result) -> {});
 
         // Replace the existing Fragment with the new Fragment
         getSupportFragmentManager().beginTransaction()
@@ -113,187 +104,6 @@ public class SVSettingsActivity extends AppCompatActivity implements
         setTitle(pref.getTitle());
         return true;
     }
-
-
-
-
-
-
-
-
-
-
-    public static class GenericFragment extends PreferenceFragmentCompat {
-
-        @Override
-        public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-            // Bind the backend data store from SVStorageBaseDataStore to the preference manager
-            assert SVStorageSingleton.getInstance() instanceof SVStorageBaseDataStore;
-            RxDataStore<Preferences> dataStore = ((SVStorageBaseDataStore) SVStorageSingleton.getInstance()).getDataStore();
-            getPreferenceManager().setPreferenceDataStore(new RxDataStorePreference(dataStore));
-            // Get current SV Box
-            String currObjId = SVStorageSingleton.getInstance().getCurrentObjectId();
-            String currObjName = "A"; // TODO assign this
-            String favObjId = SVStorageSingleton.getInstance().getFavouriteObjectId();
-            String favObjName = "B"; // TODO assign this
-            List<String> knowObjIds = SVStorageSingleton.getInstance().getKnownObjectIds();
-
-            // Inflate the preferences from the XML resource
-            setPreferencesFromResource(R.xml.preferences_generic, rootKey);
-
-
-            // Customize the preferences views
-            Preference prefShowCurrentObjConfigs = findPreference(getResources().getString(R.string.activity_svsettings_txt_show_current_obj_configs_key));
-            assert prefShowCurrentObjConfigs != null;
-            prefShowCurrentObjConfigs.setSummary(
-                    getResources().getString(R.string.activity_svsettings_txt_show_current_obj_configs_summary,
-                            currObjName, currObjId));
-
-            Preference prefResetFavouriteSVBox = findPreference(getResources().getString(R.string.activity_svsettings_txt_reset_favourite_obj_id_key));
-            assert prefResetFavouriteSVBox != null;
-            prefResetFavouriteSVBox.setSummary(
-                    getResources().getString(R.string.activity_svsettings_txt_reset_favourite_obj_id_summary,
-                            favObjName, favObjId));
-            prefResetFavouriteSVBox.setOnPreferenceClickListener(
-                new Preference.OnPreferenceClickListener() {
-                    @Override
-                    public boolean onPreferenceClick(@NonNull Preference preference) {
-                        // Show warning dialog, if accepted reset the favourite object id
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                        builder.setTitle(R.string.activity_svsettings_txt_reset_favourite_obj_id_title)
-                                .setMessage(R.string.activity_svsettings_txt_reset_favourite_obj_id_message)
-                                .setPositiveButton(R.string.activity_svsettings_txt_reset_favourite_obj_id_yes,
-                                        (dialog, which) -> {
-                                            SVStorageSingleton.getInstance().setFavouriteObjectId(null);
-                                            prefResetFavouriteSVBox.setSummary(
-                                                    getResources().getString(R.string.activity_svsettings_txt_reset_favourite_obj_id_summary,
-                                                            "N", "A"));
-                                        })
-                                .setNegativeButton(R.string.activity_svsettings_txt_reset_favourite_obj_id_no,
-                                        (dialog, which) -> {
-                                            // Do nothing
-                                        })
-                                .show();
-                        return true;
-                    }
-                });
-
-            Preference prefShowKnownObjectIds = findPreference(getResources().getString(R.string.activity_svsettings_txt_show_known_obj_id_key));
-            assert prefShowKnownObjectIds != null;
-            prefShowKnownObjectIds.setSummary(
-                    getResources().getString(R.string.activity_svsettings_txt_show_known_obj_id_summary,
-                            knowObjIds.size()));
-            View prefShowKnownObjectIdsDialogView = null;   // TODO assign this
-            prefShowKnownObjectIds.setOnPreferenceClickListener(
-                new Preference.OnPreferenceClickListener() {
-                    @Override
-                    public boolean onPreferenceClick(@NonNull Preference preference) {
-                        // Show warning dialog, if accepted reset the favourite object id
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                        builder.setTitle(R.string.activity_svsettings_txt_show_known_obj_id_title)
-                                .setView(prefShowKnownObjectIdsDialogView)
-                                .setPositiveButton(R.string.activity_svsettings_txt_show_known_obj_id_yes,
-                                        (dialog, which) -> {
-                                            List<String> updatedKnowObjIds = SVStorageSingleton.getInstance().getKnownObjectIds();
-                                            prefShowKnownObjectIds.setSummary(
-                                                    getResources().getString(R.string.activity_svsettings_txt_show_known_obj_id_summary,
-                                                            updatedKnowObjIds.size()));
-                                        })
-                                .show();
-                        return true;
-                    }
-                });
-
-            Preference prefResetKnownObjectIds = findPreference(getResources().getString(R.string.activity_svsettings_txt_clean_known_obj_id_storage_key));
-            assert prefResetKnownObjectIds != null;
-            prefResetKnownObjectIds.setOnPreferenceClickListener(
-                new Preference.OnPreferenceClickListener() {
-                    @Override
-                    public boolean onPreferenceClick(@NonNull Preference preference) {
-                        // Show warning dialog, if accepted reset the favourite object id
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                        builder.setTitle(R.string.activity_svsettings_txt_clean_known_obj_id_storage_title)
-                                .setMessage(R.string.activity_svsettings_txt_clean_known_obj_id_storage_message)
-                                .setPositiveButton(R.string.activity_svsettings_txt_clean_known_obj_id_storage_yes,
-                                        (dialog, which) -> {
-                                            // remove known objects' ids and clean their storage
-                                            List<String> updatedKnowObjIds = SVStorageSingleton.getInstance().getKnownObjectIds();
-                                            for (String objId : updatedKnowObjIds)
-                                                SVStorageSingleton.getInstance().removeKnownObjectId(objId);
-
-                                            // recreate current object id
-                                            SVStorageSingleton.getInstance().addKnownObjectId(currObjId);
-
-                                            // update preferences' summaries
-                                            prefShowKnownObjectIds.setSummary(
-                                                    getResources().getString(R.string.activity_svsettings_txt_show_known_obj_id_summary,
-                                                            SVStorageSingleton.getInstance().getKnownObjectIds().size()));
-                                        })
-                                .setNegativeButton(R.string.activity_svsettings_txt_clean_known_obj_id_storage_no,
-                                        (dialog, which) -> {
-                                            // Do nothing
-                                        })
-                                .show();
-                        return true;
-                    }
-                });
-        }
-
-    }
-
-    public static class ObjectFragment extends PreferenceFragmentCompat {
-
-        @Override
-        public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-            // Bind the backend data store from LocalPreferences to the preference manager
-            assert SVStorageSingleton.getInstance().getCurrentPreferencesApp() instanceof LocalPreferences;
-            RxDataStore<Preferences> dataStore = ((LocalPreferences) SVStorageSingleton.getInstance().getCurrentPreferencesApp()).getDataStore();
-            getPreferenceManager().setPreferenceDataStore(new RxDataStorePreference(dataStore));
-
-            // Inflate the preferences from the XML resource
-            setPreferencesFromResource(R.xml.preferences_object, rootKey);
-
-            // Customize the preferences views
-            EditTextPreference prefChartsTimeout = findPreference(getString(LocalPreferences.CHARTS_TIMEOUT));
-            assert prefChartsTimeout != null;
-            prefChartsTimeout.setDefaultValue(LocalPreferences.DEF_CHARTS_TIMEOUT);
-            prefChartsTimeout.setOnBindEditTextListener(
-                new EditTextPreference.OnBindEditTextListener() {
-                    @Override
-                    public void onBindEditText(@NonNull EditText editText) {
-                        editText.setInputType(InputType.TYPE_CLASS_NUMBER);
-                    }
-                });
-
-            Preference prefResetObjectServices = findPreference(getResources().getString(R.string.activity_svsettings_txt_reset_obj_id_services_key));
-            assert prefResetObjectServices != null;
-            prefResetObjectServices.setOnPreferenceClickListener(
-                    new Preference.OnPreferenceClickListener() {
-                        @Override
-                        public boolean onPreferenceClick(@NonNull Preference preference) {
-                            // Show warning dialog, if accepted reset the favourite object id
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                            builder.setTitle(R.string.activity_svsettings_txt_reset_obj_id_services_title)
-                                    .setMessage(R.string.activity_svsettings_txt_reset_obj_id_services_message)
-                                    .setPositiveButton(R.string.activity_svsettings_txt_reset_obj_id_services_yes,
-                                            (dialog, which) -> {
-                                                // reset all services preference from storage
-                                                List<String> updatedKnowObjIds = SVStorageSingleton.getInstance().getKnownObjectIds();
-                                                for (String objId : updatedKnowObjIds)
-                                                    SVStorageSingleton.getInstance().resetPreferencesServices(objId);
-                                            })
-                                    .setNegativeButton(R.string.activity_svsettings_txt_reset_obj_id_services_no,
-                                            (dialog, which) -> {
-                                                // Do nothing
-                                            })
-                                    .show();
-                            return true;
-                        }
-                    });
-        }
-
-    }
-
 
 
     public static class RxDataStorePreference extends PreferenceDataStore {

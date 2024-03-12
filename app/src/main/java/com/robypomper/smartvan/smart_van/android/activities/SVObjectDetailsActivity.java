@@ -18,10 +18,13 @@ public class SVObjectDetailsActivity extends JSLObjectDetailsActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // set up action bar
         if (getActionBar() != null)
             getActionBar().setDisplayHomeAsUpEnabled(true);
-        else
+        else if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        else
+            Log.w(LOG_TAG, "No ActionBar available for this activity");
     }
 
     @Override

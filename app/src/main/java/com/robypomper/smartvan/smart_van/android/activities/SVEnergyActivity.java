@@ -303,28 +303,9 @@ public class SVEnergyActivity extends BaseRemoteObjectActivity {
     }
 
     private void updateRemoteObjectUI() {
-        updateRemoteObject();
         updateStorageComp();
         updateGenerationComp();
         updateConsumptionComp();
-    }
-
-    private void updateRemoteObject() {
-        if (binding == null) return;
-
-        if (getRemoteObject() == null)
-            Log.i(LOG_TAG, "updateRemoteObject() for unregistered remote object");
-
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                String text = getObjId();   // fallback to objId
-                JSLRemoteObject obj = getRemoteObject();
-                if (obj != null) text = obj.getName();
-
-                //binding.txtTitleName.setText(text);
-            }
-        });
     }
 
     private void updateStorageComp() {

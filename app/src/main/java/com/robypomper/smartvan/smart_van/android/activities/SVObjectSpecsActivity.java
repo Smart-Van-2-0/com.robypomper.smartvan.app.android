@@ -15,7 +15,6 @@ import androidx.core.app.NavUtils;
 
 import com.google.android.material.chip.Chip;
 import com.robypomper.josp.jsl.android.activities.BaseRemoteObjectActivity;
-import com.robypomper.josp.jsl.objs.JSLRemoteObject;
 import com.robypomper.smartvan.smart_van.android.commons.SVDefinitions;
 import com.robypomper.smartvan.smart_van.android.commons.SVSpec;
 import com.robypomper.smartvan.smart_van.android.commons.SVSpecGroup;
@@ -52,13 +51,14 @@ public class SVObjectSpecsActivity extends BaseRemoteObjectActivity {
 
     private static final String LOG_TAG = "JSLA.Actvt.ObjSpecs";
     public final static String PARAM_SPECS_GROUP_PATH = SVDefinitions.PARAM_ACTIVITY_SVOBJECT_SPECS_SPECS_GROUP_PATH;
-    /** Allow to configure back button behaviour (true: follow the NavStack, false: go to parent). */
+    /**
+     * Allow to configure back button behaviour (true: follow the NavStack, false: go to parent).
+     */
     private final static boolean USE_NAVIGATION_STACK = false;
 
 
     // Internal variables
 
-    private JSLRemoteObject remoteObject;
     private SVSpecGroup specGroup;
     private final List<SVSpecGroup> specGroupsStack = new ArrayList<>();
     private String specGroupUrl;

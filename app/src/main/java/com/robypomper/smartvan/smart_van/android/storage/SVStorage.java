@@ -16,6 +16,7 @@ import java.util.Set;
  * Except for the current object id, the favourite one and the list of known objects
  * ids; all the other methods refer to a specific object identified by its id.
  * That allows to store data for multiple objects at the same time.
+ * @noinspection unused
  */
 public interface SVStorage {
 

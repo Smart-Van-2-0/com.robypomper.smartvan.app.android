@@ -48,9 +48,6 @@ That includes all the data related to the SV Boxes, such as the history of the S
     <string name="activity_svsettings_txt_clean_known_obj_id_storage_no">Cancel</string>y
 
 
-    <string name="activity_svsettings_txt_cat_object_settings_key">cat_object_settings</string>
-    <string name="activity_svsettings_txt_cat_object_settings_title">Settings</string>
-
     <string name="activity_svsettings_txt_svbox_color_key">ALT_svbox_color</string>
     <string name="activity_svsettings_txt_svbox_color_title">SV Box Color</string>
     <string name="activity_svsettings_txt_svbox_color_summary">Set color for the current SV Box</string>

@@ -12,43 +12,6 @@
     android:fitsSystemWindows="true"
     tools:context=".activities.SVFeedbackActivity">
 
-    <LinearLayout
-        android:visibility="gone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
-
-        <ImageView
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            app:srcCompat="@mipmap/ic_launcher_foreground" />
-
-        <LinearLayout
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/txtAppName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/activity_svabout_txt_header"
-                android:textSize="24sp" />
-
-            <TextView
-                android:id="@+id/txtVersion"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/activity_svabout_txt_version_placeholder"
-                android:textAlignment="center"
-                android:textStyle="italic"
-                android:textSize="16sp" />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
     <View
         android:visibility="gone"
         android:id="@+id/divider1"

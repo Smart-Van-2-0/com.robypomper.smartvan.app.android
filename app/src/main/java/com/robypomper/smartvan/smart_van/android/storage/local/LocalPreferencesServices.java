@@ -15,6 +15,7 @@ import com.robypomper.smartvan.smart_van.android.utils.DataStoreUtils;
  * The local {@link SVPreferencesServices} implementation for the SmartVan application.
  * <p>
  * This implementation use the AndroidX DataStore to store the preferences.
+ * @noinspection unused
  */
 public class LocalPreferencesServices extends SVAbsSubStorage implements SVPreferencesServices {
 

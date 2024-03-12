@@ -20,6 +20,7 @@ import io.reactivex.rxjava3.functions.Function;
  * <p>
  * This class provides the basic methods to store and retrieve data from the
  * AndroidX DataStore.
+ * @noinspection unused
  */
 public class DataStoreUtils {
 

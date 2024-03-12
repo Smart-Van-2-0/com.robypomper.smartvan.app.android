@@ -15,6 +15,7 @@ import java.util.Set;
  * <p>
  * This class provides methods to convert icons from string to drawable resource
  * and vice versa.
+ * @noinspection unused
  */
 public class SVServiceIcons {
 

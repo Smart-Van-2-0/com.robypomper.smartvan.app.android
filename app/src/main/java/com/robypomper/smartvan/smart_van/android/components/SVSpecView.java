@@ -21,6 +21,7 @@ import com.robypomper.smartvan.smart_van.android.commons.SVSpecs;
  * <p>
  * This view show the spec name, the spec path and an icon to show if the spec was provided
  * by the Smart Van Box. The view is based on the {@link R.layout#view_sv_spec} layout.
+ * @noinspection unused
  */
 public class SVSpecView extends RelativeLayout {
 

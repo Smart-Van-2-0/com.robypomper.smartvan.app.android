@@ -46,11 +46,14 @@
             android:text="@string/lay_service_card_header_name_placeholder"
             android:textAppearance="?attr/textAppearanceHeadline6" />
 
+        <Space
+            android:layout_width="8dp"
+            android:layout_height="wrap_content"/>
+
         <ImageButton
             android:id="@+id/btnSVServiceEdit"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_edit"
             android:textAllCaps="false" />
@@ -61,7 +64,6 @@
         android:id="@+id/txtJSLCompDescr"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="left"
         android:paddingTop="8dp"
         android:text="@string/placeholder_jsl_base_component_view_descr"
         android:textAppearance="?attr/textAppearanceSubtitle1" />
