@@ -16,7 +16,7 @@ import java.util.Date;
  * date and the old state.
  * <p>
  * When a subclass, detects a state change, it can call the {@link #processStateUpdate(Object, Object)}
- * method, so this base class can update theadditional info and trigger the
+ * method, so this base class can update traditional info and trigger the
  * observer with the /{@link Observer#onStateDataUpdated(JSLBaseStateHandler, Object, Object)}
  * event.
  * <p>

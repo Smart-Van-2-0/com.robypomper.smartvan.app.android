@@ -42,7 +42,7 @@ public abstract class JSLApplication<T extends JSLService> extends MultiDexAppli
     private static final String LOG_TAG = "JSLA.JSLApp";
 
     private JSLClient<T> jslClient;
-    ExecutorService executors_network = Executors.newFixedThreadPool(5);
+    private final ExecutorService executors_network = Executors.newFixedThreadPool(5);
 
 
     // Android

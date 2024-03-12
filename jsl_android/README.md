@@ -3,7 +3,7 @@
 The JSL 4 Android looks for the `local_ks.jks` file in order to load his
 SSL certificate for a secure communication.
 
-To generate a new certificate for your JSOP/Android app, please use the
+To generate a new certificate for your JOSP/Android app, please use the
 following command:
 
 ```shell

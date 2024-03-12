@@ -1,6 +1,5 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/lay_remote_object_event_simple"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -16,13 +15,17 @@
         android:maxLines="1"
         android:text="@string/adapter_remote_object_event_type_placeholder" />
 
+    <Space
+        android:layout_width="8dp"
+        android:layout_height="wrap_content"/>
+
     <TextView
         android:id="@+id/txtEventCount"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_toEndOf="@+id/txtEventType"
         android:layout_toRightOf="@+id/txtEventType"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
         android:background="@drawable/circle_primary"
         android:gravity="center"
         android:shadowColor="@android:color/white"
@@ -38,7 +41,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_below="@id/txtEventType"
-        android:paddingRight="16dp"
         android:textAppearance="?attr/textAppearanceCaption"
         android:textSize="12sp"
         android:maxLines="2"

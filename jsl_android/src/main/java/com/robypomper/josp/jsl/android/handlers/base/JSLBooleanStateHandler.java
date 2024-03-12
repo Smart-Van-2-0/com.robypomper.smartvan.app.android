@@ -19,6 +19,7 @@ import com.robypomper.josp.jsl.objs.structure.pillars.JSLBooleanState;
  * Main properties:
  * - last update date
  * - old state
+ * @noinspection unused
  */
 public class JSLBooleanStateHandler extends JSLBaseStateHandler {
 

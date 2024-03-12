@@ -41,6 +41,7 @@ import java.util.List;
  * <p>
  * TODO: implement a way to add an overlay to the RecyclerView when the adapter is fetching events.
  * TODO add attributes to customize the UI like the TextAppearance.
+ * @noinspection unused
  */
 public abstract class RemoteObjectEventsAdapter extends RecyclerView.Adapter<RemoteObjectEventsAdapter.ViewHolder> {
 

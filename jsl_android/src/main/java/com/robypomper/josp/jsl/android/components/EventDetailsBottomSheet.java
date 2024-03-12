@@ -45,6 +45,7 @@ import java.util.Map;
  * Moreover, it allows to export the event details to the clipboard.
  * <p>
  * TODO add attributes to customize the UI like the TextAppearance.
+ * @noinspection unused
  */
 public class EventDetailsBottomSheet extends BottomSheetDialogFragment {
 
@@ -176,16 +177,18 @@ public class EventDetailsBottomSheet extends BottomSheetDialogFragment {
                 @Override
                 public boolean onMenuItemClick(MenuItem menuItem) {
                     if (menuItem.getItemId() == R.id.copyEvent)
-                        return copyEventToClipboard();
+                        copyEventToClipboard();
                     else if (menuItem.getItemId() == R.id.copyPayload)
-                        return copyEventPayloadToClipboard();
+                        copyEventPayloadToClipboard();
                     else if (menuItem.getItemId() == R.id.copyErrorMsg)
-                        return copyEventErrorMsgToClipboard();
+                        copyEventErrorMsgToClipboard();
                     else if (menuItem.getItemId() == R.id.copyErrorPayload)
-                        return copyEventErrorPayloadToClipboard();
+                        copyEventErrorPayloadToClipboard();
                     else if (menuItem.getItemId() == R.id.copyErrorStack)
-                        return copyEventErrorStackToClipboard();
-                    return false;
+                        copyEventErrorStackToClipboard();
+                    else
+                        return false;
+                    return true;
                 }
             });
 
@@ -200,38 +203,36 @@ public class EventDetailsBottomSheet extends BottomSheetDialogFragment {
         }
     };
 
-    private boolean copyEventToClipboard() {
-        return copyStringToClipboard("Event", JOSPEvent.toString(event).replace(";", ";\n"));
+    private void copyEventToClipboard() {
+        copyStringToClipboard("Event", JOSPEvent.toString(event).replace(";", ";\n"));
     }
 
-    private boolean copyEventPayloadToClipboard() {
-        return copyStringToClipboard("Event Payload", event.getPayload().replace("{","{\n").replace("}","\n}").replace(",", ",\n"));
+    private void copyEventPayloadToClipboard() {
+        copyStringToClipboard("Event Payload", event.getPayload().replace("{","{\n").replace("}","\n}").replace(",", ",\n"));
     }
 
-    private boolean copyEventErrorMsgToClipboard() {
+    private void copyEventErrorMsgToClipboard() {
         Map<String, String> errorPayloadMap = parsePayload(event.getErrorPayload());
-        return copyStringToClipboard("Error Message", errorPayloadMap.get("msg"));
+        copyStringToClipboard("Error Message", errorPayloadMap.get("msg"));
     }
 
-    private boolean copyEventErrorPayloadToClipboard() {
-        return copyStringToClipboard("Error Payload", event.getErrorPayload().replace("{","{\n").replace("}","\n}").replace(",", ",\n"));
+    private void copyEventErrorPayloadToClipboard() {
+        copyStringToClipboard("Error Payload", event.getErrorPayload().replace("{","{\n").replace("}","\n}").replace(",", ",\n"));
     }
 
-    private boolean copyEventErrorStackToClipboard() {
+    private void copyEventErrorStackToClipboard() {
         Map<String, String> errorPayloadMap = parsePayload(event.getErrorPayload());
         String stackStr = errorPayloadMap.get("stack");
-        if (stackStr == null) {
+        if (stackStr == null)
             Log.w(LOG_TAG, "Given event's error payload not formatted as expected, it missing the 'stack' field");
-            return false;
-        }
-        return copyStringToClipboard("Error Stack", stackStr.replace("[","[\n").replace("]","\n]"));
+        else
+            copyStringToClipboard("Error Stack", stackStr.replace("[","[\n").replace("]","\n]"));
     }
 
-    private boolean copyStringToClipboard(String label, String str) {
+    private void copyStringToClipboard(String label, String str) {
         ClipboardManager clipboard = (ClipboardManager) currentContext.getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText(label, str);
         clipboard.setPrimaryClip(clip);
-        return true;
     }
 
     private final View.OnClickListener onBtnOkClickListener = new View.OnClickListener() {
@@ -333,11 +334,11 @@ public class EventDetailsBottomSheet extends BottomSheetDialogFragment {
     private void addRecursively(String prefix, Map<String, Object> map, Map<String, String> mapString) {
         String prefixDotted = prefix.isEmpty() ? "" : prefix + ".";
         for (Map.Entry<String, Object> entry : map.entrySet()) {
-            if (entry.getValue() instanceof Map) {
+            if (entry.getValue() instanceof Map)
+                //noinspection unchecked
                 addRecursively(prefixDotted + entry.getKey(), (Map<String, Object>) entry.getValue(), mapString);
-            } else {
+            else
                 mapString.put(prefixDotted + entry.getKey(), entry.getValue().toString());
-            }
         }
     }
 
