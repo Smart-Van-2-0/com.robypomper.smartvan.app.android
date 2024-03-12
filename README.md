@@ -1,33 +1,32 @@
 # Smart Van for Android
 
+
 This is the main repository for the **Smart Van for Android Mobile App** and
 it's part of the [Smart Van Project](https://smartvan.johnosproject.org/).<br />
 It's based on [Android Studio](https://developer.android.com/studio)'s
 project, so you can use it to edit those sources.
 
-**Dist Name:** Smart Van<br />
-**Dist Artifact:** SmartVanAndroid<br />
-**Dist Version:** 1.0.0-DEV
-
 [README](README.md) | [CHANGELOG](CHANGELOG.md) | [TODOs](TODOs.md) | [LICENCE](LICENCE.md)
 
-This mobile app allows connect to Smart Van object as defined from the [Smart Van Project](https://smartvan.johnosproject.org/)
-website.
+**[SV Mobile App](app/README.md)**<br/>
+**Dist Name:** Smart Van<br />
+**Dist Artifact:** SVMobileApp<br />
+**Dist Version:** 1.0.0
 
-It's based on the 'JSLAndroid' library (actually it's a module from current
-repository), that allows access easily to the JOSP Eco System.
-
-
-## Build and run
-
-Fastest way to try out this mobile app is [download](https://github.com/Smart-Van-2-0/com.robypomper.smartvan.app.android/releases)
-it from his git repository and install it manually.
-
-Otherwise you can compile it and run on emulators/physical device as any other
-[Android Studio](https://developer.android.com/studio/run) project.
+**[JSL Android](jsl_android/README.md)**<br/>
+**Artifact Name:** jospJSL4Android<br />
+**Artifact Group:** com.robypomper.josp<br />
+**Artifact Version:** 2.2.4-DEV (release SV: 1.0.0)
 
 
-## Develop
+## Collaborate
 
-Open the main dir with [Android Studio](https://developer.android.com/studio/projects),
-then you can edit, compile and run those source files.
+This project is part of the [Smart Van Project](https://smartvan.johnosproject.org),
+and it's published under an Open Source licence to allow the community to
+contribute to the project.
+
+If you want to contribute to the project, you can start by reading the
+[Contribution Guidelines](https://smartvan.johnosproject.org/collaborate) page.
+Otherwise, you can clone current repository and start to customize your own
+JOD Smart Van distribution. Check out the project's structure and 'how to work
+on it', on the [Development](/docs/development.md) page.

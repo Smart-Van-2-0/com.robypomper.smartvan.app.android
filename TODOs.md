@@ -2,8 +2,7 @@
 
 [README](README.md) | [CHANGELOG](CHANGELOG.md) | [TODOs](TODOs.md) | [LICENCE](LICENCE.md)
 
-# Version 0.0.1
+* [SV Mobile App](app/TODOs.md)
+* [Chart Views](chart_views/TODOs.md)
+* [JSL Android](jsl_android/TODOs.md)
 
-* Include JSL library
-* Add JSLAndroid module with support classes for JSL access
-* Update SVMainActivity with some Smart Van info
