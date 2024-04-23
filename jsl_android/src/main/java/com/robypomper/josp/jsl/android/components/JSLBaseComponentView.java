@@ -58,7 +58,7 @@ public abstract class JSLBaseComponentView
 
         // Inflate ui
         inflate(context, layout, this);
-        setBackgroundColor(Color.argb(0.0F, 0, 0, 0));
+        setBackgroundColor(Color.argb(0, 0, 0, 0));
 
         // Init handlers
         remObjCommHandler = new JSLRemoteObjectCommunicationViewHandler(context, this, component != null ? component.getRemoteObject() : null);

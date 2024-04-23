@@ -46,7 +46,7 @@
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_marginLeft="4dp"
-                        android:tint="?attr/colorPrimary"
+                        app:tint="?attr/colorPrimary"
                         app:srcCompat="@drawable/circle_info_light" />
 
                 </LinearLayout>
