@@ -125,7 +125,7 @@ public class SVSettingsMainFragment extends PreferenceFragmentCompat {
                                 for (String objId : updatedKnowObjIds)
                                     SVStorageSingleton.getInstance().removeKnownObjectId(objId);
 
-                                // recreate current object id
+                                // recreate current object id       // TODO update according to SVStorageBaseDataStore fix (see also SVSelectObjectActivity::doGoToNextActivity())
                                 String currObjId = SVStorageSingleton.getInstance().getCurrentObjectId();
                                 SVStorageSingleton.getInstance().addKnownObjectId(currObjId);
 

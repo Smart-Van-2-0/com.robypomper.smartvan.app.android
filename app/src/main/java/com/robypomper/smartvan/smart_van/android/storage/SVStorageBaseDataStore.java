@@ -231,12 +231,11 @@ public abstract class SVStorageBaseDataStore implements SVStorage {
     @Override
     public void addKnownObjectId(String objectId) {
         Set<String> knownIds = DataStoreUtils.getFromDataStore(dataStore, DataStoreUtils.stringSetKey(ctx, OBJ_ID_KNOWN), DEF_OBJ_ID_KNOWN);
-        List<String> knownIdsList = new ArrayList<>(knownIds);
-        if (!knownIdsList.add(objectId))
-            return;
-        knownIds = new HashSet<>(knownIdsList);
-        DataStoreUtils.setToDataStore(dataStore, DataStoreUtils.stringSetKey(ctx, OBJ_ID_KNOWN), knownIds);
-        generateStorage(objectId);
+        if (!knownIds.contains(objectId)) {
+            knownIds.add(objectId);
+            DataStoreUtils.setToDataStore(dataStore, DataStoreUtils.stringSetKey(ctx, OBJ_ID_KNOWN), knownIds);
+        }
+        generateStorage(objectId);      // it works also for loading existing data
     }
 
     /**

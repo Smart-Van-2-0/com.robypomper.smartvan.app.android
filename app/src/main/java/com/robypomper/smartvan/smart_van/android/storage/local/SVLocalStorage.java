@@ -59,12 +59,14 @@ public class SVLocalStorage extends SVStorageBaseDataStore implements SVStorage 
     // Storage mngm implementation
 
     protected void generatePreferenceApp(String objectId) {
+        if (preferencesApp.containsKey(objectId)) return;
         SVPreferences locPreferences = new LocalPreferences(ctx);
         locPreferences.generateStorage(objectId);
         preferencesApp.put(objectId, locPreferences);
     }
 
     protected void generatePreferenceServices(String objectId) {
+        if (preferencesServices.containsKey(objectId)) return;
         SVPreferencesServices locPreferencesServices = new LocalPreferencesServices(ctx);
         locPreferencesServices.generateStorage(objectId);
         preferencesServices.put(objectId, locPreferencesServices);
@@ -72,6 +74,7 @@ public class SVLocalStorage extends SVStorageBaseDataStore implements SVStorage 
 
     // TODO uncomment when the history is implemented
     //protected void generateHistory(String objectId) {
+    // if (history.containsKey(objectId)) return;
     // SVHistory locHistory = new LocalHistory();
     // locHistory.generateStorage(objectId);
     // history.put(objectId, locHistory);
@@ -79,6 +82,7 @@ public class SVLocalStorage extends SVStorageBaseDataStore implements SVStorage 
 
     // TODO uncomment when the automations are implemented
     //protected void generateAutomations(String objectId) {
+    // if (automations.containsKey(objectId)) return;
     // SVAutomations locAutomations = new LocalAutomations();
     // locAutomations.generateStorage(objectId);
     // automations.put(objectId, locAutomations);

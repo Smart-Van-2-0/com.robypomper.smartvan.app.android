@@ -13,8 +13,8 @@ import java.util.Set;
  * An instance of SVStorage is provided by the {@link com.robypomper.smartvan.smart_van.android.app.SVApplication}
  * and allows activities and other components to access the SmartVan storage.
  * <p>
- * Except for the current, the favourite object id and the list of known objects
- * ids, all the other methods refer to a specific object identified by its id.
+ * Except for the current object id, the favourite one and the list of known objects
+ * ids; all the other methods refer to a specific object identified by its id.
  * That allows to store data for multiple objects at the same time.
  */
 public interface SVStorage {

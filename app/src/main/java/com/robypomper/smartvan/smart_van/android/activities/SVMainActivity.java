@@ -340,7 +340,14 @@ public class SVMainActivity extends BaseRemoteObjectActivity {
                 binding.imgSVIcon.setSVBox(getRemoteObject());
 
                 String strObjId = getObjId();   // fallback to objId
-                int objColor = SVStorageSingleton.getInstance().getCurrentPreferencesApp().getSVBoxColor();
+                int objColor;
+                try {
+                    objColor = SVStorageSingleton.getInstance().getCurrentPreferencesApp().getSVBoxColor();
+                } catch (IllegalStateException e) { // java.lang.IllegalStateException: No current object is set
+                    Intent selectObjectIntent = new Intent(SVMainActivity.this, SVSelectObjectActivity.class);
+                    startActivity(selectObjectIntent);
+                    return;
+                }
 
                 JSLRemoteObject obj = getRemoteObject();
                 if (obj != null) strObjId = obj.getName();
