@@ -11,6 +11,7 @@
     tools:context=".activities.SVEnergyActivity">
 
     <TextView
+        android:visibility="gone"
         android:id="@+id/txtContent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -166,27 +167,86 @@
         android:text="@string/activity_svenergy_txt_sub_title_history" />
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/layChart"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:layout_margin="16dp">
 
-        <com.robypomper.josp.jsl.android.components.charts.ChartBarView
-            android:id="@+id/viewChart"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            app:chart_range_unit="12"
-            app:chart_range_qty="15"
-            app:chart_fetch_timeout_ms="15000"
-            app:chart_enable_time_settings_view="false"
-            app:chart_enable_time_navigator_view="true"
-            app:chart_enable_time_settings_bottom_sheet="true"
-            app:chart_enable_exports_bottom_sheet="true"
-            />
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical" >
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="2dp" >
+
+                    <Button
+                        android:id="@+id/btnTimeSettings"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:minHeight="32dp"
+                        android:drawableEnd="@drawable/ic_more_arrow_down"
+                        android:drawablePadding="8dp"
+                        android:drawableTint="@color/mtrl_text_btn_text_color_selector"
+                        android:text="@string/activity_svenergy_btn_time_settings"
+                        android:textAllCaps="false"
+                        tools:ignore="PrivateResource" />
+
+                    <Button
+                        android:id="@+id/btnExports"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:minHeight="32dp"
+                        android:drawableEnd="@drawable/ic_more_arrow_down"
+                        android:drawablePadding="8dp"
+                        android:drawableTint="@color/mtrl_text_btn_text_color_selector"
+                        android:text="@string/activity_svenergy_btn_time_export"
+                        android:textAllCaps="false"
+                        tools:ignore="PrivateResource" />
+
+                </LinearLayout>
+
+                <com.robypomper.smartvan.smart_van.android.components.SVChartLineView
+                    android:id="@+id/viewChart"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    />
+
+                <com.robypomper.smartvan.smart_van.android.components.SVTimeNavigatorView
+                    android:id="@+id/timeNavigatorView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:navigator_text_appearance_txt="?attr/textAppearanceButton"
+                    android:padding="8dp" />
+            </LinearLayout>
+
+
+            <com.robypomper.smartvan.smart_van.android.components.SVOverlayView
+                android:visibility="gone"
+                android:id="@+id/layOverlayView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
 

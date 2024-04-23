@@ -1,0 +1,5 @@
+<resources>
+    <declare-styleable name="SVOverlayView">
+        <attr name="overlay_text_appearance_txt" format="reference" />
+    </declare-styleable>
+</resources>

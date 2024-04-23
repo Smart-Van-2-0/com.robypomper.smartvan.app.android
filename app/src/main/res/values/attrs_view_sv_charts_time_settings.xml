@@ -1,0 +1,17 @@
+<resources>
+    <declare-styleable name="SVTimeSettingsView">
+        <attr name="settings_range_period" format="enum">
+            <enum name="Year" value="1"/>
+            <enum name="Month" value="2"/>
+            <enum name="Day" value="5"/>
+            <enum name="DayOfMonth" value="5"/>
+            <enum name="Hour" value="11"/>
+            <enum name="HourOfDay" value="11"/>
+            <enum name="Minute" value="12"/>
+            <enum name="Second" value="13"/>
+        </attr>
+        <attr name="settings_range_qty" format="integer" />
+        <attr name="settings_text_appearance_flds" format="reference" />
+        <attr name="settings_text_appearance_txt" format="reference" />
+    </declare-styleable>
+</resources>

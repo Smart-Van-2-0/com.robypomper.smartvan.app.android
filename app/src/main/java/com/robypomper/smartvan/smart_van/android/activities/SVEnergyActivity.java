@@ -5,23 +5,32 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.core.app.NavUtils;
+import androidx.fragment.app.FragmentManager;
 
 import com.github.mikephil.charting.components.YAxis;
 import com.robypomper.josp.jsl.android.activities.BaseRemoteObjectActivity;
-import com.robypomper.josp.jsl.android.components.charts.adapters.JSLChartViewAdapter;
-import com.robypomper.josp.jsl.android.components.charts.formatters.ChartDateTimeFormatter;
-import com.robypomper.josp.jsl.android.components.charts.formatters.ChartUnitFormatter;
 import com.robypomper.josp.jsl.comm.JSLLocalClient;
 import com.robypomper.josp.jsl.objs.JSLRemoteObject;
 import com.robypomper.josp.jsl.objs.remote.ObjComm;
 import com.robypomper.josp.jsl.objs.structure.pillars.JSLRangeState;
+import com.robypomper.smartvan.smart_van.android.R;
 import com.robypomper.smartvan.smart_van.android.commons.SVDefinitions;
 import com.robypomper.smartvan.smart_van.android.commons.SVSpec;
 import com.robypomper.smartvan.smart_van.android.commons.SVSpecs;
+import com.robypomper.smartvan.smart_van.android.components.SVChartView;
+import com.robypomper.smartvan.smart_van.android.components.SVChartViewExportable;
+import com.robypomper.smartvan.smart_van.android.components.SVChartViewJSLAbs;
+import com.robypomper.smartvan.smart_van.android.components.SVChartViewTSFiltered;
+import com.robypomper.smartvan.smart_van.android.components.SVExportsBottomSheet;
+import com.robypomper.smartvan.smart_van.android.components.SVOverlayView;
+import com.robypomper.smartvan.smart_van.android.components.SVTimeNavigatorView;
+import com.robypomper.smartvan.smart_van.android.components.SVTimeSettingsBottomSheet;
+import com.robypomper.smartvan.smart_van.android.components.SVTimeSettingsView;
 import com.robypomper.smartvan.smart_van.android.databinding.ActivitySvenergyBinding;
-import com.robypomper.smartvan.smart_van.android.storage.SVStorageSingleton;
 
 
 public class SVEnergyActivity extends BaseRemoteObjectActivity {
@@ -67,12 +76,17 @@ public class SVEnergyActivity extends BaseRemoteObjectActivity {
     private JSLRangeState storageComp;
     private JSLRangeState generationComp;
     private JSLRangeState consumptionComp;
-    private JSLChartViewAdapter chartAdapter;
 
 
     // UI widgets
 
     private ActivitySvenergyBinding binding;
+    private SVChartView chart;
+    private Button btnSheetExport;
+    private Button btnSheetTimeSettings;
+    private SVTimeNavigatorView timeNavigatorView;
+    private SVTimeSettingsView timeSettingsView;
+    private SVOverlayView overlayView;
 
 
     // Android
@@ -97,11 +111,44 @@ public class SVEnergyActivity extends BaseRemoteObjectActivity {
         binding.donutConsumptionValue.setColor(COMP_CONSUMPTION_COLOR);
 
         // set up chart view
-        chartAdapter = new JSLChartViewAdapter(getJSLApplication(), binding.viewChart,
-                ChartDateTimeFormatter.X_FORMATTER_MINUTES(), ChartUnitFormatter.Y_FORMATTER_UNIT_0001(), ChartUnitFormatter.Y_FORMATTER_UNIT_0001());
-        binding.viewChart.setAdapter(chartAdapter);
-        binding.viewChart.setActivity(this);
-        binding.viewChart.setFetchTimeoutMs((long) SVStorageSingleton.getInstance().getCurrentPreferencesApp().getChartTimeoutSeconds() * 1000);
+        chart = binding.viewChart;
+        if (chart instanceof SVChartViewJSLAbs)
+            ((SVChartViewJSLAbs) chart).setJSLApplication(getJSLApplication());
+
+        // Setup BottomSheetExports
+        btnSheetExport = findViewById(R.id.btnExports);
+        btnSheetExport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showBottomSheetExports();
+            }
+        });
+
+        // Setup OverlayView
+        overlayView = findViewById(R.id.layOverlayView);
+        overlayView.setChart(chart);
+
+        // Only TS charts:
+        if (chart instanceof SVChartViewTSFiltered) {
+            SVChartViewTSFiltered chartTS = (SVChartViewTSFiltered) chart;
+
+            // Setup BottomSheetTimeSetting
+            btnSheetTimeSettings = findViewById(R.id.btnTimeSettings);
+            btnSheetTimeSettings.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showBottomSheetTimeSetting();
+                }
+            });
+
+            // Setup timeNavigatorView
+            timeNavigatorView = findViewById(R.id.timeNavigatorView);
+            timeNavigatorView.setChart(chartTS);
+
+            // Setup timeSettingsView
+            //timeSettingsView = findViewById(com.robypomper.josp.jsl.android.charts.R.id.timeSettingsView);
+            //timeSettingsView.setChart(chartTS);
+        }
 
         // set up action bar
         if (getActionBar() != null)
@@ -250,7 +297,7 @@ public class SVEnergyActivity extends BaseRemoteObjectActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                binding.viewChart.setEnabled(enable);
+                chart.setEnabled(enable);
             }
         });
     }
@@ -335,30 +382,37 @@ public class SVEnergyActivity extends BaseRemoteObjectActivity {
     // UI Chart
 
     private void addComponentsToChart() {
-        addComponentToChart(storageComp, COMP_STORAGE_LABEL, COMP_STORAGE_COLOR, YAxis.AxisDependency.LEFT);
-        addComponentToChart(generationComp, COMP_GENERATION_LABEL, COMP_GENERATION_COLOR, YAxis.AxisDependency.RIGHT);
-        addComponentToChart(consumptionComp, COMP_CONSUMPTION_LABEL, COMP_CONSUMPTION_COLOR, YAxis.AxisDependency.RIGHT);
+        if (storageComp != null) chart.addComponent(storageComp, COMP_STORAGE_LABEL, COMP_STORAGE_UNIT, COMP_STORAGE_COLOR, YAxis.AxisDependency.LEFT);
+        if (generationComp != null) chart.addComponent(generationComp, COMP_GENERATION_LABEL, COMP_GENERATION_UNIT, COMP_GENERATION_COLOR, YAxis.AxisDependency.LEFT);
+        if (consumptionComp != null) chart.addComponent(consumptionComp, COMP_CONSUMPTION_LABEL, COMP_CONSUMPTION_UNIT, COMP_CONSUMPTION_COLOR, YAxis.AxisDependency.LEFT);
+        chart.fetchData();
     }
 
     private void removeComponentsFromChart() {
-        removeComponentFromChart(storageComp);
-        removeComponentFromChart(generationComp);
-        removeComponentFromChart(consumptionComp);
+        if (storageComp != null) chart.removeComponent(storageComp);
+        if (generationComp != null) chart.removeComponent(generationComp);
+        if (consumptionComp != null) chart.removeComponent(consumptionComp);
+        chart.clearData();
     }
 
-    private void addComponentToChart(JSLRangeState comp, String compLabel, int compColor, YAxis.AxisDependency axisDependency) {
-        if (chartAdapter == null) return;
-        try {
-            chartAdapter.addComponent(comp, compLabel, compColor, axisDependency);
-        } catch (IllegalArgumentException e) {
-            if (e.getMessage() != null && !e.getMessage().contains("already added"))
-                throw e;
-        }
+
+    // UI Listeners
+
+    private void showBottomSheetTimeSetting() {
+        SVChartViewTSFiltered chartTS = (SVChartViewTSFiltered) chart;
+        FragmentManager fragmentMngr = this.getSupportFragmentManager();
+
+        SVTimeSettingsBottomSheet frmTimeSettingsBottomSheet = new SVTimeSettingsBottomSheet(this);
+        frmTimeSettingsBottomSheet.show(fragmentMngr, SVTimeSettingsBottomSheet.BTN_SHEET_TAG);
+        frmTimeSettingsBottomSheet.setChart(chartTS);
     }
 
-    private void removeComponentFromChart(JSLRangeState comp) {
-        if (chartAdapter == null) return;
-        chartAdapter.removeComponent(comp);
-    }
+    private void showBottomSheetExports() {
+        SVChartViewExportable chartExportable = (SVChartViewExportable) chart;
+        FragmentManager fragmentMngr = this.getSupportFragmentManager();
 
+        SVExportsBottomSheet frmExportsBottomSheet = new SVExportsBottomSheet(this);
+        frmExportsBottomSheet.show(fragmentMngr, SVExportsBottomSheet.BTN_SHEET_TAG);
+        frmExportsBottomSheet.setChart(chartExportable);
+    }
 }

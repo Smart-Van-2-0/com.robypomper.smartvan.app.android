@@ -3,4 +3,6 @@
     <string name="activity_svenergy_description">On this page, you can find comprehensive information about your electrical system. From battery status to temporal charts of energy generation and consumption.</string>
     <string name="activity_svenergy_txt_sub_title_real_time">Real-time</string>
     <string name="activity_svenergy_txt_sub_title_history">History</string>
+    <string name="activity_svenergy_btn_time_settings">Change Time Range</string>
+    <string name="activity_svenergy_btn_time_export">Export Data</string>
 </resources>

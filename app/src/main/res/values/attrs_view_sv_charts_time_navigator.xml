@@ -1,0 +1,8 @@
+<resources>
+    <declare-styleable name="SVTimeNavigatorView">
+        <attr name="navigator_reference_date" format="string" />
+        <attr name="navigator_range_offset" format="integer" />
+        <attr name="navigator_text_appearance_btn" format="reference" />
+        <attr name="navigator_text_appearance_txt" format="reference" />
+    </declare-styleable>
+</resources>

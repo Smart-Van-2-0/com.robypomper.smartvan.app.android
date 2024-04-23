@@ -1,0 +1,4 @@
+<resources>
+    <string name="view_overlay_title">TITLE</string>
+    <string name="view_overlay_description">Description...</string>
+</resources>
