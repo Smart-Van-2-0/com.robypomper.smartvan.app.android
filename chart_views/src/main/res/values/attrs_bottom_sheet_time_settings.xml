@@ -1,8 +1,0 @@
-<resources>
-    <declare-styleable name="TimeSettingsBottomSheet">
-        <attr name="settings_bottom_text_appearance_title" format="reference" />
-        <attr name="settings_bottom_text_appearance_txt" format="reference" />
-        <attr name="settings_bottom_text_appearance_tgl" format="reference" />
-        <attr name="settings_bottom_text_appearance_btn" format="reference" />
-    </declare-styleable>
-</resources>
