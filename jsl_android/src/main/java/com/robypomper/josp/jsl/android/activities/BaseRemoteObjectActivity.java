@@ -24,7 +24,7 @@ import com.robypomper.josp.jsl.objs.structure.pillars.JSLRangeState;
  * <p>
  * Subclasses can reimplement the {@link #onRemoteObjectReady()} and the
  * {@link #onRemoteObjectNotReady()} methods to handle the remote object ready/not ready
- * events and update the activity's UI. As heper methods, this class provides the
+ * events and update the activity's UI. As helper methods, this class provides the
  * {@link #isRemoteObjectReady()} method that returns true if the remote object is ready.
  * <p>
  * During his creation, the class looks for the object ID of the remote object
@@ -45,6 +45,7 @@ import com.robypomper.josp.jsl.objs.structure.pillars.JSLRangeState;
  * subclasses to find the {@link JSLComponent} objects that are exposed by the
  * remote object that is used by the activity. Those methods allow the subclasses
  * to look for the desired component by its path.
+ * @noinspection unused
  */
 public class BaseRemoteObjectActivity extends BaseJSLActivity {
 

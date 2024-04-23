@@ -22,6 +22,7 @@ import java.util.concurrent.Executors;
  * <p>
  * Moreover, the JSLService, on his create method, sets the {@link DiscoverAndroid}
  * context. So, the JSL instance can use it as discover implementation.
+ * @noinspection unused
  */
 public class JSLService extends JSLServiceBase {
 

@@ -3,31 +3,22 @@ package com.robypomper.josp.jsl.android.activities;
 import android.os.Bundle;
 
 import com.robypomper.josp.jsl.android.JSLAndroid;
-import com.robypomper.josp.jsl.comm.JSLLocalClient;
 import com.robypomper.josp.jsl.objs.JSLObjsMngr;
 import com.robypomper.josp.jsl.objs.JSLRemoteObject;
-import com.robypomper.josp.jsl.objs.remote.ObjComm;
-import com.robypomper.josp.jsl.objs.remote.ObjStruct;
 import com.robypomper.josp.jsl.objs.structure.DefaultJSLComponentPath;
 import com.robypomper.josp.jsl.objs.structure.JSLComponent;
 import com.robypomper.josp.jsl.objs.structure.JSLComponentPath;
-import com.robypomper.josp.jsl.objs.structure.JSLContainer;
 import com.robypomper.josp.jsl.objs.structure.JSLRoot;
-import com.robypomper.josp.jsl.objs.structure.pillars.JSLBooleanAction;
-import com.robypomper.josp.jsl.objs.structure.pillars.JSLBooleanState;
-import com.robypomper.josp.jsl.objs.structure.pillars.JSLRangeAction;
-import com.robypomper.josp.jsl.objs.structure.pillars.JSLRangeState;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 
 /**
  * Base class for all activities that need to work with a set of JSLRemoteObjects.
  *
- * ...
+ * @noinspection unused
  */
 public class BaseObjectsActivity extends BaseJSLActivity {
 

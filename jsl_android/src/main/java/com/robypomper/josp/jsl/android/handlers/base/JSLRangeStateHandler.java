@@ -19,6 +19,7 @@ import com.robypomper.josp.jsl.objs.structure.pillars.JSLRangeState;
  * Main properties:
  * - last update date
  * - old state
+ * @noinspection unused
  */
 public class JSLRangeStateHandler extends JSLBaseStateHandler {
 

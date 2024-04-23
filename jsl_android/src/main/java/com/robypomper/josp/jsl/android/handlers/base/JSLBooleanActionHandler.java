@@ -7,28 +7,6 @@ import com.robypomper.josp.jsl.objs.structure.pillars.JSLBooleanState;
 
 
 /**
- * Handler for {@link JSLBooleanAction} components based on {@link JSLBaseActionHandler}.
- * <p>
- * As subclass of {@link JSLBaseActionHandler}, this handler implements methods
- * to send actions to the remote object and to manage the feedback.
- * <p>
- * Main features:
- * - single observer
- * - support component switch
- * - onComponentChanged
- * - onStarted
- * - onTimeout
- * - onFeedbackReceived
- * - settable timeout duration
- * <p>
- * Main properties
- * - is waiting for feedback
- * - last action sent date
- * - last feedback received date
- * - last timeout date
- */
-
-/**
  * Handler for {@link JSLBooleanAction} components that manage commands feedback.
  * <p>
  * As subclass of {@link JSLBaseActionHandler}, this handler sets a timeout

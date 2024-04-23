@@ -5,10 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.robypomper.josp.jsl.android.app.JSLApplication;
-import com.robypomper.josp.jsl.android.app.JSLClient;
 import com.robypomper.josp.jsl.android.app.JSLClientState;
 import com.robypomper.josp.jsl.android.databinding.ActivityJslStartupBinding;
 import com.robypomper.josp.jsl.android.service.JSLService;
