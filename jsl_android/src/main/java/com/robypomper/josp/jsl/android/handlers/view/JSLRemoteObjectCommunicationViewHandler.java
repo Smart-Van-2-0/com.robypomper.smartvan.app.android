@@ -90,7 +90,7 @@ public class JSLRemoteObjectCommunicationViewHandler
     /**
      * Default background to use on container view when the remote object is disconnected.
      */
-    private static final Drawable DEF_DISC_BACKGROUND = new ColorDrawable(Color.argb(0.5F, 255, 255, 255));
+    private static final Drawable DEF_DISC_BACKGROUND = new ColorDrawable(Color.argb(128, 255, 255, 255));
 
 
     // Internal vars

@@ -10,5 +10,6 @@
   jsl.srv.instance: '9999',
   jsl.comm.local.ks.path: 'local_ks.jks',
   jsl.comm.local.ks.pass: 'johnny123',
+  jsl.comm.local.ks.alias: 'test-android-srv-LocalCert',
   jsl.comm.local.discovery: 'com.robypomper.josp.jsl.android.impls.DiscoverAndroid'
 }
