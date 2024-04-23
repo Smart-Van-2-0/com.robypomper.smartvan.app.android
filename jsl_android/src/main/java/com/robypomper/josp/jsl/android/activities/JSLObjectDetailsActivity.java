@@ -356,7 +356,7 @@ public abstract class JSLObjectDetailsActivity extends BaseRemoteObjectActivity 
                             text = "No permission";
                             img = R.drawable.permission_none;
                             break;
-                        case Status:
+                        case State:
                             text = "Status only";
                             img = R.drawable.permission_status;
                             break;
