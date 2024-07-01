@@ -11,7 +11,7 @@ project, so you can use it to edit those sources.
 **[SV Mobile App](app/README.md)**<br/>
 **Dist Name:** Smart Van<br />
 **Dist Artifact:** SVMobileApp<br />
-**Dist Version:** 1.0.0
+**Dist Version:** 1.1.0-DEV
 
 **[JSL Android](jsl_android/README.md)**<br/>
 **Artifact Name:** jospJSL4Android<br />

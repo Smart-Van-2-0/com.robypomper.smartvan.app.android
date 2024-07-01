@@ -6,7 +6,7 @@ contribute to the project.
 
 **Dist Name:** Smart Van<br />
 **Dist Artifact:** SmartVanAndroid<br />
-**Dist Version:** 1.0.0
+**Dist Version:** 1.1.0-DEV
 
 [README](README.md) | [CHANGELOG](CHANGELOG.md) | [TODOs](TODOs.md) | [LICENCE](LICENCE.md)
 
