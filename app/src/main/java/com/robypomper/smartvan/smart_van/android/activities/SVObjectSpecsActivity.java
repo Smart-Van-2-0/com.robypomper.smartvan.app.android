@@ -202,7 +202,7 @@ public class SVObjectSpecsActivity extends BaseRemoteObjectActivity {
             path = "specs/" + path.toLowerCase();
         }
         path = path.replace("iot box", "iot");
-        specGroupUrl = "https://smartvan.johnosproject.org/docs/" + path;
+        specGroupUrl = "https://www.smartvanbox.org/docs/" + path;
     }
 
     private void goToBack() {

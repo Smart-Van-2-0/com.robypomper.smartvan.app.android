@@ -1,6 +1,5 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/lay_remote_object_simple"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -24,7 +23,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_below="@id/txtObjName"
-        android:paddingRight="16dp"
         android:textAppearance="?attr/textAppearanceCaption"
         android:textSize="12sp"
         android:maxLines="2"

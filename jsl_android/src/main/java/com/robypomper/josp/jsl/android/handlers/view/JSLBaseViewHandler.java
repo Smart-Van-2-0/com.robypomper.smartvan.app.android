@@ -11,8 +11,6 @@ import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.robypomper.josp.jsl.android.handlers.base.JSLBaseHandler;
-
 import java.text.DateFormat;
 import java.util.Date;
 
@@ -59,7 +57,6 @@ import java.util.Date;
  * Initial states, Default values, String Formats, Action names
  *   - by default from the DEFAULT VALUES::DEF_INIT
  *   - settable by client classes (if necessary they can update the UI)
- *
  *
  * Subclasses capabilities:
  * TODO document how subclassed can do their stuff

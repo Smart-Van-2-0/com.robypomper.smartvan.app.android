@@ -12,7 +12,7 @@ android {
         targetSdk 34
         multiDexEnabled true
         versionCode 1
-        versionName "2.2.4-DEV"
+        versionName "2.2.4-DEV_SV-1.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -37,8 +37,8 @@ android {
 dependencies {
     api 'com.robypomper.josp:jospJSL:2.2.4'
 
-    implementation 'org.slf4j:slf4j-api:2.0.10'
-    implementation 'uk.uuid.slf4j:slf4j-android:2.0.9-0'
+    implementation 'org.slf4j:slf4j-api:2.0.12'
+    implementation 'uk.uuid.slf4j:slf4j-android:2.0.12-0'
 
     api "androidx.multidex:multidex:2.0.1"
     api 'com.google.android.material:material:1.11.0'

@@ -16,6 +16,7 @@ import java.util.Date;
  * <p>
  * In addition to the connection status, this class also provides the last
  * connection and disconnection date.
+ * @noinspection unused
  */
 public class JSLRemoteObjectCommunicationHandler extends JSLBaseHandler {
 

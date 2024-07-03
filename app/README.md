@@ -11,7 +11,7 @@ contribute to the project.
 [README](README.md) | [CHANGELOG](CHANGELOG.md) | [TODOs](TODOs.md) | [LICENCE](LICENCE.md)
 
 This mobile app allows connect to Smart Van object as defined from
-the [Smart Van Project](https://smartvan.johnosproject.org/)
+the [Smart Van Project](https://www.smartvanbox.org/)
 website.
 
 It's based on the 'JSLAndroid' library (actually it's a module from current
@@ -92,12 +92,12 @@ distributed using the [Apache v2.0](LICENCE.md) licence.
 
 ## Collaborate
 
-This project is part of the [Smart Van Project](https://smartvan.johnosproject.org),
+This project is part of the [Smart Van Project](https://www.smartvanbox.org),
 and it's published under an Open Source licence to allow the community to
 contribute to the project.
 
 If you want to contribute to the project, you can start by reading the
-[Contribution Guidelines](https://smartvan.johnosproject.org/collaborate) page.
+[Contribution Guidelines](https://www.smartvanbox.org/collaborate) page.
 Otherwise, you can clone current repository and start to customize your own
 JOD Smart Van distribution. Check out the project's structure and 'how to work
 on it', on the [Development](/docs/development.md) page.

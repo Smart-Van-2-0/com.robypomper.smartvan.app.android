@@ -6,7 +6,7 @@
     <string name="activity_svfeedback_btn_issues_list">List All Issues</string>
     <string name="activity_svfeedback_link_issues_list" tools:ignore="TypographyDashes">https://github.com/Smart-Van-2-0/collaborate/issues</string>
 
-    <string name="activity_svfeedback_txt_collaborate">If you\'re passionate about contributing, read the <a href="https://smartvan.johnosproject.org/collaborate">COLLABORATE</a> page or explore our projects on <a href="https://github.com/Smart-Van-2-0">GitHub</a>.</string>
+    <string name="activity_svfeedback_txt_collaborate">If you\'re passionate about contributing, read the <a href="https://www.smartvanbox.org/collaborate">COLLABORATE</a> page or explore our projects on <a href="https://github.com/Smart-Van-2-0">GitHub</a>.</string>
     <string name="activity_svfeedback_txt_follow">You can also collaborate and assist us by joining our social channels, such as our <a href="https://www.facebook.com/profile.php?id=100095337571720">Facebook Page</a> or <a href="https://github.com/Smart-Van-2-0">GitHub</a>.</string>
-    <string name="activity_svfeedback_txt_reach_us_email">For any other inquiries, you can reach out to us via email at <a href="mailto:smartvan@johnosproject.org">smartvan@johnosproject.org</a>.</string>
+    <string name="activity_svfeedback_txt_reach_us_email">For any other inquiries, you can reach out to us via email at <a href="mailto:www.smartvanbox.org">www.smartvanbox.org</a>.</string>
 </resources>

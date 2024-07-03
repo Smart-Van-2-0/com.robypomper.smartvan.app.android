@@ -31,6 +31,7 @@ import java.util.List;
  * Base class for any activity that must wait for an object.
  * <p>
  * TODO add filter by object id and others params
+ * @noinspection unused
  */
 public abstract class JSLSelectObjectActivity extends BaseObjectsActivity {
 
