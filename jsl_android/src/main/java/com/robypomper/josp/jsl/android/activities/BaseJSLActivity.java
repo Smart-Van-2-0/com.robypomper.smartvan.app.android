@@ -36,6 +36,7 @@ import com.robypomper.josp.jsl.android.service.JSLService;
  * <p>
  * TODO: when the JSL Service is not ready, show an overlay with a warning message
  *       the message view must be customizable
+ * @noinspection unused
  */
 public class BaseJSLActivity extends AppCompatActivity {
 

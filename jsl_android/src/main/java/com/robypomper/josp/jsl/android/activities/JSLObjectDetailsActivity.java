@@ -1,5 +1,6 @@
 package com.robypomper.josp.jsl.android.activities;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -302,24 +303,17 @@ public abstract class JSLObjectDetailsActivity extends BaseRemoteObjectActivity 
                 JSLRemoteObject obj = getRemoteObject();
                 binding.layComm.setEnabled(obj != null);
                 if (obj == null) return;
-
-                String text = "N/A";
-                int img;
                 ObjComm comm = obj.getComm();
-                if (comm.isLocalConnected() && comm.isCloudConnected()) {
-                    text = "Object fully connected";
+
+                int img;
+                if (comm.isLocalConnected() && comm.isCloudConnected())
                     img = R.drawable.communication_both;
-                } else if (comm.isLocalConnected() && !comm.isCloudConnected()) {
-                    text = "Object connected\nvia DIRECT communication";
+                else if (comm.isLocalConnected() && !comm.isCloudConnected())
                     img = R.drawable.communication_direct;
-                } else if (!comm.isLocalConnected() && comm.isCloudConnected()) {
-                    text = "Object connected\nvia CLOUD communication";
+                else if (!comm.isLocalConnected() && comm.isCloudConnected())
                     img = R.drawable.communication_cloud;
-                    //imgState = R.drawable.ic_online_cloud;
-                } else {
-                    text = "Object NOT connected";
+                else
                     img = R.drawable.communication_offline;
-                }
 
                 binding.imgComm.setImageResource(img);
             }
@@ -507,6 +501,7 @@ public abstract class JSLObjectDetailsActivity extends BaseRemoteObjectActivity 
 
             // update value and enable/disable
             runOnUiThread(new Runnable() {
+                @SuppressLint("DefaultLocale")
                 @Override
                 public void run() {
                     JSLRemoteObject obj = getRemoteObject();

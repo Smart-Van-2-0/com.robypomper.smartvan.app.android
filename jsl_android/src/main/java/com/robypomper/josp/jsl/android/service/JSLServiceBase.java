@@ -21,12 +21,12 @@ import android.util.Log;
 public class JSLServiceBase extends Service {
 
     private static final String LOG_TAG = "JSLA.JSLService";
+    final int START_MODE = Service.START_STICKY;       // indicates how to behave if the service is killed
     private final boolean DISABLE_LOGGING = true;
 
 
-    int startMode;       // indicates how to behave if the service is killed
-    IBinder binder = new LocalBinder();
-    boolean allowRebind = true;
+    final IBinder binder = new LocalBinder();
+    final boolean allowRebind = true;
 
 
     // Android
@@ -40,7 +40,7 @@ public class JSLServiceBase extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (!DISABLE_LOGGING)
             Log.d(LOG_TAG, "The service is starting, due to a call to startService()");
-        return startMode;
+        return START_MODE;
     }
 
     @Override

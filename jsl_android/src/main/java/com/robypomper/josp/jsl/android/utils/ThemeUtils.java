@@ -9,6 +9,7 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
 import androidx.core.content.ContextCompat;
 
+/** @noinspection unused*/
 public class ThemeUtils {
 
     public static @ColorInt int colorFromThemeAttribute(@AttrRes int attr, Resources.Theme theme) {
@@ -23,9 +24,10 @@ public class ThemeUtils {
      * colorOriginal = ThemeUtils.getAppColor(this, android.R.attr.textColorPrimary);
      * colorOriginal = ThemeUtils.getAppColor(this, android.R.attr.colorError);
      * colorError = ThemeUtils.getAppColor(this, com.google.android.material.R.attr.colorError);
-     * @param context
-     * @param colorAttr
-     * @return
+     *
+     * @param context the context
+     * @param colorAttr the color attribute
+     * @return the color
      */
     @ColorInt
     public static int getAppColor(Context context, @AttrRes int colorAttr) {
@@ -48,6 +50,16 @@ public class ThemeUtils {
         TypedValue typedValue = new TypedValue();
         context.getTheme().resolveAttribute(attrRes, typedValue, true);
         return typedValue;
+    }
+
+    /**
+     * Set the alpha component of {@code color} to be {@code alpha}.
+     */
+    public static int setAlphaComponent(int color, int alpha) {
+        if (alpha < 0 || alpha > 255) {
+            throw new IllegalArgumentException("alpha must be between 0 and 255.");
+        }
+        return (color & 0x00ffffff) | (alpha << 24);
     }
 
 }
