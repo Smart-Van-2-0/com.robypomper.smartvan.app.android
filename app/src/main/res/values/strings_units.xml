@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="unit_percent">Percent</string>
+    <string name="unit_percent_short">%</string>
     <string name="unit_voltage">Volts</string>
     <string name="unit_voltage_short">V</string>
     <string name="unit_watts">Watts</string>

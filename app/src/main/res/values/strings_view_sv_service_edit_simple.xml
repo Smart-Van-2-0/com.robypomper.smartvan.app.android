@@ -1,0 +1,5 @@
+<resources>
+    <string name="view_sv_service_edit_simple_txt_name_placeholder">{Name}</string>
+    <string name="view_sv_service_edit_simple_txt_icon">Select an Icon</string>
+    <string name="lay_service_edit_simple_icon_list_item_txt">{IconName}</string>
+</resources>

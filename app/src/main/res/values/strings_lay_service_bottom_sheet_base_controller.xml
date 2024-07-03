@@ -1,0 +1,4 @@
+<resources>
+    <string name="lay_service_bottom_sheet_base_controller_state_old">Old state</string>
+    <string name="lay_service_bottom_sheet_base_controller_last_update">Last update</string>
+</resources>

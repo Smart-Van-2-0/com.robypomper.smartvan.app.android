@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/sortByName"
+        android:title="@string/activity_svservices_txt_sort_by_name" />
+
+    <item
+        android:id="@+id/sortByLastUpdate"
+        android:title="@string/activity_svservices_txt_sort_by_last_update" />
+
+    <item
+        android:id="@+id/sortByLastChange"
+        android:title="@string/activity_svservices_txt_sort_by_last_change" />
+
+</menu>

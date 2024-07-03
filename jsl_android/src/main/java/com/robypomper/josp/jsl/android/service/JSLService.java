@@ -1,5 +1,7 @@
 package com.robypomper.josp.jsl.android.service;
 
+import android.util.Log;
+
 import com.robypomper.josp.jsl.FactoryJSL;
 import com.robypomper.josp.jsl.JSL;
 import com.robypomper.josp.jsl.JSLListeners;
@@ -20,10 +22,12 @@ import java.util.concurrent.Executors;
  * <p>
  * Moreover, the JSLService, on his create method, sets the {@link DiscoverAndroid}
  * context. So, the JSL instance can use it as discover implementation.
+ * @noinspection unused
  */
 public class JSLService extends JSLServiceBase {
 
-    ExecutorService executor_init = Executors.newFixedThreadPool(1);
+    private static final String LOG_TAG = "JSLA.JSLService";
+    private final ExecutorService executor_init = Executors.newFixedThreadPool(1);
     private JSL jslInstance = null;
     private final List<JSLInstanceListener> jslInstanceListeners = new ArrayList<>();
     private final JSLListeners jslListeners = new JSLListeners();
@@ -42,6 +46,8 @@ public class JSLService extends JSLServiceBase {
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.d(LOG_TAG, "JSLService is being created");
+
         DiscoverAndroid.setContext(this);
         jslInitThread();
     }
@@ -54,6 +60,8 @@ public class JSLService extends JSLServiceBase {
         super.onDestroy();
         jslShutdown();
         jslInstance = null;
+
+        Log.d(LOG_TAG, "JSLService is no longer used and is being destroyed");
     }
 
 
@@ -68,8 +76,12 @@ public class JSLService extends JSLServiceBase {
         executor_init.execute(new Runnable() {
             @Override
             public void run() {
+                Log.d(LOG_TAG, "JSLService started JSL thread");
+                Log.i(LOG_TAG, "JSLService initialing JSL instance...");
                 jslInit();
+                Log.i(LOG_TAG, "JSLService starting JSL instance...");
                 jslStartup();
+                Log.i(LOG_TAG, "JSLService started JSL instance successfully");
             }
         });
     }
@@ -93,20 +105,21 @@ public class JSLService extends JSLServiceBase {
      * NB: this code must run on a background thread.
      */
     private void jslInit() {
-        if (jslInstance != null)
-            return;
+        if (jslInstance != null) return;
 
         try {
-            String settingsFilePath = new File(getFilesDir(),"jsl.yml").getAbsolutePath();
+            String settingsFilePath = new File(getFilesDir(), "jsl.yml").getAbsolutePath();
             JSL.Settings jslSettings = FactoryJSL.loadSettings(settingsFilePath);
-            ((JSLSettings_002)jslSettings).setSrvBaseDir(getFilesDir().getAbsolutePath());
+            ((JSLSettings_002) jslSettings).setSrvBaseDir(getFilesDir().getAbsolutePath());
             jslInstance = FactoryJSL.createJSL(jslSettings);
         } catch (JSL.FactoryException e) {
-            throw new RuntimeException(e);
+            Log.e(LOG_TAG, "JSLService error while initializing down JSL instance", e);
+            throw new RuntimeException("JSLService error while initializing down JSL instance", e);
         }
 
         jslListeners.setJSL(jslInstance);
 
+        Log.d(LOG_TAG, "JSLService initialized JSL instance");
         emitOnJSLInstanceCreated();
     }
 
@@ -117,15 +130,16 @@ public class JSLService extends JSLServiceBase {
      * NB: this code must run on a background thread.
      */
     private void jslStartup() {
-        if (jslInstance == null || jslInstance.getState() != JSLState.STOP)
-            return;
+        if (jslInstance == null || jslInstance.getState() != JSLState.STOP) return;
 
         try {
             jslInstance.startup();
         } catch (StateException e) {
-            throw new RuntimeException(e);
+            Log.e(LOG_TAG, "JSLService error while startup down JSL instance", e);
+            throw new RuntimeException("JSLService error while startup down JSL instance", e);
         }
 
+        Log.d(LOG_TAG, "JSLService started JSL instance");
         emitOnJSLInstanceReady();
     }
 
@@ -133,55 +147,63 @@ public class JSLService extends JSLServiceBase {
      * Shutdown the JSL instance.
      */
     private void jslShutdown() {
-        if (jslInstance == null)
-            return;
+        if (jslInstance == null) return;
 
         jslListeners.setJSL(null);
 
-        if (jslInstance.getState() != JSLState.RUN)
-            return;
+        if (jslInstance.getState() != JSLState.RUN) return;
 
         try {
             jslInstance.shutdown();
         } catch (StateException e) {
-            throw new RuntimeException(e);
+            Log.e(LOG_TAG, "JSLService error while shutting down JSL instance", e);
+            throw new RuntimeException("JSLService error while shutting down JSL instance", e);
         }
 
+        Log.d(LOG_TAG, "JSLService stopped JSL instance");
         emitOnJSInstanceShutdown();
     }
 
 
     // Listeners
 
-    /** Adds given listener from the {@link JSLInstanceListener} list. */
+    /**
+     * Adds given listener from the {@link JSLInstanceListener} list.
+     */
     public void addJSLInstanceListener(JSLInstanceListener listener) {
-        if (jslInstanceListeners.contains(listener))
-            return;
+        if (jslInstanceListeners.contains(listener)) return;
 
         jslInstanceListeners.add(listener);
     }
 
-    /** Removes given listener from the {@link JSLInstanceListener} list. */
+    /**
+     * Removes given listener from the {@link JSLInstanceListener} list.
+     */
     public void removeJSLInstanceListener(JSLInstanceListener listener) {
-        if (!jslInstanceListeners.contains(listener))
-            return;
+        if (!jslInstanceListeners.contains(listener)) return;
 
         jslInstanceListeners.remove(listener);
     }
 
-    /** Trigger {@link JSLInstanceListener#onJSLInstanceCreated(JSL, JSLService)} event. */
+    /**
+     * Trigger {@link JSLInstanceListener#onJSLInstanceCreated(JSL, JSLService)} event.
+     */
     private void emitOnJSLInstanceCreated() {
         for (JSLInstanceListener l : jslInstanceListeners)
             l.onJSLInstanceCreated(jslInstance, this);
     }
 
-    /** Trigger {@link JSLInstanceListener#onJSLInstanceReady(JSL, JSLService)} event. */
+    /**
+     * Trigger {@link JSLInstanceListener#onJSLInstanceReady(JSL, JSLService)} event.
+     */
     private void emitOnJSLInstanceReady() {
         for (JSLInstanceListener l : jslInstanceListeners)
             l.onJSLInstanceReady(jslInstance, this);
     }
 
-    /** Trigger {@link JSLInstanceListener#onJSLInstanceShutdown(JSLService)} event. */
+    /**
+     * Trigger {@link JSLInstanceListener#onJSLInstanceShutdown(JSLService)} event.
+     */
     private void emitOnJSInstanceShutdown() {
         for (JSLInstanceListener l : jslInstanceListeners)
             l.onJSLInstanceShutdown(this);

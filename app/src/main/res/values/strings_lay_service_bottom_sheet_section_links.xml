@@ -1,0 +1,5 @@
+<resources>
+    <string name="lay_service_bottom_sheet_section_links_title">More</string>
+    <string name="lay_service_bottom_sheet_section_links_automations">Automations &gt;</string>
+    <string name="lay_service_bottom_sheet_section_links_events">Events registry &gt;</string>
+</resources>

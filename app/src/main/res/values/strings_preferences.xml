@@ -1,0 +1,16 @@
+<resources>
+    <string name="pref_group__storage">smart_van_storage</string>
+    <string name="pref__storage__curr_obj_id">curr_obj_id</string>
+    <string name="pref__storage__fav_obj_id">fav_obj_id</string>
+    <string name="pref__storage__ask_use_fav_obj">ask_use_fav_obj</string>
+    <string name="pref__storage__ask_set_fav_obj">ask_set_fav_obj</string>
+    <string name="pref__storage__known_obj_id">known_obj_id</string>
+
+    <string name="pref_group__pref_prefix">smart_van_preferences_%s</string>
+    <string name="pref__pref__svbox_color">svbox_color</string>
+    <string name="pref__pref__charts_timeout">charts_timeout</string>
+
+    <string name="pref_group__services_prefix">smart_van_services_%s</string>
+    <string name="pref__services__name_prefix">name_%s</string>
+    <string name="pref__services__icon_prefix">icon_%s</string>
+</resources>

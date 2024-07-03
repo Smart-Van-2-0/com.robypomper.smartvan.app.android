@@ -1,0 +1,35 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        app:key="cat_object_settings"
+        app:title="Settings">
+
+
+        <com.kizitonwose.colorpreferencecompat.ColorPreferenceCompat
+            android:key="@string/activity_svsettings_txt_svbox_color_key"
+            app:title="@string/activity_svsettings_txt_svbox_color_title"
+            app:summary="@string/activity_svsettings_txt_svbox_color_summary"
+            android:defaultValue="@color/smartvan_origin" />
+
+        <EditTextPreference
+            app:key="@string/activity_svsettings_txt_charts_timeout_key"
+            app:title="@string/activity_svsettings_txt_charts_timeout_title"
+            app:summary="@string/activity_svsettings_txt_charts_timeout_summary"
+            android:inputType="number"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:key="@string/activity_svsettings_txt_cat_object_storage_key"
+        app:title="@string/activity_svsettings_txt_cat_object_storage_title">
+
+        <Preference
+            app:key="@string/activity_svsettings_txt_reset_obj_id_services_key"
+            app:title="@string/activity_svsettings_txt_reset_obj_id_services_title"
+            app:summary="@string/activity_svsettings_txt_reset_obj_id_services_summary"/>
+
+    </PreferenceCategory>
+
+
+</PreferenceScreen>

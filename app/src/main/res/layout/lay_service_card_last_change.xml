@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/txtJSLCompLastChangeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lay_service_card_last_change_label"
+        android:textAppearance="?attr/textAppearanceCaption" />
+
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/txtJSLCompLastChange"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:minWidth="135dp"
+        android:maxWidth="135dp"
+        android:text="@string/placeholder_jsl_base_action_view_last_change"
+        android:textAppearance="?attr/textAppearanceCaption" />
+
+</LinearLayout>

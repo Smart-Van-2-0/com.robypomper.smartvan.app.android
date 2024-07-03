@@ -1,0 +1,4 @@
+<resources>
+    <string name="lay_service_card_header_name_placeholder">{txtSVServiceName}</string>
+    <string name="lay_service_card_header_type_placeholder">{txtSVServiceType}</string>
+</resources>

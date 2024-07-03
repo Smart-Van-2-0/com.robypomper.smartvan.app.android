@@ -1,0 +1,74 @@
+<resources>
+    <string name="activity_svsettings__title">SV Configs</string>
+
+    <string name="activity_svsettings_txt_show_current_obj_configs_key">show_current_obj_configs</string>
+    <string name="activity_svsettings_txt_show_current_obj_configs_title">Current SV Box</string>
+    <string name="activity_svsettings_txt_show_current_obj_configs_summary">%s / %s</string>
+    <string name="activity_svsettings_txt_show_current_obj_configs_summary_placeholder">{NAME} / {00000–00000–00000}</string>
+
+    <string name="activity_svsettings_txt_cat_generic_favourite_key">cat_generic_favourite</string>
+    <string name="activity_svsettings_txt_cat_generic_favourite_title">Favourite SV Box</string>
+
+    <string name="activity_svsettings_txt_ask_set_fav_obj_id_title">Show \"Set favourite SV Box\" dialog </string>
+    <string name="activity_svsettings_txt_ask_set_fav_obj_id_summary_on">Ask to set selected SV Box as favourite, when no favourite is already set</string>
+    <string name="activity_svsettings_txt_ask_set_fav_obj_id_summary_off">Never ask to set selected SV Box as favourite</string>
+
+    <string name="activity_svsettings_txt_reset_favourite_obj_id_key">reset_favourite_obj_id</string>
+    <string name="activity_svsettings_txt_reset_favourite_obj_id_title">Reset favourite SV Box</string>
+    <string name="activity_svsettings_txt_reset_favourite_obj_id_summary">Currently favourite SV Box:\n%s / %s</string>
+    <string name="activity_svsettings_txt_reset_favourite_obj_id_summary_placeholder">Currently favourite SV Box:\n{NAME} / {00000–00000–00000}</string>
+    <string name="activity_svsettings_txt_reset_favourite_obj_id_message">
+Resetting the favorite SV Box simply re-enables the initial screen for the selection of the SV Box.\n
+Proceeding will not result in any data loss!
+    </string>
+    <string name="activity_svsettings_txt_reset_favourite_obj_id_yes">Reset</string>
+    <string name="activity_svsettings_txt_reset_favourite_obj_id_no">Cancel</string>y
+
+    <string name="activity_svsettings_txt_ask_use_fav_obj_id_title">Show \"Use favourite SV Box\" dialog </string>
+    <string name="activity_svsettings_txt_ask_use_fav_obj_id_summary_on">Always ask if use the favourite SV Box</string>
+    <string name="activity_svsettings_txt_ask_use_fav_obj_id_summary_off">Always use the favourite SV Box</string>
+
+    <string name="activity_svsettings_txt_cat_generic_known_obj_id_key">cat_known_obj_id</string>
+    <string name="activity_svsettings_txt_cat_generic_known_obj_id_title">Known SV Box</string>
+
+    <string name="activity_svsettings_txt_show_known_obj_id_key">show_known_obj_id</string>
+    <string name="activity_svsettings_txt_show_known_obj_id_title">Show known SV Boxes</string>
+    <string name="activity_svsettings_txt_show_known_obj_id_summary">%d SV Boxes are known</string>
+    <string name="activity_svsettings_txt_show_known_obj_id_summary_placeholder"># SV Boxes are known</string>
+    <string name="activity_svsettings_txt_show_known_obj_id_yes">OK</string>
+
+    <string name="activity_svsettings_txt_clean_known_obj_id_storage_key">reset_known_obj_id_storage</string>
+    <string name="activity_svsettings_txt_clean_known_obj_id_storage_title">Clean ALL SV Boxes storages</string>
+    <string name="activity_svsettings_txt_clean_known_obj_id_storage_summary">Delete stored data related to all known SV Boxes from the phone</string>
+    <string name="activity_svsettings_txt_clean_known_obj_id_storage_message">
+Cleaning the known SV Boxes storage will result in the loss of all data related to all known SV Boxes.\n
+That includes all the data related to the SV Boxes, such as the history of the SV Boxes, the automations, the configurations, etc.
+    </string>
+    <string name="activity_svsettings_txt_clean_known_obj_id_storage_yes">Clean Data</string>
+    <string name="activity_svsettings_txt_clean_known_obj_id_storage_no">Cancel</string>y
+
+
+    <string name="activity_svsettings_txt_svbox_color_key">ALT_svbox_color</string>
+    <string name="activity_svsettings_txt_svbox_color_title">SV Box Color</string>
+    <string name="activity_svsettings_txt_svbox_color_summary">Set color for the current SV Box</string>
+    <string name="activity_svsettings_txt_svbox_color_set_default">No color entered, default color selected.</string>
+    <string name="activity_svsettings_txt_svbox_color_set_invalid">Invalid color entered, nothing changed.</string>
+
+    <string name="activity_svsettings_txt_charts_timeout_key">ALT_charts_timeout</string>
+    <string name="activity_svsettings_txt_charts_timeout_title">Chart timeout seconds</string>
+    <string name="activity_svsettings_txt_charts_timeout_summary">Max waiting time for charts when waiting data from the SV Box, in seconds</string>
+    <string name="activity_svsettings_txt_charts_timeout_set_default">No timeout entered, default charts timeout (%d seconds) selected.</string>
+    <string name="activity_svsettings_txt_charts_timeout_set_invalid">Invalid timeout value, nothing changed.</string>
+
+    <string name="activity_svsettings_txt_cat_object_storage_key">cat_object_storage</string>
+    <string name="activity_svsettings_txt_cat_object_storage_title">Storage</string>
+
+    <string name="activity_svsettings_txt_reset_obj_id_services_key">reset_obj_id_services</string>
+    <string name="activity_svsettings_txt_reset_obj_id_services_title">Reset Services preferences</string>
+    <string name="activity_svsettings_txt_reset_obj_id_services_summary">Reset to default all SV Services preferences, such as custom names and icons</string>
+    <string name="activity_svsettings_txt_reset_obj_id_services_message">
+Cleaning the Services preferences will reset all SV Service names and icon to their defaults.
+    </string>
+    <string name="activity_svsettings_txt_reset_obj_id_services_yes">Reset SV Services</string>
+    <string name="activity_svsettings_txt_reset_obj_id_services_no">Cancel</string>y
+</resources>

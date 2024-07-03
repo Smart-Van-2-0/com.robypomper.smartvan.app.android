@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="activity_object_details_txt_sub_title_object_name_placeholder">{OBJ_NAME}</string>
+    <string name="activity_object_details_txt_sub_title_object_id_placeholder">{00000–00000–00000}</string>
+    <string name="activity_object_details_txt_comm">Communication</string>
+    <string name="activity_object_details_txt_perms">Permissions</string>
+    <string name="activity_object_details_txt_events">Events</string>
+    <string name="activity_object_details_txt_struct">Structure</string>
+    <string name="activity_object_details_txt_sub_title_events">Latest object\'s events</string>
+</resources>

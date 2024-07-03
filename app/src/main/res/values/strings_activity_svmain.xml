@@ -1,0 +1,56 @@
+<resources>
+    <string name="activity_svmain__title">SV Mobile App</string>
+    <string name="activity_svmain_txt_title">Smart Van</string>
+    <string name="activity_svmain_txt_content">Here you can start monitor and control&lt;br/&gt;your &lt;b&gt;%s&lt;/b&gt; Smart Van.</string>
+    <string name="activity_svmain_txt_website">
+        This application is part of the Smart Van Project and can be connected to a Smart Van Box.&lt;br/&gt;
+        &lt;br/&gt;
+        The entire project, like the current application, is under heavy development and updates are released frequently.&lt;br/&gt;
+        So, if you want to stay up to date, please visit the project website at:&lt;br/&gt;
+        &lt;br/&gt;
+        &lt;a href=\"https://www.smartvanbox.org\"&gt;www.smartvanbox.org&lt;/a&gt;
+    </string>
+
+    <string name="activity_svmain_navigation_drawer_title_placeholder">{SVBox Name}</string>
+    <string name="activity_svmain_navigation_drawer_id_placeholder">{00000–00000–00000}</string>
+    <string name="activity_svmain_navigation_drawer_model_label">&lt;b&gt;Model:&lt;/b&gt; %s</string>
+    <string name="activity_svmain_navigation_drawer_svspecs_label">&lt;b&gt;Specs Groups:&lt;/b&gt; %d/%d</string>
+    <string name="activity_svmain_navigation_drawer_version_label">&lt;b&gt;App:&lt;/b&gt; %s</string>
+
+    <string name="activity_svmain_navigation_drawer_main_features_title">Features</string>
+    <string name="activity_svmain_navigation_drawer_energy_monitor_title">Energy monitor</string>
+    <string name="activity_svmain_navigation_drawer_services_control_title">Services control</string>
+    <string name="activity_svmain_navigation_drawer_main_mngm_title">Management</string>
+    <string name="activity_svmain_navigation_drawer_sv_box_title">My SV Box</string>
+    <string name="activity_svmain_navigation_drawer_sv_specs_title">Smart Van Specs</string>
+    <string name="activity_svmain_navigation_drawer_configs_title">Configs</string>
+    <string name="activity_svmain_navigation_drawer_feedback_title">Feedback</string>
+    <string name="activity_svmain_navigation_drawer_about_title">About</string>
+
+
+    <string name="activity_svmain_txt_energy_label">Energy status</string>
+    <string name="activity_svmain_txt_energy_power_label">Battery</string>
+    <string name="activity_svmain_txt_energy_power_value_placeholder">{VAL}</string>
+    <string name="activity_svmain_txt_energy_power_unit">%</string>
+    <string name="activity_svmain_txt_energy_panels_label">Solar Panels</string>
+    <string name="activity_svmain_txt_energy_panels_value_placeholder">{VAL}</string>
+    <string name="activity_svmain_txt_energy_panels_unit">@string/unit_watts_short</string>
+    <string name="activity_svmain_txt_energy_consumption_label">Service Load</string>
+    <string name="activity_svmain_txt_energy_consumption_value_placeholder">{VAL}</string>
+    <string name="activity_svmain_txt_energy_consumption_unit">@string/unit_watts_short</string>
+    <string name="activity_svmain_btn_energy_more_details">Go to Energy Monitor</string>
+
+    <string name="activity_svmain_txt_services_label">Services in use</string>
+    <string name="activity_svmain_txt_services_description">Active SV Services:</string>
+    <string name="activity_svmain_txt_services_value_placeholder">{VAL}</string>
+    <string name="activity_svmain_txt_services_footer">out of &lt;b&gt;%d&lt;/b&gt; total</string>
+    <string name="activity_svmain_btn_services_more_details">Go to Service Control</string>
+
+
+    <string name="activity_svmain_txt_specs_label">SmartVan Specs</string>
+    <string name="activity_svmain_txt_specs_description">Checkout which SV Specs is supported frm current Smart Van Box.</string>
+    <string name="activity_svmain_btn_specs_more_details">More details</string>
+
+    <string name="activity_svmain_txt_connection_text">{CONN_STATE_STRING}</string>
+
+</resources>

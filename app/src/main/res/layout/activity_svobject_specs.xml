@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/baseLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    tools:context=".activities.SVObjectSpecsActivity">
+
+    <TextView
+        android:id="@+id/txtContent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="16dp"
+        android:text="@string/activity_svobject_specs_txt_content"
+        android:textAlignment="center"
+        android:textAppearance="?attr/textAppearanceSubtitle1" />
+
+    <TextView
+        android:id="@+id/txtCurrentSpecPathTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="16dp"
+        android:paddingHorizontal="16dp"
+        android:textAppearance="?attr/textAppearanceHeadline6"
+        android:text="@string/activity_svobject_specs_title_path" />
+
+    <LinearLayout
+        android:id="@+id/layNavigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:paddingHorizontal="16dp"
+        android:orientation="horizontal">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipNav1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:checked="false"
+            android:text="@string/activity_svobject_specs_root_placeholder" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/activity_svobject_specs_separator_placeholder" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipNav2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/activity_svobject_specs_2ndLevel_placeholder" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txtName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="16dp"
+        android:paddingHorizontal="16dp"
+        android:textAppearance="?attr/textAppearanceHeadline6"
+        android:maxLines="1"
+        android:text="@string/activity_svobject_specs_title_sub_specs" />
+
+    <ListView
+        android:id="@+id/listSpecs"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingTop="8dp"
+        android:fadingEdge="horizontal"
+        android:fadingEdgeLength="30dp"
+        android:fillViewport="false"
+        android:requiresFadingEdge="vertical"/>
+
+    <Button
+        android:id="@+id/btnMoreDetails"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_gravity="center"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:background="?attr/colorSurface"
+        android:textColor="?attr/colorOnSurface"
+        app:backgroundTint="@null"
+        android:text="@string/activity_svobject_specs_more_details" />
+
+</LinearLayout>

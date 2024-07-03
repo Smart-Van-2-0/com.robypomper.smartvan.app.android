@@ -1,0 +1,6 @@
+<resources>
+    <string name="placeholder_jsl_range_action_view_action_decrease">{btnJSLCompActionDecrease}</string>
+    <string name="placeholder_jsl_range_action_view_action_increase">{btnJSLCompActionIncrease}</string>
+    <string name="placeholder_jsl_range_action_view_action_set_min">{btnJSLCompActionSetMin}</string>
+    <string name="placeholder_jsl_range_action_view_action_set_max">{btnJSLCompActionSetMax}</string>
+</resources>

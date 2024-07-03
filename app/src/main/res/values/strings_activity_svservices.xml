@@ -1,0 +1,16 @@
+<resources>
+    <string name="activity_svservices__title">Services control</string>
+    <string name="activity_svservices_description">This page contains all the controls and actuators for your SV Box. They can be binary (on/off) or percentage–based (0–100%).</string>
+    <string name="activity_svservices_txt_sub_title_controllers">Buttons and regulators</string>
+    <string name="activity_svservices_txt_sub_title_actuators">Relays and dimmers</string>
+    <string name="activity_svservices_txt_sort_by_name">By Name</string>
+    <string name="activity_svservices_txt_sort_by_last_update">By Last Update</string>
+    <string name="activity_svservices_txt_sort_by_last_change">By Last Change</string>
+    <string name="activity_svservices_txt_filter_binaries">Only Binaries</string>
+    <string name="activity_svservices_txt_filter_percent">Only Percent</string>
+    <string name="activity_svservices_txt_filter_switches">Only Switches</string>
+    <string name="activity_svservices_txt_filter_dimmers">Only Dimmers</string>
+    <string name="activity_svservices_txt_filter_high">Only High power</string>
+    <string name="activity_svservices_txt_filter_low">Only Low Power</string>
+    <string name="activity_svservices_txt_filter_reset">Show all</string>
+</resources>

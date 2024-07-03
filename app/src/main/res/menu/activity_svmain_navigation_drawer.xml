@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/itemMainFeatures"
+        android:title="@string/activity_svmain_navigation_drawer_main_features_title">
+        <menu>
+            <item
+                android:id="@+id/itemEnergyMonitor"
+                android:checkable="false"
+                android:icon="@drawable/ic_energy_monitor"
+                android:title="@string/activity_svmain_navigation_drawer_energy_monitor_title" />
+            <item
+                android:id="@+id/itemServicesControl"
+                android:checkable="false"
+                android:icon="@drawable/ic_service_control"
+                android:title="@string/activity_svmain_navigation_drawer_services_control_title" />
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/itemMainMngm"
+        android:title="@string/activity_svmain_navigation_drawer_main_mngm_title">
+        <menu>
+            <item
+                android:id="@+id/itemSVBox"
+                android:checkable="false"
+                android:icon="@drawable/ic_sv_box"
+                android:title="@string/activity_svmain_navigation_drawer_sv_box_title" />
+            <item
+                android:id="@+id/itemSVSpecs"
+                android:checkable="false"
+                android:icon="@drawable/ic_sv_specs"
+                android:title="@string/activity_svmain_navigation_drawer_sv_specs_title" />
+            <item
+                android:id="@+id/itemConfigs"
+                android:checkable="false"
+                android:icon="@drawable/ic_configs"
+                android:title="@string/activity_svmain_navigation_drawer_configs_title" />
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/itemFeedback"
+        android:checkable="false"
+        android:title="@string/activity_svmain_navigation_drawer_feedback_title" />
+    <item
+        android:id="@+id/itemAbout"
+        android:checkable="false"
+        android:title="@string/activity_svmain_navigation_drawer_about_title" />
+
+</menu>

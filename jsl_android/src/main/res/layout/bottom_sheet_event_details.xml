@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="components.EventDetailsBottomSheet" >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <LinearLayout
+            android:id="@+id/bottom_sheet_exports"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/layEvent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/txtEventPhase"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textAppearance="?attr/textAppearanceHeadline6"
+                        android:text="@string/bottom_sheet_event_details_phase_placeholder" />
+
+                    <Space
+                        android:layout_width="8dp"
+                        android:layout_height="wrap_content"/>
+
+                    <ImageView
+                        android:id="@+id/imgEventInfo"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        app:tint="?attr/colorPrimary"
+                        app:srcCompat="@drawable/circle_info_light" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/txtEventDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:textAppearance="?attr/textAppearanceCaption"
+                    android:text="@string/bottom_sheet_event_details_date_placeholder" />
+
+                <TextView
+                    android:id="@+id/txtEventDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"
+                    android:text="@string/bottom_sheet_event_details_event_descr_group" />
+
+                <GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_gravity="center"
+                    android:columnCount="2">
+
+                    <TextView
+                        android:id="@+id/txtEventCountLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="32dp"
+                        android:textAppearance="?attr/textAppearanceBody1"
+                        android:textStyle="bold"
+                        android:text="@string/bottom_sheet_event_details_count_label" />
+
+                    <TextView
+                        android:id="@+id/txtEventCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:textAppearance="?attr/textAppearanceBody1"
+                        android:text="@string/bottom_sheet_event_details_count_placeholder" />
+
+                    <TextView
+                        android:id="@+id/txtEventIdLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="32dp"
+                        android:textAppearance="?attr/textAppearanceBody1"
+                        android:textStyle="bold"
+                        android:text="@string/bottom_sheet_event_details_id_label" />
+
+                    <TextView
+                        android:id="@+id/txtEventId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:textAppearance="?attr/textAppearanceBody1"
+                        android:text="@string/bottom_sheet_event_details_id_placeholder" />
+
+                    <TextView
+                        android:visibility="gone"
+                        android:id="@+id/txtEventSrcTypeLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="32dp"
+                        android:textAppearance="?attr/textAppearanceBody1"
+                        android:textStyle="bold"
+                        android:text="@string/bottom_sheet_event_details_src_type_label" />
+
+                    <TextView
+                        android:visibility="gone"
+                        android:id="@+id/txtEventSrcType"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:textAppearance="?attr/textAppearanceBody1"
+                        android:text="@string/bottom_sheet_event_details_src_type_placeholder" />
+
+                    <TextView
+                        android:id="@+id/txtEventSrcIdLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="32dp"
+                        android:textAppearance="?attr/textAppearanceBody1"
+                        android:textStyle="bold"
+                        android:text="@string/bottom_sheet_event_details_src_id_label" />
+
+                    <TextView
+                        android:id="@+id/txtEventSrcId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:textAppearance="?attr/textAppearanceBody1"
+                        android:text="@string/bottom_sheet_event_details_src_id_placeholder" />
+
+                    <TextView
+                        android:id="@+id/txtEventErrorTypeLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="32dp"
+                        android:textColor="?attr/colorError"
+                        android:textAppearance="?attr/textAppearanceBody1"
+                        android:textStyle="bold"
+                        android:text="@string/bottom_sheet_event_details_error_type_label" />
+
+                    <TextView
+                        android:id="@+id/txtEventErrorType"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:textColor="?attr/colorError"
+                        android:textAppearance="?attr/textAppearanceBody1"
+                        android:text="@string/bottom_sheet_event_details_error_type_placeholder" />
+
+                    <TextView
+                        android:id="@+id/txtEventErrorMsgLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="32dp"
+                        android:textColor="?attr/colorError"
+                        android:textAppearance="?attr/textAppearanceBody1"
+                        android:textStyle="bold"
+                        android:text="@string/bottom_sheet_event_details_error_msg_label" />
+
+                    <TextView
+                        android:id="@+id/txtEventErrorMsg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:textColor="?attr/colorError"
+                        android:textAppearance="?attr/textAppearanceBody1"
+                        android:text="@string/bottom_sheet_event_details_error_msg_placeholder" />
+
+
+                </GridLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txtEventPayloadTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:textAppearance="?attr/textAppearanceBody1"
+                android:textStyle="bold"
+                android:text="@string/bottom_sheet_event_details_payload_label" />
+
+            <TableLayout
+                android:id="@+id/txtEventPayloadTable"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                >
+
+                <TableRow
+                    android:background="?attr/colorPrimary"
+                    android:padding="4dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="center"
+                        android:textColor="?attr/colorOnPrimary"
+                        android:text="@string/bottom_sheet_event_details_payload_key" />
+
+                    <Space
+                        android:layout_width="32dp"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textAlignment="center"
+                        android:textColor="?attr/colorOnPrimary"
+                        android:text="@string/bottom_sheet_event_details_payload_value" />
+
+                </TableRow>
+
+            </TableLayout>
+
+            <LinearLayout
+                android:id="@+id/layButtons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:paddingHorizontal="16dp"
+                android:orientation="horizontal"
+                android:gravity="end">
+
+                <Button
+                    android:id="@+id/btnOk"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:text="@string/bottom_sheet_event_details_ok" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

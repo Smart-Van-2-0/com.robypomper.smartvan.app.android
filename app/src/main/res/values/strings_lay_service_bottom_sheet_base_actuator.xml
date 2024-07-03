@@ -1,0 +1,7 @@
+<resources>
+    <string name="lay_service_bottom_sheet_base_actuator_state_old">Old state:</string>
+    <string name="lay_service_bottom_sheet_base_actuator_last_update">Last update:</string>
+    <string name="lay_service_bottom_sheet_base_actuator_last_action_sent">Last action sent:</string>
+    <string name="lay_service_bottom_sheet_base_actuator_last_feedback">Last feedback:</string>
+    <string name="lay_service_bottom_sheet_base_actuator_last_timeout">Last timeout:</string>
+</resources>

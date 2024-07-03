@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="activity_jsl_wait_object_txt_title">Waiting objects</string>
+    <string name="activity_jsl_wait_object_txt_filter_value">OBJECTS\' FILTER</string>
+    <string name="activity_jsl_wait_object_txt_operation">Listening for new remote objects…</string>
+    <string name="activity_jsl_wait_object_txt_button">Restart JSL Local Communication</string>
+</resources>

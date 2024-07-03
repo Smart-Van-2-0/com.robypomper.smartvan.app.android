@@ -1,0 +1,13 @@
+<resources>
+    <declare-styleable name="SVDonutView">
+        <attr name="sv_donut_value" format="integer|float" />
+        <attr name="sv_donut_value_appearance" format="reference" />
+        <attr name="sv_donut_value_max" format="integer|float" />
+        <attr name="sv_donut_unit" format="string" />
+        <attr name="sv_donut_unit_appearance" format="reference" />
+        <attr name="sv_donut_label" format="string" />
+        <attr name="sv_donut_label_appearance" format="reference" />
+        <attr name="sv_donut_color" format="color" />
+        <attr name="sv_donut_text_vertical_offset" format="dimension" />
+    </declare-styleable>
+</resources>

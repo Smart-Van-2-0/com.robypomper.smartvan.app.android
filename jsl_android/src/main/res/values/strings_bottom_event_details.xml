@@ -1,0 +1,30 @@
+<resources>
+    <string name="bottom_sheet_event_details_menu_copy_event">Copy Event</string>
+    <string name="bottom_sheet_event_details_menu_copy_payload">Copy Payload</string>
+    <string name="bottom_sheet_event_details_menu_copy_error_msg">Copy Error Message</string>
+    <string name="bottom_sheet_event_details_menu_copy_error_payload">Copy Error</string>
+    <string name="bottom_sheet_event_details_menu_copy_error_stack">Copy Error Stack</string>
+    <string name="bottom_sheet_event_details_date_placeholder">{DATE}</string>
+    <string name="bottom_sheet_event_details_error_type_label">Error type:</string>
+    <string name="bottom_sheet_event_details_error_type_placeholder">{ERROR PAYLOAD\n2ND LINE}</string>
+    <string name="bottom_sheet_event_details_error_msg_label">Error message:</string>
+    <string name="bottom_sheet_event_details_error_msg_placeholder">{ERROR MESSAGE\n2ND LINE}</string>
+    <string name="bottom_sheet_event_details_count_label">Events count:</string>
+    <string name="bottom_sheet_event_details_count_placeholder">{00}</string>
+
+    <string name="bottom_sheet_event_details_event_descr">All details of the event, such as type, phase, date, etc…</string>
+    <string name="bottom_sheet_event_details_event_descr_group">All details of the event, such as type, phase, date, etc… Similar events, emitted consecutively, are grouped into a cluster event.</string>
+    <string name="bottom_sheet_event_details_id_label">Event ID:</string>
+    <string name="bottom_sheet_event_details_id_placeholder">{000}</string>
+    <string name="bottom_sheet_event_details_phase_placeholder">{PHASE}</string>
+    <string name="bottom_sheet_event_details_payload_label">Payload:</string>
+    <string name="bottom_sheet_event_details_payload_key">Key</string>
+    <string name="bottom_sheet_event_details_payload_value">Value</string>
+
+    <string name="bottom_sheet_event_details_src_type_label">Type:</string>
+    <string name="bottom_sheet_event_details_src_type_placeholder">{SRC_TYPE}</string>
+    <string name="bottom_sheet_event_details_src_id_label">Source ID:</string>
+    <string name="bottom_sheet_event_details_src_id_placeholder">{000}</string>
+
+    <string name="bottom_sheet_event_details_ok">OK</string>
+</resources>

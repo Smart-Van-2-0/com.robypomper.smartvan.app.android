@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/baseLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="@drawable/gradient_to_surface"
+    android:orientation="vertical"
+    tools:context=".activities.SVEnergyActivity">
+
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/txtContent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="16dp"
+        android:text="@string/activity_svenergy_description"
+        android:textAlignment="center"
+        android:textAppearance="?attr/textAppearanceSubtitle1" />
+
+    <TextView
+        android:id="@+id/txtRealtimeTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="16dp"
+        android:paddingHorizontal="16dp"
+        android:textAppearance="?attr/textAppearanceHeadline6"
+        android:text="@string/activity_svenergy_txt_sub_title_real_time" />
+
+    <androidx.cardview.widget.CardView
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.robypomper.smartvan.smart_van.android.components.SVDonutView
+                android:id="@+id/donutStorageValue__1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="16dp"
+                android:layout_weight="1"
+                app:sv_donut_value="12"
+                app:sv_donut_value_max="15"
+                app:sv_donut_unit="V"
+                app:sv_donut_label="Storage"
+                app:sv_donut_color="@color/green"
+                app:sv_donut_text_vertical_offset="30dp"
+                />
+
+            <com.robypomper.smartvan.smart_van.android.components.SVDonutView
+                android:id="@+id/donutGenerationValue__1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="16dp"
+                android:layout_weight="1"
+                app:sv_donut_value="0.05"
+                app:sv_donut_value_max="10"
+                app:sv_donut_unit="W"
+                app:sv_donut_label="Generation"
+                app:sv_donut_color="@color/yellow"
+                app:sv_donut_text_vertical_offset="30dp" />
+
+            <com.robypomper.smartvan.smart_van.android.components.SVDonutView
+                android:id="@+id/donutConsumptionValue__1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="16dp"
+                android:layout_weight="1"
+                app:sv_donut_value="5.0392"
+                app:sv_donut_value_max="10"
+                app:sv_donut_unit="W"
+                app:sv_donut_label="Consumption"
+                app:sv_donut_color="@color/blue"
+                app:sv_donut_text_vertical_offset="30dp"
+                />
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="8dp">
+
+            <com.robypomper.smartvan.smart_van.android.components.SVDonutView
+                android:id="@+id/donutStorageValue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="16dp"
+                android:layout_weight="1"
+                app:sv_donut_value="12"
+                app:sv_donut_value_max="15"
+                app:sv_donut_unit="V"
+                app:sv_donut_label="Storage"
+                app:sv_donut_color="@color/green"
+                app:sv_donut_text_vertical_offset="30dp"
+                />
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="8dp">
+
+            <com.robypomper.smartvan.smart_van.android.components.SVDonutView
+                android:id="@+id/donutGenerationValue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="16dp"
+                android:layout_weight="1"
+                app:sv_donut_value="0.05"
+                app:sv_donut_value_max="10"
+                app:sv_donut_unit="W"
+                app:sv_donut_label="Generation"
+                app:sv_donut_color="@color/yellow"
+                app:sv_donut_text_vertical_offset="30dp" />
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="8dp">
+
+            <com.robypomper.smartvan.smart_van.android.components.SVDonutView
+                android:id="@+id/donutConsumptionValue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="16dp"
+                android:layout_weight="1"
+                app:sv_donut_value="5.0392"
+                app:sv_donut_value_max="10"
+                app:sv_donut_unit="W"
+                app:sv_donut_label="Consumption"
+                app:sv_donut_color="@color/blue"
+                app:sv_donut_text_vertical_offset="30dp"
+                />
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txtHistoryTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="16dp"
+        android:paddingHorizontal="16dp"
+        android:textAppearance="?attr/textAppearanceHeadline6"
+        android:text="@string/activity_svenergy_txt_sub_title_history" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/layChart"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_margin="16dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical" >
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="2dp" >
+
+                    <Button
+                        android:id="@+id/btnTimeSettings"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:minHeight="32dp"
+                        android:drawableEnd="@drawable/ic_more_arrow_down"
+                        android:drawablePadding="8dp"
+                        android:drawableTint="@color/mtrl_text_btn_text_color_selector"
+                        android:text="@string/activity_svenergy_btn_time_settings"
+                        android:textAllCaps="false"
+                        tools:ignore="PrivateResource" />
+
+                    <Button
+                        android:id="@+id/btnExports"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:minHeight="32dp"
+                        android:drawableEnd="@drawable/ic_more_arrow_down"
+                        android:drawablePadding="8dp"
+                        android:drawableTint="@color/mtrl_text_btn_text_color_selector"
+                        android:text="@string/activity_svenergy_btn_time_export"
+                        android:textAllCaps="false"
+                        tools:ignore="PrivateResource" />
+
+                </LinearLayout>
+
+                <com.robypomper.smartvan.smart_van.android.components.SVChartLineView
+                    android:id="@+id/viewChart"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    />
+
+                <com.robypomper.smartvan.smart_van.android.components.SVTimeNavigatorView
+                    android:id="@+id/timeNavigatorView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:navigator_text_appearance_txt="?attr/textAppearanceButton"
+                    android:padding="8dp" />
+            </LinearLayout>
+
+
+            <com.robypomper.smartvan.smart_van.android.components.SVOverlayView
+                android:visibility="gone"
+                android:id="@+id/layOverlayView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>

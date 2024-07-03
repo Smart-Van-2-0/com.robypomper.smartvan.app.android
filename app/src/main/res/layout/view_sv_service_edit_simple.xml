@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context=".components.SVServiceEditSimpleView"
+    android:layout_marginLeft="32dp"
+    android:layout_marginRight="32dp"
+    android:padding="8dp" >
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/txtSVServiceName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:inputType="text"
+        android:hint="@string/view_sv_service_edit_simple_txt_name_placeholder" />
+
+    <Spinner
+        android:background="?attr/editTextBackground"
+        android:id="@+id/txtSVServiceIcon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="0dp"
+        android:hint="@string/view_sv_service_edit_simple_txt_icon"
+        tools:ignore="RtlHardcoded,RtlSymmetry" />
+
+</LinearLayout>

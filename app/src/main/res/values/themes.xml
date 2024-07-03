@@ -1,71 +1,21 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Theme.SmartVan" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/smartvan_500</item>
-        <item name="colorPrimaryVariant">@color/smartvan_700</item>
-        <item name="colorOnPrimary">@color/white</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/smartvan_second_500</item>
-        <item name="colorSecondaryVariant">@color/smartvan_second_700</item>
-        <item name="colorOnSecondary">@color/black</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="21">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/smartvan_300</item>
+        <item name="colorSecondary">@color/smartvan_second_300</item>
+        <item name="colorSurface">@color/smartvan_50</item>
+        <item name="colorOnSurface">@color/smartvan_800</item>
+        <item name="colorError">@color/red_dark</item>
+    </style>
+
+    <!--
+    <style name="Theme.SmartVan.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.SmartVan.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    -->
+
+    <style name="Theme.SmartVan.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:windowFullscreen">true</item>
-    </style>
-
-
-
-    <style name="Theme.SmartVan.text" parent="TextAppearance.AppCompat">
-        <item name="android:textColor">@color/black</item>
-    </style>
-
-    <style name="Theme.SmartVan.text.GenericTitle">
-        <item name="android:gravity">center_horizontal</item>
-    </style>
-
-    <style name="Theme.SmartVan.text.Title" parent="Theme.SmartVan.text.GenericTitle">
-        <item name="android:textSize">@dimen/title_size</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">?colorPrimary</item>
-        <item name="android:layout_margin">@dimen/title_margin</item>
-    </style>
-
-    <style name="Theme.SmartVan.text.SubTitle" parent="Theme.SmartVan.text.GenericTitle">
-        <item name="android:textSize">@dimen/sub_title_size</item>
-        <item name="android:textColor">?attr/colorSecondary</item>
-        <item name="android:layout_margin">@dimen/sub_title_margin</item>
-    </style>
-
-    <style name="Theme.SmartVan.text.Label">
-        <item name="android:textSize">@dimen/label_size</item>
-        <item name="android:layout_marginLeft">@dimen/label_margin</item>
-        <item name="android:layout_marginRight">@dimen/label_margin</item>
-    </style>
-
-    <style name="Theme.SmartVan.text.Value">
-        <item name="android:textSize">@dimen/value_size</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:layout_marginLeft">@dimen/value_margin</item>
-        <item name="android:layout_marginRight">@dimen/value_margin</item>
-    </style>
-
-    <style name="Theme.SmartVan.text.Unit">
-        <item name="android:textSize">@dimen/unit_size</item>
-        <item name="android:layout_marginLeft">@dimen/unit_margin</item>
-        <item name="android:layout_marginRight">@dimen/unit_margin</item>
-    </style>
-
-
-    <style name="Theme.SmartVan.section" parent="android:Widget">
-
-    </style>
-
-    <style name="Theme.SmartVan.section.Card" parent="android:Widget">
-        <item name="android:background">@drawable/section_card_background</item>
     </style>
 
 </resources>

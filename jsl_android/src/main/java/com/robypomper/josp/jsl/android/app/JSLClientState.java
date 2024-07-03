@@ -3,6 +3,7 @@ package com.robypomper.josp.jsl.android.app;
 
 /**
  * JSL state representations.
+ *
  * @noinspection unused
  */
 public enum JSLClientState {
